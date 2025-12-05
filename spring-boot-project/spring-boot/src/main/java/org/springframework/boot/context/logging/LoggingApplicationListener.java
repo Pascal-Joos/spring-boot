@@ -419,16 +419,13 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 				system.setLogLevel(name, level);
 			}
 			catch (RuntimeException ex) {
-				this.logger.error(LogMessage.format("Cannot set level %s for %s", level, name));
+				this.logger.error(LogMessage.format("Cannot set level '%s' for '%s'", level, name));
 			}
 		};
 	}
 
 	private void registerShutdownHookIfNecessary(Environment environment, @Nullable LoggingSystem loggingSystem) {
 		if (environment.getProperty(REGISTER_SHUTDOWN_HOOK_PROPERTY, Boolean.class, true)) {
-			if (loggingSystem == null) {
-				return;
-			}
 			Runnable shutdownHandler = loggingSystem.getShutdownHandler();
 			if (shutdownHandler != null && shutdownHookRegistered.compareAndSet(false, true)) {
 				registerShutdownHook(shutdownHandler);
@@ -439,8 +436,6 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 	void registerShutdownHook(Runnable shutdownHandler) {
 		SpringApplication.getShutdownHandlers().add(shutdownHandler);
 	}
-
-
 
 	public void setOrder(int order) {
 		this.order = order;
