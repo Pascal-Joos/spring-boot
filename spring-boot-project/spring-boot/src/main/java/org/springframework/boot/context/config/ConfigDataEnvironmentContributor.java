@@ -33,7 +33,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;
 import org.springframework.util.CollectionUtils;
 import javax.annotation.Nullable;
-import org.springframework.util.Assert;
 
 /**
  * A single element that may directly or indirectly contribute configuration data to the
@@ -277,13 +276,12 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 				this.fromProfileSpecificImport, this.propertySource, this.configurationPropertySource, this.properties,
 				this.configDataOptions, updatedChildren);
 	}
- 	private void moveProfileSpecific(Map<ImportPhase, List<ConfigDataEnvironmentContributor>> children) {
+
+	private void moveProfileSpecific(Map<ImportPhase, List<ConfigDataEnvironmentContributor>> children) {
 		List<ConfigDataEnvironmentContributor> before = children.get(ImportPhase.BEFORE_PROFILE_ACTIVATION);
 		if (!hasAnyProfileSpecificChildren(before)) {
 			return;
 		}
-		Assert.state(before != null,
-				"BEFORE_PROFILE_ACTIVATION children must not be null when moving profile-specific entries");
 		List<ConfigDataEnvironmentContributor> updatedBefore = new ArrayList<>(before.size());
 		List<ConfigDataEnvironmentContributor> updatedAfter = new ArrayList<>();
 		for (ConfigDataEnvironmentContributor contributor : before) {
@@ -293,7 +291,6 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 		children.put(ImportPhase.BEFORE_PROFILE_ACTIVATION, updatedBefore);
 		children.put(ImportPhase.AFTER_PROFILE_ACTIVATION, updatedAfter);
 	}
-
 
 	private ConfigDataEnvironmentContributor moveProfileSpecificChildren(ConfigDataEnvironmentContributor contributor,
 			List<ConfigDataEnvironmentContributor> removed) {
