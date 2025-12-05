@@ -47,7 +47,7 @@ class SpringConfigurationPropertySources implements Iterable<ConfigurationProper
 	private final Map<PropertySource<?>, ConfigurationPropertySource> cache = new ConcurrentReferenceHashMap<>(16,
 			ReferenceType.SOFT);
 
-	SpringConfigurationPropertySources(@Nullable Iterable<PropertySource<?>> sources) {
+	SpringConfigurationPropertySources(Iterable<PropertySource<?>> sources) {
 		Assert.notNull(sources, "Sources must not be null");
 		this.sources = sources;
 	}

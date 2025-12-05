@@ -150,8 +150,8 @@ public final class ConfigurationPropertySources {
 	 * @return an {@link Iterable} containing newly adapted
 	 * {@link SpringConfigurationPropertySource} instances
 	 */
-	public static Iterable<ConfigurationPropertySource> from(@Nullable Iterable<PropertySource<?>> sources) {
-		return new SpringConfigurationPropertySources(sources);
+	public static Iterable<ConfigurationPropertySource> from(Iterable<PropertySource<?>> sources) {
+		return new SpringConfigurationPropertySources((sources != null) ? sources : Collections.emptyList());
 	}
 
 	private static Stream<PropertySource<?>> streamPropertySources(PropertySources sources) {
