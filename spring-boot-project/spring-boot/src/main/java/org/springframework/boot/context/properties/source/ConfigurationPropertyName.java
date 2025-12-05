@@ -325,27 +325,24 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
 	}
 
 	private int compare(@Nullable String e1, @Nullable ElementType type1, @Nullable String e2,
-				@Nullable ElementType type2) {
-			if (e1 == null) {
-				return -1;
-			}
-			if (e2 == null) {
-				return 1;
-			}
-			boolean indexed1 = (type1 != null && type1.isIndexed());
-			boolean indexed2 = (type2 != null && type2.isIndexed());
-			int result = Boolean.compare(indexed2, indexed1);
-			if (result != 0) {
-				return result;
-			}
-			if (type1 == ElementType.NUMERICALLY_INDEXED && type2 == ElementType.NUMERICALLY_INDEXED) {
-				long v1 = Long.parseLong(e1);
-				long v2 = Long.parseLong(e2);
-				return Long.compare(v1, v2);
-			}
-			return e1.compareTo(e2);
+			@Nullable ElementType type2) {
+		if (e1 == null) {
+			return -1;
 		}
-
+		if (e2 == null) {
+			return 1;
+		}
+		int result = Boolean.compare(type2.isIndexed(), type1.isIndexed());
+		if (result != 0) {
+			return result;
+		}
+		if (type1 == ElementType.NUMERICALLY_INDEXED && type2 == ElementType.NUMERICALLY_INDEXED) {
+			long v1 = Long.parseLong(e1);
+			long v2 = Long.parseLong(e2);
+			return Long.compare(v1, v2);
+		}
+		return e1.compareTo(e2);
+	}
 
 	@Override
 	public boolean equals(Object obj) {
