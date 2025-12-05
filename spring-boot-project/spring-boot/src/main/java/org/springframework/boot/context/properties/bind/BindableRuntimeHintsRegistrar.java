@@ -151,9 +151,6 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		}
 
 		private void handleValueObjectProperties(ReflectionHints hints) {
-			if (this.bindConstructor == null) {
-				return;
-			}
 			for (int i = 0; i < this.bindConstructor.getParameterCount(); i++) {
 				String propertyName = this.bindConstructor.getParameters()[i].getName();
 				ResolvableType propertyType = ResolvableType.forConstructorParameter(this.bindConstructor, i);
@@ -162,9 +159,6 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		}
 
 		private void handleJavaBeanProperties(ReflectionHints hints) {
-			if (this.beanInfo == null) {
-				return;
-			}
 			for (PropertyDescriptor propertyDescriptor : this.beanInfo.getPropertyDescriptors()) {
 				Method writeMethod = propertyDescriptor.getWriteMethod();
 				if (writeMethod != null) {
