@@ -58,7 +58,7 @@ class WebFilterHandler extends ServletComponentHandler {
 
 	private EnumSet<DispatcherType> extractDispatcherTypes(Map<String, Object> attributes) {
 		DispatcherType[] dispatcherTypes = (DispatcherType[]) attributes.get("dispatcherTypes");
-		if (dispatcherTypes == null || dispatcherTypes.length == 0) {
+		if (dispatcherTypes.length == 0) {
 			return EnumSet.noneOf(DispatcherType.class);
 		}
 		if (dispatcherTypes.length == 1) {
