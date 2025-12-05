@@ -32,7 +32,6 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.core.io.support.SpringFactoriesLoader.ArgumentResolver;
 import org.springframework.core.log.LogMessage;
 import org.springframework.util.Assert;
-import javax.annotation.Nullable;
 
 /**
  * A collection of {@link ConfigDataLoader} instances loaded via {@code spring.factories}.
@@ -113,7 +112,7 @@ class ConfigDataLoaders {
 			}
 		}
 		Assert.state(result != null, () -> "No loader found for resource '" + resource + "'");
-		return result;
+		return java.util.Objects.requireNonNull(result);
 	}
 
 }
