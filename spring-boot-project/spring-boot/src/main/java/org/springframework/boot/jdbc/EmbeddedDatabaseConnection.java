@@ -205,8 +205,7 @@ public enum EmbeddedDatabaseConnection {
 			productName = productName.toUpperCase(Locale.ENGLISH);
 			EmbeddedDatabaseConnection[] candidates = EmbeddedDatabaseConnection.values();
 			for (EmbeddedDatabaseConnection candidate : candidates) {
-				if (candidate != NONE && candidate.getType() != null
-						&& productName.contains(candidate.getType().name())) {
+				if (candidate != NONE && productName.contains(candidate.getType().name())) {
 					String url = metaData.getURL();
 					return (url == null || candidate.isEmbeddedUrl(url));
 				}
