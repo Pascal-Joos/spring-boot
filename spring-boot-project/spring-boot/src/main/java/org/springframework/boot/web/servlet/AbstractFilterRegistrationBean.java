@@ -223,16 +223,13 @@ public abstract class AbstractFilterRegistrationBean<T extends Filter> extends D
 		EnumSet<DispatcherType> dispatcherTypes = this.dispatcherTypes;
 		if (dispatcherTypes == null) {
 			T filter = getFilter();
-				if (filter == null) {
-					dispatcherTypes = EnumSet.of(DispatcherType.REQUEST);
-				}
-				else if (ClassUtils.isPresent("org.springframework.web.filter.OncePerRequestFilter",
-						filter.getClass().getClassLoader()) && filter instanceof OncePerRequestFilter) {
-					dispatcherTypes = EnumSet.allOf(DispatcherType.class);
-				}
-				else {
-					dispatcherTypes = EnumSet.of(DispatcherType.REQUEST);
-				}
+			if (ClassUtils.isPresent("org.springframework.web.filter.OncePerRequestFilter",
+					filter.getClass().getClassLoader()) && filter instanceof OncePerRequestFilter) {
+				dispatcherTypes = EnumSet.allOf(DispatcherType.class);
+			}
+			else {
+				dispatcherTypes = EnumSet.of(DispatcherType.REQUEST);
+			}
 		}
 		Set<String> servletNames = new LinkedHashSet<>();
 		for (ServletRegistrationBean<?> servletRegistrationBean : this.servletRegistrationBeans) {
