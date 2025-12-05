@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,12 +28,11 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.event.GenericApplicationListener;
 import org.springframework.core.Ordered;
@@ -41,6 +40,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.util.Assert;
+import org.springframework.context.ConfigurableApplicationContext;
 import javax.annotation.Nullable;
 
 /**
@@ -56,6 +56,7 @@ public class SpringApplicationAdminMXBeanRegistrar implements ApplicationContext
 
 	private static final Log logger = LogFactory.getLog(SpringApplicationAdmin.class);
 
+	@Nullable
 	private ConfigurableApplicationContext applicationContext;
 
 	private Environment environment = new StandardEnvironment();
@@ -113,13 +114,15 @@ public class SpringApplicationAdminMXBeanRegistrar implements ApplicationContext
 	}
 
 	void onApplicationReadyEvent(ApplicationReadyEvent event) {
-		if (this.applicationContext.equals(event.getApplicationContext())) {
+		if (this.applicationContext != null
+				&& this.applicationContext.equals(event.getApplicationContext())) {
 			this.ready = true;
 		}
 	}
 
 	void onWebServerInitializedEvent(WebServerInitializedEvent event) {
-		if (this.applicationContext.equals(event.getApplicationContext())) {
+		if (this.applicationContext != null
+				&& this.applicationContext.equals(event.getApplicationContext())) {
 			this.embeddedWebApplication = true;
 		}
 	}
@@ -151,16 +154,18 @@ public class SpringApplicationAdminMXBeanRegistrar implements ApplicationContext
 		}
 
 		@Override
+		public void shutdown() {
+			if (SpringApplicationAdminMXBeanRegistrar.this.applicationContext != null) {
+				SpringApplicationAdminMXBeanRegistrar.this.applicationContext.close();
+			}
+		}
+
+		@Override
 		public String getProperty(String key) {
 			return SpringApplicationAdminMXBeanRegistrar.this.environment.getProperty(key);
 		}
 
-		@Override
-		public void shutdown() {
-			logger.info("Application shutdown requested.");
-			SpringApplicationAdminMXBeanRegistrar.this.applicationContext.close();
-		}
-
 	}
+
 
 }
