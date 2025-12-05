@@ -87,7 +87,8 @@ public class WebServerFactoryCustomizerBeanPostProcessor implements BeanPostProc
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Collection<WebServerFactoryCustomizer<?>> getWebServerFactoryCustomizerBeans() {
-		return (Collection) this.beanFactory.getBeansOfType(WebServerFactoryCustomizer.class, false, false).values();
+		ListableBeanFactory beanFactory = java.util.Objects.requireNonNull(this.beanFactory, "beanFactory must not be null");
+		return (Collection) beanFactory.getBeansOfType(WebServerFactoryCustomizer.class, false, false).values();
 	}
 
 }
