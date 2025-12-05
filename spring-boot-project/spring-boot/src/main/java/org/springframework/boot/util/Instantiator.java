@@ -123,11 +123,9 @@ public class Instantiator<T> {
 	 * @since 2.4.8
 	 */
 	public List<T> instantiate(@Nullable ClassLoader classLoader, @Nullable Collection<String> names) {
-			if (names == null) {
-				return Collections.emptyList();
-			}
-			return instantiate(names.stream().map((name) -> TypeSupplier.forName(classLoader, name)));
-		}
+		Assert.notNull(names, "Names must not be null");
+		return instantiate(names.stream().map((name) -> TypeSupplier.forName(classLoader, name)));
+	}
 
 	/**
 	 * Instantiate the given set of classes, injecting constructor arguments as necessary.
@@ -173,7 +171,6 @@ public class Instantiator<T> {
 		throw new IllegalAccessException("Class [" + type.getName() + "] has no suitable constructor");
 	}
 
-		@Nullable
 	private Object[] getArgs(Class<?>[] parameterTypes) {
 		Object[] args = new Object[parameterTypes.length];
 		for (int i = 0; i < parameterTypes.length; i++) {
