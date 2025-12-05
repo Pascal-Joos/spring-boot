@@ -191,7 +191,6 @@ public class SpringApplication {
 
 	private Set<String> sources = new LinkedHashSet<>();
 
-	@Nullable
 	private Class<?> mainApplicationClass;
 
 	private Banner.Mode bannerMode = Banner.Mode.CONSOLE;
@@ -220,9 +219,9 @@ public class SpringApplication {
 
 	private boolean registerShutdownHook = true;
 
-	private List<ApplicationContextInitializer<?>> initializers = new ArrayList<>();
+	private List<ApplicationContextInitializer<?>> initializers;
 
-	private List<ApplicationListener<?>> listeners = new ArrayList<>();
+	private List<ApplicationListener<?>> listeners;
 
 	@Nullable
 	private Map<String, Object> defaultProperties;
