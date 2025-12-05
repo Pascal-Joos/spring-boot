@@ -158,26 +158,67 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 			}
 		}
 
-			private void handleJavaBeanProperties(ReflectionHints hints) {
-				BeanInfo beanInfo = java.util.Objects.requireNonNull(this.beanInfo);
-				for (PropertyDescriptor propertyDescriptor : beanInfo.getPropertyDescriptors()) {
-					Method writeMethod = propertyDescriptor.getWriteMethod();
-					if (writeMethod != null) {
-						hints.registerMethod(writeMethod, ExecutableMode.INVOKE);
+		private void handleJavaBeanProperties(ReflectionHints hints) {
+			for (PropertyDescriptor propertyDescriptor : this.beanInfo.getPropertyDescriptors()) {
+				Method writeMethod = propertyDescriptor.getWriteMethod();
+				if (writeMethod != null) {
+					hints.registerMethod(writeMethod, ExecutableMode.INVOKE);
+				}
+				Method readMethod = propertyDescriptor.getReadMethod();
+				if (readMethod != null) {
+					ResolvableType propertyType = ResolvableType.forMethodReturnType(readMethod, this.type);
+					String propertyName = propertyDescriptor.getName();
+					if (isSetterMandatory(propertyName, propertyType) && writeMethod == null) {
+						continue;
 					}
-					Method readMethod = propertyDescriptor.getReadMethod();
-					if (readMethod != null) {
-						ResolvableType propertyType = ResolvableType.forMethodReturnType(readMethod, this.type);
-						String propertyName = propertyDescriptor.getName();
-						if (isSetterMandatory(propertyName, propertyType) && writeMethod == null) {
-							continue;
-						}
-						handleProperty(hints, propertyName, propertyType);
-						hints.registerMethod(readMethod, ExecutableMode.INVOKE);
-					}
+					handleProperty(hints, propertyName, propertyType);
+					hints.registerMethod(readMethod, ExecutableMode.INVOKE);
 				}
 			}
+		}
 
+		private boolean isSetterMandatory(String propertyName, ResolvableType propertyType) {
+			Class<?> propertyClass = propertyType.resolve();
+			if (propertyClass == null) {
+				return true;
+			}
+			if (isContainer(propertyType)) {
+				return false;
+			}
+			return !isNestedType(propertyName, propertyClass);
+		}
+
+		private void handleProperty(ReflectionHints hints, String propertyName, ResolvableType propertyType) {
+			Class<?> propertyClass = propertyType.resolve();
+			if (propertyClass == null) {
+				return;
+			}
+			if (propertyClass.equals(this.type)) {
+				return; // Prevent infinite recursion
+			}
+			Class<?> componentType = getComponentClass(propertyType);
+			if (componentType != null) {
+				// Can be a list of simple types
+				if (!isJavaType(componentType)) {
+					processNested(componentType, hints);
+				}
+			}
+			else if (isNestedType(propertyName, propertyClass)) {
+				processNested(propertyClass, hints);
+			}
+		}
+
+		private void processNested(Class<?> type, ReflectionHints hints) {
+			new Processor(type, true, this.seen).process(hints);
+		}
+
+		@Nullable
+		private Class<?> getComponentClass(ResolvableType type) {
+			ResolvableType componentType = getComponentType(type);
+			if (componentType == null) {
+				return null;
+			}
+			if (isContainer(componentType)) {
 				// Resolve nested generics like Map<String, List<SomeType>>
 				return getComponentClass(componentType);
 			}
