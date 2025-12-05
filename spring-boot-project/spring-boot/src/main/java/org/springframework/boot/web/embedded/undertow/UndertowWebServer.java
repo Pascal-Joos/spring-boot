@@ -72,7 +72,6 @@ public class UndertowWebServer implements WebServer {
 
 	private final boolean autoStart;
 
-	@Nullable
 	private Undertow undertow;
 
 	private volatile boolean started = false;
@@ -102,7 +101,6 @@ public class UndertowWebServer implements WebServer {
 			boolean autoStart) {
 		this.builder = builder;
 		this.httpHandlerFactories = httpHandlerFactories;
-		this.closeables = new ArrayList<>();
 		this.autoStart = autoStart;
 	}
 
