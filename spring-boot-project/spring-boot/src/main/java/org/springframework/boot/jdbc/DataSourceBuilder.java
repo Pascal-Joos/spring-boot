@@ -506,34 +506,33 @@ public final class DataSourceBuilder<T extends DataSource> {
 			}
 		}
 
-			@Nullable
-			String get(@Nullable T dataSource) {
-				try {
-					if (this.getter == null) {
-						UnsupportedDataSourcePropertyException.throwIf(!this.property.isOptional(),
-								() -> "No getter mapped for '" + this.property + "' property");
-						return null;
-					}
-					if (dataSource == null) {
-						return null;
-					}
-					return convertToString(this.getter.get(dataSource));
+		@Nullable
+		String get(@Nullable T dataSource) {
+			try {
+				if (this.getter == null) {
+					UnsupportedDataSourcePropertyException.throwIf(!this.property.isOptional(),
+							() -> "No getter mapped for '" + this.property + "' property");
+					return null;
 				}
-				catch (SQLException ex) {
-					throw new IllegalStateException(ex);
-				}
+				return convertToString(this.getter.get(dataSource));
 			}
-			@Nullable
-			@SuppressWarnings("unchecked")
-			private V convertFromString(@Nullable String value) {
-				if (String.class.equals(this.type)) {
-					return (V) value;
-				}
-				if (Class.class.equals(this.type)) {
-					return (V) ClassUtils.resolveClassName(value, null);
-				}
-				throw new IllegalStateException("Unsupported value type " + this.type);
+			catch (SQLException ex) {
+				throw new IllegalStateException(ex);
 			}
+		}
+
+		@Nullable
+		@SuppressWarnings("unchecked")
+		private V convertFromString(@Nullable String value) {
+			if (String.class.equals(this.type)) {
+				return (V) value;
+			}
+			if (Class.class.equals(this.type)) {
+				return (V) ClassUtils.resolveClassName(value, null);
+			}
+			throw new IllegalStateException("Unsupported value type " + this.type);
+		}
+
 		private String convertToString(V value) {
 			if (String.class.equals(this.type)) {
 				return (String) value;
