@@ -50,7 +50,7 @@ public final class ConfigurationProperty implements OriginProvider, Comparable<C
 	}
 
 	private ConfigurationProperty(@Nullable ConfigurationPropertySource source,
-			ConfigurationPropertyName name, Object value, @Nullable Origin origin) {
+			@Nullable ConfigurationPropertyName name, Object value, @Nullable Origin origin) {
 		Assert.notNull(name, "Name must not be null");
 		Assert.notNull(value, "Value must not be null");
 		this.source = source;
@@ -135,7 +135,7 @@ public final class ConfigurationProperty implements OriginProvider, Comparable<C
 
 	@Nullable
 	static ConfigurationProperty of(@Nullable ConfigurationPropertySource source,
-			ConfigurationPropertyName name, Object value, @Nullable Origin origin) {
+			@Nullable ConfigurationPropertyName name, Object value, @Nullable Origin origin) {
 		if (value == null) {
 			return null;
 		}

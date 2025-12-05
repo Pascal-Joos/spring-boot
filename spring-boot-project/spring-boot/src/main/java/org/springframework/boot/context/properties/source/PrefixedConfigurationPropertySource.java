@@ -43,17 +43,14 @@ class PrefixedConfigurationPropertySource implements ConfigurationPropertySource
 
 	@Nullable
 	@Override
-		public ConfigurationProperty getConfigurationProperty(@Nullable ConfigurationPropertyName name) {
-			if (name == null) {
-				return null;
-			}
-			ConfigurationProperty configurationProperty = this.source.getConfigurationProperty(getPrefixedName(name));
-			if (configurationProperty == null) {
-				return null;
-			}
-			return ConfigurationProperty.of(configurationProperty.getSource(), name, configurationProperty.getValue(),
-					configurationProperty.getOrigin());
+	public ConfigurationProperty getConfigurationProperty(@Nullable ConfigurationPropertyName name) {
+		ConfigurationProperty configurationProperty = this.source.getConfigurationProperty(getPrefixedName(name));
+		if (configurationProperty == null) {
+			return null;
 		}
+		return ConfigurationProperty.of(configurationProperty.getSource(), name, configurationProperty.getValue(),
+				configurationProperty.getOrigin());
+	}
 
 	private ConfigurationPropertyName getPrefixedName(@Nullable ConfigurationPropertyName name) {
 		return this.prefix.append(name);
