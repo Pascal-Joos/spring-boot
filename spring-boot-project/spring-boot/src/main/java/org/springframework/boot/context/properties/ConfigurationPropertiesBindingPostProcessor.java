@@ -29,8 +29,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.core.env.PropertySources;
 import org.springframework.util.Assert;
-import java.util.Objects;
-import javax.annotation.Nullable;
 import com.uber.nullaway.annotations.Initializer;
 import javax.annotation.Nullable;
 
@@ -53,7 +51,7 @@ public class ConfigurationPropertiesBindingPostProcessor
 	 */
 	public static final String BEAN_NAME = ConfigurationPropertiesBindingPostProcessor.class.getName();
 
-	private @Nullable ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
 	private BeanDefinitionRegistry registry;
 
@@ -65,14 +63,12 @@ public class ConfigurationPropertiesBindingPostProcessor
 	}
 
 	@Initializer
-tpublic void afterPropertiesSet() throws Exception {
+	@Override
+	public void afterPropertiesSet() throws Exception {
 		// We can't use constructor injection of the application context because
 		// it causes eager factory bean initialization
-		Assert.state(this.applicationContext != null, "ApplicationContext must not be null");
-		ApplicationContext applicationContext = Objects.requireNonNull(this.applicationContext);
-		this.registry = (BeanDefinitionRegistry) applicationContext.getAutowireCapableBeanFactory();
-		this.binder = ConfigurationPropertiesBinder.get(applicationContext);
-	}
+		this.registry = (BeanDefinitionRegistry) this.applicationContext.getAutowireCapableBeanFactory();
+		this.binder = ConfigurationPropertiesBinder.get(this.applicationContext);
 	}
 
 	@Override
@@ -80,14 +76,11 @@ tpublic void afterPropertiesSet() throws Exception {
 		return Ordered.HIGHEST_PRECEDENCE + 1;
 	}
 
-tpublic Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		Assert.state(this.applicationContext != null, "ApplicationContext must not be null");
-		ApplicationContext applicationContext = Objects.requireNonNull(this.applicationContext);
-		bind(ConfigurationPropertiesBean.get(applicationContext, bean, beanName));
+	@Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		bind(ConfigurationPropertiesBean.get(this.applicationContext, bean, beanName));
 		return bean;
 	}
-	}
-
 
 	private void bind(ConfigurationPropertiesBean bean) {
 		if (bean == null || hasBoundValueObject(bean.getName())) {
