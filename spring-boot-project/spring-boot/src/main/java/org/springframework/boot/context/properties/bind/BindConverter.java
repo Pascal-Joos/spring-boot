@@ -90,7 +90,6 @@ final class BindConverter {
 		return false;
 	}
 
-	@Nullable
 	<T> T convert(@Nullable Object source, Bindable<T> target) {
 		return convert(source, target.getType(), target.getAnnotations());
 	}
