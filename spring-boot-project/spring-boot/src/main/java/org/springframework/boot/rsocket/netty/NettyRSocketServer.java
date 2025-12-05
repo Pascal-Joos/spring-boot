@@ -63,10 +63,13 @@ public class NettyRSocketServer implements RSocketServer {
 		return null;
 	}
 
-	@Override
+ 	@Override
 	public void start() throws RSocketServerException {
 		this.channel = block(this.starter, this.lifecycleTimeout);
-		logger.info("Netty RSocket started on port(s): " + address().getPort());
+		InetSocketAddress localAddress = address();
+		if (localAddress != null) {
+			logger.info("Netty RSocket started on port(s): " + localAddress.getPort());
+		}
 		startDaemonAwaitThread(this.channel);
 	}
 
