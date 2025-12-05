@@ -73,7 +73,7 @@ public class Binder {
 	 * @param sources the sources used for binding
 	 */
 	public Binder(ConfigurationPropertySource... sources) {
-		this((sources != null) ? Arrays.asList(sources) : null, null, null, null);
+		this((sources != null) ? Arrays.asList(sources) : java.util.Collections.emptyList(), null, null, null);
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class Binder {
 	 * that can convert values (or {@code null} if no initialization is required). Often
 	 * used to call {@link ConfigurableListableBeanFactory#copyRegisteredEditorsTo}.
 	 */
-	public Binder(@Nullable Iterable<ConfigurationPropertySource> sources,
+	public Binder(Iterable<ConfigurationPropertySource> sources,
 			@Nullable PlaceholdersResolver placeholdersResolver, @Nullable ConversionService conversionService,
 			@Nullable Consumer<PropertyEditorRegistry> propertyEditorInitializer) {
 		this(sources, placeholdersResolver, conversionService, propertyEditorInitializer, null);
@@ -135,7 +135,7 @@ public class Binder {
 	 * binding
 	 * @since 2.2.0
 	 */
-	public Binder(@Nullable Iterable<ConfigurationPropertySource> sources,
+	public Binder(Iterable<ConfigurationPropertySource> sources,
 			@Nullable PlaceholdersResolver placeholdersResolver, @Nullable ConversionService conversionService,
 			@Nullable Consumer<PropertyEditorRegistry> propertyEditorInitializer,
 			@Nullable BindHandler defaultBindHandler) {
@@ -157,7 +157,7 @@ public class Binder {
 	 * constructor to use when binding
 	 * @since 2.2.1
 	 */
-	public Binder(@Nullable Iterable<ConfigurationPropertySource> sources,
+	public Binder(Iterable<ConfigurationPropertySource> sources,
 			@Nullable PlaceholdersResolver placeholdersResolver, @Nullable ConversionService conversionService,
 			@Nullable Consumer<PropertyEditorRegistry> propertyEditorInitializer,
 			@Nullable BindHandler defaultBindHandler, @Nullable BindConstructorProvider constructorProvider) {
@@ -182,7 +182,7 @@ public class Binder {
 	 * constructor to use when binding
 	 * @since 2.5.0
 	 */
-	public Binder(@Nullable Iterable<ConfigurationPropertySource> sources,
+	public Binder(Iterable<ConfigurationPropertySource> sources,
 			@Nullable PlaceholdersResolver placeholdersResolver, @Nullable List<ConversionService> conversionServices,
 			@Nullable Consumer<PropertyEditorRegistry> propertyEditorInitializer,
 			@Nullable BindHandler defaultBindHandler, @Nullable BindConstructorProvider constructorProvider) {
