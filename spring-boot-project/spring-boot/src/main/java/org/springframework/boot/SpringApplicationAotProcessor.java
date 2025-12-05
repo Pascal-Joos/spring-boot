@@ -109,7 +109,6 @@ public class SpringApplicationAotProcessor extends ContextAotProcessor {
 			}
 			catch (AbandonedRunException ex) {
 				ApplicationContext context = ex.getApplicationContext();
-				Assert.notNull(context, "AOT processing requires a GenericApplicationContext but no ApplicationContext was available");
 				Assert.isInstanceOf(GenericApplicationContext.class, context,
 						() -> "AOT processing requires a GenericApplicationContext but got a "
 								+ context.getClass().getName());
