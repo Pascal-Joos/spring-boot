@@ -101,9 +101,7 @@ final class PrivateKeyParser {
 			encoder.integer(0x00); // Version 0
 			DerEncoder algorithmIdentifier = new DerEncoder();
 			algorithmIdentifier.objectIdentifier(algorithm);
-				if (parameters != null) {
-					algorithmIdentifier.objectIdentifier(parameters);
-				}
+			algorithmIdentifier.objectIdentifier(parameters);
 			byte[] byteArray = algorithmIdentifier.toByteArray();
 			encoder.sequence(byteArray);
 			encoder.octetString(bytes);
