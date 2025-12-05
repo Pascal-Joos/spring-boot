@@ -75,10 +75,8 @@ public class ErrorPageRegistrarBeanPostProcessor implements BeanPostProcessor, B
 	private Collection<ErrorPageRegistrar> getRegistrars() {
 		if (this.registrars == null) {
 			// Look up does not include the parent context
-			Assert.notNull(this.beanFactory, "beanFactory must not be null");
-			ListableBeanFactory beanFactory = this.beanFactory;
 			this.registrars = new ArrayList<>(
-					beanFactory.getBeansOfType(ErrorPageRegistrar.class, false, false).values());
+					this.beanFactory.getBeansOfType(ErrorPageRegistrar.class, false, false).values());
 			this.registrars.sort(AnnotationAwareOrderComparator.INSTANCE);
 			this.registrars = Collections.unmodifiableList(this.registrars);
 		}
