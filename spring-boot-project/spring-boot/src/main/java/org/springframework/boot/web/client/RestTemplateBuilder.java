@@ -777,7 +777,10 @@ public class RestTemplateBuilder {
 			return unwrappedRequestFactory;
 		}
 
-		private void setConnectTimeout(ClientHttpRequestFactory factory) {
+	private void setConnectTimeout(ClientHttpRequestFactory factory) {
+			if (this.connectTimeout == null) {
+				return;
+			}
 			Method method = findMethod(factory, "setConnectTimeout", int.class);
 			int timeout = Math.toIntExact(this.connectTimeout.toMillis());
 			invoke(factory, method, timeout);
