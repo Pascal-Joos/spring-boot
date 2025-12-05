@@ -87,6 +87,9 @@ class SpringBootExceptionHandler implements UncaughtExceptionHandler {
 	 * @return {@code true} if the exception contains a log configuration message
 	 */
 	private boolean isLogConfigurationMessage(@Nullable Throwable ex) {
+			if (ex == null) {
+				return false;
+			}
 		if (ex instanceof InvocationTargetException) {
 			return isLogConfigurationMessage(ex.getCause());
 		}
