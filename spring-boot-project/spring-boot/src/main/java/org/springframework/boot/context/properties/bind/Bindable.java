@@ -172,7 +172,7 @@ public final class Bindable<T> {
 	 * @param annotations the annotations
 	 * @return an updated {@link Bindable}
 	 */
-	public Bindable<T> withAnnotations(@Nullable Annotation... annotations) {
+	public Bindable<T> withAnnotations(Annotation... annotations) {
 		return new Bindable<>(this.type, this.boxedType, this.value,
 				(annotations != null) ? annotations : NO_ANNOTATIONS, NO_BIND_RESTRICTIONS);
 	}

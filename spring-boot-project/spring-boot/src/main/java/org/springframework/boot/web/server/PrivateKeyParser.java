@@ -189,7 +189,7 @@ final class PrivateKeyParser {
 
 		private final ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-		void objectIdentifier(@Nullable int... encodedObjectIdentifier) throws IOException {
+		void objectIdentifier(int... encodedObjectIdentifier) throws IOException {
 			int code = (encodedObjectIdentifier != null) ? 0x06 : 0x05;
 			codeLengthBytes(code, bytes(encodedObjectIdentifier));
 		}
