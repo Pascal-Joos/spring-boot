@@ -373,13 +373,13 @@ public class Log4J2LoggingSystem extends AbstractLoggingSystem {
 	}
 
 	private void clearLogLevel(@Nullable String loggerName, @Nullable LoggerConfig logger) {
-		if (logger instanceof LevelSetLoggerConfig) {
-			getLoggerContext().getConfiguration().removeLogger(loggerName);
+			if (logger == null || logger instanceof LevelSetLoggerConfig) {
+				getLoggerContext().getConfiguration().removeLogger(loggerName);
+			}
+			else {
+				logger.setLevel(null);
+			}
 		}
-		else {
-			logger.setLevel(null);
-		}
-	}
 
 	private void setLogLevel(@Nullable String loggerName, @Nullable LoggerConfig logger, Level level) {
 		if (logger == null) {
