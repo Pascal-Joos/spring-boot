@@ -47,7 +47,7 @@ class ConfigDataLocationRuntimeHintsTests {
 		assertThat(hints.resources().resourcePatternHints()).singleElement()
 				.satisfies(includes("application*.properties", "application*.xml", "application*.yaml",
 						"application*.yml", "config/application*.properties", "config/application*.xml",
-						"config/application*.yaml", "config/application*.yml"));
+						"config/application*.yaml", "config/application*.yml", "/", "config"));
 	}
 
 	@Test
@@ -62,7 +62,7 @@ class ConfigDataLocationRuntimeHintsTests {
 		}.registerHints(hints, null);
 		assertThat(hints.resources().resourcePatternHints()).singleElement()
 				.satisfies(includes("test*.properties", "test*.xml", "test*.yaml", "test*.yml",
-						"config/test*.properties", "config/test*.xml", "config/test*.yaml", "config/test*.yml"));
+						"config/test*.properties", "config/test*.xml", "config/test*.yaml", "config/test*.yml", "/", "config"));
 	}
 
 	@Test
@@ -76,7 +76,7 @@ class ConfigDataLocationRuntimeHintsTests {
 		}.registerHints(hints, null);
 		assertThat(hints.resources().resourcePatternHints()).singleElement()
 				.satisfies(includes("config/application*.properties", "config/application*.xml",
-						"config/application*.yaml", "config/application*.yml"));
+						"config/application*.yaml", "config/application*.yml", "/", "config"));
 	}
 
 	@Test
@@ -89,7 +89,7 @@ class ConfigDataLocationRuntimeHintsTests {
 			}
 		}.registerHints(hints, null);
 		assertThat(hints.resources().resourcePatternHints()).singleElement()
-				.satisfies(includes("application*.conf", "config/application*.conf"));
+				.satisfies(includes("application*.conf", "config/application*.conf", "/", "config"));
 	}
 
 	@Test

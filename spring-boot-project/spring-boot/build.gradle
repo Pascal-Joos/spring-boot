@@ -133,6 +133,8 @@ dependencies {
 	testImplementation("org.springframework.data:spring-data-redis")
 	testImplementation("org.springframework.data:spring-data-r2dbc")
 	testImplementation("org.xerial:sqlite-jdbc")
+	testImplementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
+	testImplementation("org.apache.tomcat.embed:tomcat-embed-core:10.1.19")
 
 	testRuntimeOnly("org.testcontainers:jdbc") {
 		exclude group: "javax.annotation", module: "javax.annotation-api"
@@ -148,6 +150,30 @@ dependencies {
     errorprone "com.google.errorprone:error_prone_core:2.35.1"
     errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
     compileOnly "com.uber.nullaway:nullaway-annotations:0.12.4-SNAPSHOT"
+	// Add servlet, JSP, EL, and mustache dependencies for test runtime
+	testImplementation("org.apache.tomcat.embed:tomcat-embed-jasper:10.1.19")
+	testImplementation("org.apache.tomcat:tomcat-jsp-api:10.1.19")
+	testImplementation("org.apache.tomcat:tomcat-servlet-api:10.1.19")
+	testImplementation("org.apache.tomcat:tomcat-el-api:10.1.19")
+	testImplementation("org.eclipse.jetty:jetty-servlet:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-server:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-webapp:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-util:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-security:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-io:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-http:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-jmx:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-xml:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-client:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-alpn-server:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-alpn-java-server:11.0.20")
+	testImplementation("org.eclipse.jetty:jetty-alpn-conscrypt-server:11.0.20")
+	testImplementation("org.eclipse.jetty.http2:http2-server:11.0.20")
+	testImplementation("org.eclipse.jetty.http2:http2-client:11.0.20")
+	testImplementation("org.eclipse.jetty.http2:http2-http-client-transport:11.0.20")
+	testImplementation("com.github.spullara.mustache.java:compiler:0.9.10")
+	testImplementation("org.glassfish.web:jakarta.servlet.jsp.jstl:2.0.0")
+	testImplementation("org.glassfish:jakarta.el:5.0.0")
 }
 
 task extractTomcatConfigProperties(type: Sync) {
@@ -183,9 +209,9 @@ plugins.withType(EclipsePlugin) {
 
 sourceSets {
 	main {
-		java {
-			srcDirs syncJavaTemplates
-		}
+	 java {
+	 srcDirs = ["src/main/java", "build/generated-sources/main"]
+	 }
 	}
 	test {
 		output.dir(tomcatConfigProperties, builtBy: "extractTomcatConfigProperties")
@@ -199,7 +225,6 @@ test {
 
 def scanner_path = project.rootProject.projectDir.toString() + "/annotator-out/scanner.xml"
 def nullaway_path = project.rootProject.projectDir.toString() + "/annotator-out/nullaway.xml"
-import net.ltgt.gradle.errorprone.CheckSeverity
 tasks.withType(JavaCompile) {
 	// Don't run NullAway when -Derrorprone.disable=true provided on the CLI
     if (System.properties['errorprone.disable'] == 'true') {

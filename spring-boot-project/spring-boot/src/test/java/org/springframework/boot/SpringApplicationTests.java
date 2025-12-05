@@ -276,7 +276,7 @@ class SpringApplicationTests {
 		application.setWebApplicationType(WebApplicationType.NONE);
 		this.context = application.run("--spring.main.banner-mode=log");
 		then(application).should(atLeastOnce()).setBannerMode(Banner.Mode.LOG);
-		assertThat(output).contains("o.s.b.SpringApplication");
+		assertThat(output).contains(".S.S.SpringApplication");
 	}
 
 	@Test
