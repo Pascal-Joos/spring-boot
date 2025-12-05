@@ -20,7 +20,7 @@ import liquibase.exception.ChangeLogParseException;
 
 import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;
 import org.springframework.boot.diagnostics.FailureAnalysis;
-import org.springframework.lang.Nullable;
+import javax.annotation.Nullable;
 
 /**
  * An {@link AbstractFailureAnalyzer} that analyzes exceptions of type
@@ -35,17 +35,16 @@ class LiquibaseChangelogMissingFailureAnalyzer extends AbstractFailureAnalyzer<C
 	@Nullable
 	@Override
 	protected FailureAnalysis analyze(Throwable rootFailure, ChangeLogParseException cause) {
-		String message = cause.getMessage();
-		if (message != null && message.endsWith(MESSAGE_SUFFIX)) {
-			String changelogPath = extractChangelogPath(message);
+		if (cause.getMessage().endsWith(MESSAGE_SUFFIX)) {
+			String changelogPath = extractChangelogPath(cause);
 			return new FailureAnalysis(getDescription(changelogPath),
 					"Make sure a Liquibase changelog is present at the configured path.", cause);
 		}
 		return null;
 	}
 
-	private String extractChangelogPath(String message) {
-		return message.substring(0, message.length() - MESSAGE_SUFFIX.length());
+	private String extractChangelogPath(ChangeLogParseException cause) {
+		return cause.getMessage().substring(0, cause.getMessage().length() - MESSAGE_SUFFIX.length());
 	}
 
 	private String getDescription(String changelogPath) {
