@@ -73,6 +73,9 @@ public class SslServerCustomizer implements NettyServerCustomizer {
 	private final SslStoreProvider sslStoreProvider;
 
 	public SslServerCustomizer(@Nullable Ssl ssl, @Nullable Http2 http2, @Nullable SslStoreProvider sslStoreProvider) {
+		if (ssl == null) {
+			throw new IllegalArgumentException("Ssl must not be null");
+		}
 		this.ssl = ssl;
 		this.http2 = http2;
 		this.sslStoreProvider = sslStoreProvider;
