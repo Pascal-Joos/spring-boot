@@ -65,7 +65,7 @@ public class InactiveConfigDataAccessException extends ConfigDataException {
 	private static String getMessage(@Nullable PropertySource<?> propertySource, @Nullable ConfigDataResource location,
 			String propertyName, @Nullable Origin origin) {
 		StringBuilder message = new StringBuilder("Inactive property source '");
-		message.append(propertySource.getName());
+		message.append((propertySource != null) ? propertySource.getName() : "unknown");
 		if (location != null) {
 			message.append("' imported from location '");
 			message.append(location);
