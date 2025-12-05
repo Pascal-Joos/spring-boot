@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2024 the original author or authors.
+ * Copyright 2012-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,45 +16,45 @@
 
 package org.springframework.boot.diagnostics.analyzer;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.NoUniqueBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.diagnostics.FailureAnalysis;
-import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import javax.annotation.Nullable;
 
 /**
- * An {@link AbstractFailureAnalyzer} that performs analysis of failures caused by a
- * {@link NoUniqueBeanDefinitionException}.
+ * An {@link AbstractInjectionFailureAnalyzer} that performs analysis of failures caused
+ * by a {@link NoUniqueBeanDefinitionException}.
  *
  * @author Andy Wilkinson
+ * @author Scott Frederick
  */
-class NoUniqueBeanDefinitionFailureAnalyzer extends AbstractFailureAnalyzer<NoUniqueBeanDefinitionException> {
+class NoUniqueBeanDefinitionFailureAnalyzer extends AbstractInjectionFailureAnalyzer<NoUniqueBeanDefinitionException> {
 
-	private final ConfigurableListableBeanFactory beanFactory;
+	private final ConfigurableBeanFactory beanFactory;
 
-	NoUniqueBeanDefinitionFailureAnalyzer(ConfigurableListableBeanFactory beanFactory) {
-		this.beanFactory = beanFactory;
+	NoUniqueBeanDefinitionFailureAnalyzer(BeanFactory beanFactory) {
+		Assert.isInstanceOf(ConfigurableBeanFactory.class, beanFactory);
+		this.beanFactory = (ConfigurableBeanFactory) beanFactory;
 	}
 
+	@Nullable
 	@Override
-	protected FailureAnalysis analyze(Throwable rootFailure, NoUniqueBeanDefinitionException cause) {
+	protected FailureAnalysis analyze(Throwable rootFailure, NoUniqueBeanDefinitionException cause,
+			@Nullable String description) {
+		if (description == null) {
+			return null;
+		}
 		String[] beanNames = extractBeanNames(cause);
 		if (beanNames == null) {
 			return null;
 		}
 		StringBuilder message = new StringBuilder();
-		message.append(String.format("No qualifying bean of type '%s' available:%n", cause.getBeanType().getName()));
-		message.append(String.format(
-				"expected single matching bean but found %d: %s%n",
-				beanNames.length,
-				Arrays.stream(beanNames).collect(Collectors.joining(", "))));
+		message.append(String.format("%s required a single bean, but %d were found:%n", description, beanNames.length));
 		for (String beanName : beanNames) {
 			buildMessage(message, beanName);
 		}
@@ -77,18 +77,17 @@ class NoUniqueBeanDefinitionFailureAnalyzer extends AbstractFailureAnalyzer<NoUn
 
 	private String getDefinitionDescription(String beanName, BeanDefinition definition) {
 		if (StringUtils.hasText(definition.getFactoryMethodName())) {
-			return String.format("\t- %s: defined by method '%s' in %s%n", beanName,
-					definition.getFactoryMethodName(), definition.getResourceDescription());
+			return String.format("\t- %s: defined by method '%s' in %s%n", beanName, definition.getFactoryMethodName(),
+					definition.getResourceDescription());
 		}
 		return String.format("\t- %s: defined in %s%n", beanName, definition.getResourceDescription());
 	}
 
 	@Nullable
 	private String[] extractBeanNames(NoUniqueBeanDefinitionException cause) {
-		String message = cause.getMessage();
-		if (message != null && message.contains("but found")) {
+		if (cause.getMessage().contains("but found")) {
 			return StringUtils.commaDelimitedListToStringArray(
-					message.substring(message.lastIndexOf(':') + 1).trim());
+					cause.getMessage().substring(cause.getMessage().lastIndexOf(':') + 1).trim());
 		}
 		return null;
 	}
