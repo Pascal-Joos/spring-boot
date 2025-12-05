@@ -60,15 +60,18 @@ abstract class ServletComponentHandler {
 		return value;
 	}
 
-	protected final Map<String, String> extractInitParameters(Map<String, Object> attributes) {
-		Map<String, String> initParameters = new HashMap<>();
-		for (AnnotationAttributes initParam : (AnnotationAttributes[]) attributes.get("initParams")) {
-			String name = (String) initParam.get("name");
-			String value = (String) initParam.get("value");
-			initParameters.put(name, value);
+		protected final Map<String, String> extractInitParameters(Map<String, Object> attributes) {
+			Map<String, String> initParameters = new HashMap<>();
+			AnnotationAttributes[] initParams = (AnnotationAttributes[]) attributes.get("initParams");
+			if (initParams != null) {
+				for (AnnotationAttributes initParam : initParams) {
+					String name = (String) initParam.get("name");
+					String value = (String) initParam.get("value");
+					initParameters.put(name, value);
+				}
+			}
+			return initParameters;
 		}
-		return initParameters;
-	}
 
 	void handle(AnnotatedBeanDefinition beanDefinition, BeanDefinitionRegistry registry) {
 		Map<String, Object> attributes = beanDefinition.getMetadata()
