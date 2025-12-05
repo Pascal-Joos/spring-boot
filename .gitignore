@@ -12,6 +12,7 @@
 .classpath
 .factorypath
 .gradle
+.gradle-cache
 .idea
 .metadata
 .project
@@ -42,3 +43,4 @@ secrets.yml
 .sts4-cache
 
 annotator-out/
+*.log

@@ -1,4 +1,0 @@
-/home/nima/Developer/nullness-benchmarks/spring-boot/spring-boot-project/spring-boot/src/main/java/org/springframework/boot/rsocket/context/RSocketServerBootstrap.java:55: error: [NullAway] dereferenced expression this.eventPublisher is @Nullable
-		this.eventPublisher.publishEvent(new RSocketServerInitializedEvent(this.server));
-		                   ^
-    (see http://t.uber.com/nullaway )
