@@ -191,8 +191,7 @@ public class SpringApplication {
 
 	private Set<String> sources = new LinkedHashSet<>();
 
-	@Nullable
-		private Class<?> mainApplicationClass;
+	private Class<?> mainApplicationClass;
 
 	private Banner.Mode bannerMode = Banner.Mode.CONSOLE;
 
