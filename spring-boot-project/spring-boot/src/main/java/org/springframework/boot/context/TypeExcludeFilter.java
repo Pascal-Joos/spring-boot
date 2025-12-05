@@ -19,8 +19,6 @@ package org.springframework.boot.context;
 import java.io.IOException;
 import java.util.Collection;
 
-import javax.annotation.Nullable;
-
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -28,6 +26,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.filter.TypeFilter;
+import javax.annotation.Nullable;
 
 /**
  * Provides exclusion {@link TypeFilter TypeFilters} that are loaded from the
@@ -78,11 +77,7 @@ public class TypeExcludeFilter implements TypeFilter, BeanFactoryAware {
 	private Collection<TypeExcludeFilter> getDelegates() {
 		Collection<TypeExcludeFilter> delegates = this.delegates;
 		if (delegates == null) {
-			BeanFactory beanFactory = this.beanFactory;
-			if (!(beanFactory instanceof ListableBeanFactory)) {
-				throw new IllegalStateException("BeanFactory must be a ListableBeanFactory");
-			}
-			delegates = ((ListableBeanFactory) beanFactory).getBeansOfType(TypeExcludeFilter.class).values();
+			delegates = ((ListableBeanFactory) this.beanFactory).getBeansOfType(TypeExcludeFilter.class).values();
 			this.delegates = delegates;
 		}
 		return delegates;
