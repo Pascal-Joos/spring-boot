@@ -85,14 +85,10 @@ public class MustacheView extends AbstractUrlBasedView {
 			return Mono
 					.error(new IllegalStateException("Could not find Mustache template with URL [" + getUrl() + "]"));
 		}
-		Compiler compiler = this.compiler;
-		if (compiler == null) {
-			return Mono.error(new IllegalStateException("Mustache Compiler must not be null"));
-		}
 		DataBuffer dataBuffer = exchange.getResponse().bufferFactory()
 				.allocateBuffer(DefaultDataBufferFactory.DEFAULT_INITIAL_CAPACITY);
 		try (Reader reader = getReader(resource)) {
-			Template template = compiler.compile(reader);
+			Template template = this.compiler.compile(reader);
 			Charset charset = getCharset(contentType).orElseGet(this::getDefaultCharset);
 			try (Writer writer = new OutputStreamWriter(dataBuffer.asOutputStream(), charset)) {
 				template.execute(model, writer);
@@ -105,7 +101,6 @@ public class MustacheView extends AbstractUrlBasedView {
 		}
 		return exchange.getResponse().writeWith(Flux.just(dataBuffer));
 	}
-
 
 	@Nullable
 	private Resource resolveResource() {
