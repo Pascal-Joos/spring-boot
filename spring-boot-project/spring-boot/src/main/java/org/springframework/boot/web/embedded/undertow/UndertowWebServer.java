@@ -391,10 +391,11 @@ public class UndertowWebServer implements WebServer {
 					next.handleRequest(exchange);
 				}
 
-				@Override
-				public void close() throws IOException {
-					CloseableHttpHandlerFactory.this.closeable.close();
-				}
+					@Override
+					public void close() throws IOException {
+						Closeable closeable = java.util.Objects.requireNonNull(CloseableHttpHandlerFactory.this.closeable);
+						closeable.close();
+					}
 
 			};
 		}
