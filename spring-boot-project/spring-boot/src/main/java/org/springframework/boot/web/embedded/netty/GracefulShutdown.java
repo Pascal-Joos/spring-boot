@@ -80,7 +80,7 @@ final class GracefulShutdown {
 			while (!this.shuttingDown) {
 				sleep(50);
 			}
-			this.shutdownThread.interrupt();
+			shutdownThread.interrupt();
 		}
 	}
 
