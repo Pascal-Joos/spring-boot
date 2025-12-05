@@ -265,9 +265,10 @@ public enum PeriodStyle {
 			return intValue(value) == 0;
 		}
 
-		private int intValue(Period value) {
+			private int intValue(Period value) {
 			Assert.notNull(this.intValue, () -> "intValue cannot be extracted from " + this.name());
-			return this.intValue.apply(value);
+			java.util.function.Function<java.time.Period, Integer> intValueFn = java.util.Objects.requireNonNull(this.intValue);
+			return intValueFn.apply(value);
 		}
 
 		private static Unit fromChronoUnit(@Nullable ChronoUnit chronoUnit) {
