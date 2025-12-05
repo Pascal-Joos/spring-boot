@@ -29,7 +29,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.MergedAnnotation;
 import org.springframework.core.annotation.MergedAnnotations;
 import javax.annotation.Nullable;
-import java.util.Objects;
 
 /**
  * An {@link AbstractInjectionFailureAnalyzer} for
@@ -52,8 +51,7 @@ class NotConstructorBoundInjectionFailureAnalyzer
 			@Nullable String description) {
 		InjectionPoint injectionPoint = findInjectionPoint(rootFailure);
 		if (isConstructorBindingConfigurationProperties(injectionPoint)) {
-			InjectionPoint nonNullInjectionPoint = Objects.requireNonNull(injectionPoint);
-			String simpleName = nonNullInjectionPoint.getMember().getDeclaringClass().getSimpleName();
+			String simpleName = injectionPoint.getMember().getDeclaringClass().getSimpleName();
 			String action = String.format("Update your configuration so that " + simpleName + " is defined via @"
 					+ ConfigurationPropertiesScan.class.getSimpleName() + " or @"
 					+ EnableConfigurationProperties.class.getSimpleName() + ".", simpleName);
