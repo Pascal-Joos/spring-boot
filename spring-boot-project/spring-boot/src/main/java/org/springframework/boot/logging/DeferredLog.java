@@ -47,7 +47,7 @@ public class DeferredLog implements Log {
 	 * Create a new {@link DeferredLog} instance.
 	 */
 	public DeferredLog() {
-		this.destinationSupplier = null;
+		this.destinationSupplier = () -> LogFactory.getLog(DeferredLog.class);
 		this.lines = new Lines();
 	}
 
