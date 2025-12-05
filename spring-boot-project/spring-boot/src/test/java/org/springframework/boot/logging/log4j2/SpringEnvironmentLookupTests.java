@@ -55,20 +55,20 @@ class SpringEnvironmentLookupTests {
 	void lookupWhenFoundInEnvironmentReturnsValue() {
 		this.environment.setProperty("test", "test");
 		Interpolator lookup = createLookup(this.loggerContext);
-		assertThat(lookup.lookup("test")).isEqualTo("test");
+		assertThat(lookup.lookup("spring:test")).isEqualTo("test");
 	}
 
 	@Test
 	void lookupWhenNotFoundInEnvironmentReturnsNull() {
 		Interpolator lookup = createLookup(this.loggerContext);
-		assertThat(lookup.lookup("test")).isNull();
+		assertThat(lookup.lookup("spring:test")).isNull();
 	}
 
 	@Test
 	void lookupWhenNoSpringEnvironmentThrowsException() {
 		this.loggerContext.removeObject(Log4J2LoggingSystem.ENVIRONMENT_KEY);
 		Interpolator lookup = createLookup(this.loggerContext);
-		assertThatIllegalStateException().isThrownBy(() -> assertThat(lookup.lookup("test")).isEqualTo("test"))
+		assertThatIllegalStateException().isThrownBy(() -> assertThat(lookup.lookup("spring:test")).isEqualTo("test"))
 				.withMessage("Unable to obtain Spring Environment from LoggerContext");
 	}
 
