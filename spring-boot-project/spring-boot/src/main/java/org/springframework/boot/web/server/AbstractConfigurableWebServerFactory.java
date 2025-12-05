@@ -49,7 +49,7 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 
 	private Set<ErrorPage> errorPages = new LinkedHashSet<>();
 
-	private Ssl ssl = new Ssl();
+	private Ssl ssl;
 
 	@Nullable
 	private SslStoreProvider sslStoreProvider;
@@ -57,7 +57,7 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 	@Nullable
 	private Http2 http2;
 
-	private Compression compression = new Compression();
+	private Compression compression;
 
 	@Nullable
 	private String serverHeader;
