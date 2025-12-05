@@ -168,21 +168,29 @@ public class UndertowWebServer implements WebServer {
 		return this.builder.build();
 	}
 
-	@Nullable
-	protected HttpHandler createHttpHandler() {
-		HttpHandler handler = null;
-		for (HttpHandlerFactory factory : this.httpHandlerFactories) {
-			handler = factory.getHandler(handler);
-			if (handler instanceof Closeable closeable) {
-				this.closeables.add(closeable);
+ 		@Nullable
+		protected HttpHandler createHttpHandler() {
+			HttpHandler handler = null;
+			for (HttpHandlerFactory factory : this.httpHandlerFactories) {
+				if (handler == null) {
+					// Initialize the handler chain without passing null to the factory
+					handler = factory.getHandler(exchange -> {
+						throw new IllegalStateException("No HttpHandler configured");
+					});
+				}
+				else {
+					handler = factory.getHandler(handler);
+				}
+				if (handler instanceof Closeable closeable) {
+					this.closeables.add(closeable);
+				}
+				if (handler instanceof GracefulShutdownHandler shutdownHandler) {
+					Assert.isNull(this.gracefulShutdown, "Only a single GracefulShutdownHandler can be defined");
+					this.gracefulShutdown = shutdownHandler;
+				}
 			}
-			if (handler instanceof GracefulShutdownHandler shutdownHandler) {
-				Assert.isNull(this.gracefulShutdown, "Only a single GracefulShutdownHandler can be defined");
-				this.gracefulShutdown = shutdownHandler;
-			}
+			return handler;
 		}
-		return handler;
-	}
 
 	private String getPortsDescription() {
 		List<UndertowWebServer.Port> ports = getActualPorts();
