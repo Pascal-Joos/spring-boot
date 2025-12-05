@@ -205,84 +205,103 @@ public final class ConfigurationPropertiesBean {
 	 * {@link ConfigurationProperties @ConfigurationProperties} object. Annotations are
 	 * considered both on the bean itself, as well as any factory method (for example a
 	 * {@link Bean @Bean} method).
-	 * @param applicationContext the source application context
-	 * @param bean the bean to consider
-	 * @param beanName the bean name
-	 * @return a configuration properties bean or {@code null} if the neither the bean nor
-	 * factory method are annotated with
-	 * {@link ConfigurationProperties @ConfigurationProperties}
-	 */
-	public static ConfigurationPropertiesBean get(ApplicationContext applicationContext, Object bean, String beanName) {
-		Method factoryMethod = findFactoryMethod(applicationContext, beanName);
-		return create(beanName, bean, bean.getClass(), factoryMethod);
-	}
-
-	@Nullable
-	private static Method findFactoryMethod(ApplicationContext applicationContext, String beanName) {
-		if (applicationContext instanceof ConfigurableApplicationContext configurableContext) {
-			return findFactoryMethod(configurableContext, beanName);
+		/**
+		 * Return a {@link ConfigurationPropertiesBean @ConfigurationPropertiesBean} instance
+		 * for the given bean details or {@code null} if the bean is not a
+		 * {@link ConfigurationProperties @ConfigurationProperties} object. Annotations are
+		 * considered both on the bean itself, as well as any factory method (for example a
+		 * {@link Bean @Bean} method).
+		 * @param applicationContext the source application context
+		 * @param bean the bean to consider
+		 * @param beanName the bean name
+		 * @return a configuration properties bean or {@code null} if the neither the bean nor
+		 * factory method are annotated with
+		 * {@link ConfigurationProperties @ConfigurationProperties}
+		 */
+		@Nullable
+		public static ConfigurationPropertiesBean get(ApplicationContext applicationContext, Object bean, String beanName) {
+			Method factoryMethod = findFactoryMethod(applicationContext, beanName);
+			return create(beanName, bean, bean.getClass(), factoryMethod);
 		}
-		return null;
-	}
 
-	@Nullable
-	private static Method findFactoryMethod(ConfigurableApplicationContext applicationContext, String beanName) {
-		return findFactoryMethod(applicationContext.getBeanFactory(), beanName);
-	}
+		@Nullable
+		private static Method findFactoryMethod(ApplicationContext applicationContext, String beanName) {
+			if (applicationContext instanceof ConfigurableApplicationContext configurableContext) {
+				return findFactoryMethod(configurableContext, beanName);
+			}
+			return null;
+		}
 
-	@Nullable
-	private static Method findFactoryMethod(ConfigurableListableBeanFactory beanFactory, String beanName) {
-		if (beanFactory.containsBeanDefinition(beanName)) {
-			BeanDefinition beanDefinition = beanFactory.getMergedBeanDefinition(beanName);
-			if (beanDefinition instanceof RootBeanDefinition rootBeanDefinition) {
-				Method resolvedFactoryMethod = rootBeanDefinition.getResolvedFactoryMethod();
-				if (resolvedFactoryMethod != null) {
-					return resolvedFactoryMethod;
+		@Nullable
+		private static Method findFactoryMethod(ConfigurableApplicationContext applicationContext, String beanName) {
+			return findFactoryMethod(applicationContext.getBeanFactory(), beanName);
+		}
+
+		@Nullable
+		private static Method findFactoryMethod(ConfigurableListableBeanFactory beanFactory, String beanName) {
+			if (beanFactory.containsBeanDefinition(beanName)) {
+				BeanDefinition beanDefinition = beanFactory.getMergedBeanDefinition(beanName);
+				if (beanDefinition instanceof RootBeanDefinition rootBeanDefinition) {
+					Method resolvedFactoryMethod = rootBeanDefinition.getResolvedFactoryMethod();
+					if (resolvedFactoryMethod != null) {
+						return resolvedFactoryMethod;
+					}
 				}
+				return findFactoryMethodUsingReflection(beanFactory, beanDefinition);
 			}
-			return findFactoryMethodUsingReflection(beanFactory, beanDefinition);
-		}
-		return null;
-	}
-
-	@Nullable
-	private static Method findFactoryMethodUsingReflection(ConfigurableListableBeanFactory beanFactory,
-			BeanDefinition beanDefinition) {
-		String factoryMethodName = beanDefinition.getFactoryMethodName();
-		String factoryBeanName = beanDefinition.getFactoryBeanName();
-		if (factoryMethodName == null || factoryBeanName == null) {
 			return null;
 		}
-		Class<?> factoryType = beanFactory.getType(factoryBeanName);
-		if (factoryType.getName().contains(ClassUtils.CGLIB_CLASS_SEPARATOR)) {
-			factoryType = factoryType.getSuperclass();
-		}
-		AtomicReference<Method> factoryMethod = new AtomicReference<>();
-		ReflectionUtils.doWithMethods(factoryType, (method) -> {
-			if (method.getName().equals(factoryMethodName)) {
-				factoryMethod.set(method);
+
+		@Nullable
+		private static Method findFactoryMethodUsingReflection(ConfigurableListableBeanFactory beanFactory,
+				BeanDefinition beanDefinition) {
+			String factoryMethodName = beanDefinition.getFactoryMethodName();
+			String factoryBeanName = beanDefinition.getFactoryBeanName();
+			if (factoryMethodName == null || factoryBeanName == null) {
+				return null;
 			}
-		});
-		return factoryMethod.get();
-	}
-
-	static ConfigurationPropertiesBean forValueObject(Class<?> beanClass, String beanName) {
-		ConfigurationPropertiesBean propertiesBean = create(beanName, null, beanClass, null);
-		Assert.state(propertiesBean != null && propertiesBean.getBindMethod() == BindMethod.VALUE_OBJECT,
-				() -> "Bean '" + beanName + "' is not a @ConfigurationProperties value object");
-		return propertiesBean;
-	}
-
-	private static ConfigurationPropertiesBean create(String name, @Nullable Object instance, Class<?> type,
-			@Nullable Method factory) {
-		ConfigurationProperties annotation = findAnnotation(instance, type, factory, ConfigurationProperties.class);
-		if (annotation == null) {
-			return null;
+			Class<?> factoryType = beanFactory.getType(factoryBeanName);
+			if (factoryType.getName().contains(ClassUtils.CGLIB_CLASS_SEPARATOR)) {
+				factoryType = factoryType.getSuperclass();
+			}
+			AtomicReference<Method> factoryMethod = new AtomicReference<>();
+			ReflectionUtils.doWithMethods(factoryType, (method) -> {
+				if (method.getName().equals(factoryMethodName)) {
+					factoryMethod.set(method);
+				}
+			});
+			return factoryMethod.get();
 		}
-		Validated validated = findAnnotation(instance, type, factory, Validated.class);
-		Annotation[] annotations = (validated != null) ? new Annotation[] { annotation, validated }
-				: new Annotation[] { annotation };
-		ResolvableType bindType = (factory != null) ? ResolvableType.forMethodReturnType(factory)
+
+		@Nullable
+		static ConfigurationPropertiesBean forValueObject(Class<?> beanClass, String beanName) {
+			ConfigurationPropertiesBean propertiesBean = create(beanName, null, beanClass, null);
+			Assert.state(propertiesBean != null && propertiesBean.getBindMethod() == BindMethod.VALUE_OBJECT,
+					() -> "Bean '" + beanName + "' is not a @ConfigurationProperties value object");
+			return propertiesBean;
+		}
+
+		@Nullable
+		private static ConfigurationPropertiesBean create(String name, @Nullable Object instance, Class<?> type,
+				@Nullable Method factory) {
+			ConfigurationProperties annotation = findAnnotation(instance, type, factory, ConfigurationProperties.class);
+			if (annotation == null) {
+				return null;
+			}
+			Validated validated = findAnnotation(instance, type, factory, Validated.class);
+			Annotation[] annotations = (validated != null) ? new Annotation[] { annotation, validated }
+					: new Annotation[] { annotation };
+			ResolvableType bindType = (factory != null) ? ResolvableType.forMethodReturnType(factory)
+					: ResolvableType.forClass(type);
+			Bindable<Object> bindable = Bindable.of(bindType).withAnnotations(annotations);
+			if (instance != null) {
+				bindable = bindable.withExistingValue(instance);
+			}
+			if (factory != null) {
+				return new ConfigurationPropertiesBean(name, instance, annotation, bindable, BindMethod.JAVA_BEAN);
+			}
+			return new ConfigurationPropertiesBean(name, instance, annotation, bindable);
+		}
 				: ResolvableType.forClass(type);
 		Bindable<Object> bindable = Bindable.of(bindType).withAnnotations(annotations);
 		if (instance != null) {
