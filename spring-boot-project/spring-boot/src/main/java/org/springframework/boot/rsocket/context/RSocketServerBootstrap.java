@@ -52,9 +52,7 @@ public class RSocketServerBootstrap implements ApplicationEventPublisherAware, S
 	@Override
 	public void start() {
 		this.server.start();
-		if (this.eventPublisher != null) {
-			this.eventPublisher.publishEvent(new RSocketServerInitializedEvent(this.server));
-		}
+		this.eventPublisher.publishEvent(new RSocketServerInitializedEvent(this.server));
 	}
 
 	@Override
