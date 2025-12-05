@@ -17,7 +17,6 @@
 package org.springframework.boot.context.properties.source;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -79,7 +78,7 @@ public class MutuallyExclusiveConfigurationPropertiesException extends RuntimeEx
 	}
 
 	private static Set<String> asSet(Collection<String> collection) {
-		return (collection != null) ? new LinkedHashSet<>(collection) : Collections.emptySet();
+		return (collection != null) ? new LinkedHashSet<>(collection) : null;
 	}
 
 	private static String buildMessage(Set<String> mutuallyExclusiveNames, Set<String> configuredNames) {
