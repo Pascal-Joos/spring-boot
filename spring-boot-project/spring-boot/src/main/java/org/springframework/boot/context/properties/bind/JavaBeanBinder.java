@@ -94,7 +94,7 @@ class JavaBeanBinder implements DataObjectBinder {
 		String propertyName = property.getName();
 		ResolvableType type = property.getType();
 		Supplier<Object> value = property.getValue(beanSupplier);
-			Annotation[] annotations = (property.getAnnotations() != null) ? property.getAnnotations() : new java.lang.annotation.Annotation[0];
+		Annotation[] annotations = property.getAnnotations();
 		Object bound = propertyBinder.bindProperty(propertyName,
 				Bindable.of(type).withSuppliedValue(value).withAnnotations(annotations));
 		if (bound == null) {
