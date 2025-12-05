@@ -157,41 +157,41 @@ public class Instantiator<T> {
 		}
 	}
 
- 		@SuppressWarnings("unchecked")
-		private T instantiate(Class<?> type) throws Exception {
-			Constructor<?>[] constructors = type.getDeclaredConstructors();
-			Arrays.sort(constructors, CONSTRUCTOR_COMPARATOR);
-			for (Constructor<?> constructor : constructors) {
-				Object[] args = getArgs(constructor.getParameterTypes());
-				if (args != null) {
-					ReflectionUtils.makeAccessible(constructor);
-					return (T) constructor.newInstance(args);
-				}
+	@SuppressWarnings("unchecked")
+	private T instantiate(Class<?> type) throws Exception {
+		Constructor<?>[] constructors = type.getDeclaredConstructors();
+		Arrays.sort(constructors, CONSTRUCTOR_COMPARATOR);
+		for (Constructor<?> constructor : constructors) {
+			Object[] args = getArgs(constructor.getParameterTypes());
+			if (args != null) {
+				ReflectionUtils.makeAccessible(constructor);
+				return (T) constructor.newInstance(args);
 			}
-			throw new IllegalAccessException("Class [" + type.getName() + "] has no suitable constructor");
 		}
+		throw new IllegalAccessException("Class [" + type.getName() + "] has no suitable constructor");
+	}
 
-		@Nullable
-		private Object[] getArgs(Class<?>[] parameterTypes) {
-			Object[] args = new Object[parameterTypes.length];
-			for (int i = 0; i < parameterTypes.length; i++) {
-				Function<Class<?>, Object> parameter = getAvailableParameter(parameterTypes[i]);
-				if (parameter == null) {
-					return null;
-				}
-				args[i] = parameter.apply(this.type);
+	private Object[] getArgs(Class<?>[] parameterTypes) {
+		Object[] args = new Object[parameterTypes.length];
+		for (int i = 0; i < parameterTypes.length; i++) {
+			Function<Class<?>, Object> parameter = getAvailableParameter(parameterTypes[i]);
+			if (parameter == null) {
+				return null;
 			}
-			return args;
+			args[i] = parameter.apply(this.type);
 		}
- 		@Nullable
-		private Function<Class<?>, Object> getAvailableParameter(Class<?> parameterType) {
-			for (Map.Entry<Class<?>, Function<Class<?>, Object>> entry : this.availableParameters.entrySet()) {
-				if (entry.getKey().isAssignableFrom(parameterType)) {
-					return entry.getValue();
-				}
+		return args;
+	}
+
+	@Nullable
+	private Function<Class<?>, Object> getAvailableParameter(Class<?> parameterType) {
+		for (Map.Entry<Class<?>, Function<Class<?>, Object>> entry : this.availableParameters.entrySet()) {
+			if (entry.getKey().isAssignableFrom(parameterType)) {
+				return entry.getValue();
 			}
-			return null;
 		}
+		return null;
+	}
 
 	/**
 	 * Callback used to register available parameters.
