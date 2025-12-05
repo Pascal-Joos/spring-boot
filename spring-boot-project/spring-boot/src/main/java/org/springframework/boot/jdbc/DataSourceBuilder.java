@@ -498,9 +498,6 @@ public final class DataSourceBuilder<T extends DataSource> {
 					UnsupportedDataSourcePropertyException.throwIf(!this.property.isOptional(),
 							() -> "No setter mapped for '" + this.property + "' property");
 					return;
-					if (value == null) {
-						return;
-					}
 				}
 				this.setter.set(dataSource, convertFromString(value));
 			}
