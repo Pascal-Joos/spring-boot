@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2019 the original author or authors.
+ * Copyright 2012-2020 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,18 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.context.annotation.AnnotatedBeanDefinition;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
-import javax.annotation.Nullable;
 
 /**
- * Abstract base class for handlers of Servlet components discovered via classpath
- * scanning.
+ * Base class for handlers dealing with servlet components.
  *
- * @author Andy Wilkinson
+ * @author Phillip Webb
  */
 abstract class ServletComponentHandler {
 
@@ -53,8 +52,9 @@ abstract class ServletComponentHandler {
 	protected String[] extractUrlPatterns(Map<String, Object> attributes) {
 		String[] value = (String[]) attributes.get("value");
 		String[] urlPatterns = (String[]) attributes.get("urlPatterns");
-		if (urlPatterns.length > 0) {
-			Assert.state(value.length == 0, "The urlPatterns and value attributes are mutually exclusive.");
+		if (urlPatterns != null && urlPatterns.length > 0) {
+			Assert.state(value == null || value.length == 0,
+					"The urlPatterns and value attributes are mutually exclusive.");
 			return urlPatterns;
 		}
 		return value;
@@ -62,10 +62,13 @@ abstract class ServletComponentHandler {
 
 	protected final Map<String, String> extractInitParameters(Map<String, Object> attributes) {
 		Map<String, String> initParameters = new HashMap<>();
-		for (AnnotationAttributes initParam : (AnnotationAttributes[]) attributes.get("initParams")) {
-			String name = (String) initParam.get("name");
-			String value = (String) initParam.get("value");
-			initParameters.put(name, value);
+		AnnotationAttributes[] initParams = (AnnotationAttributes[]) attributes.get("initParams");
+		if (initParams != null) {
+			for (AnnotationAttributes initParam : initParams) {
+				String name = (String) initParam.get("name");
+				String value = (String) initParam.get("value");
+				initParameters.put(name, value);
+			}
 		}
 		return initParameters;
 	}
