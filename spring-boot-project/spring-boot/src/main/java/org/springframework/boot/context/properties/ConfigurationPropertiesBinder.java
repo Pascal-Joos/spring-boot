@@ -234,12 +234,8 @@ class ConfigurationPropertiesBinder {
 			this.applicationContext = applicationContext;
 		}
 
-			ConfigurationPropertiesBinder create() {
-			ApplicationContext applicationContext = this.applicationContext;
-			if (applicationContext == null) {
-				throw new IllegalStateException("ApplicationContext has not been set");
-			}
-			return new ConfigurationPropertiesBinder(applicationContext);
+		ConfigurationPropertiesBinder create() {
+			return new ConfigurationPropertiesBinder(this.applicationContext);
 		}
 
 	}
