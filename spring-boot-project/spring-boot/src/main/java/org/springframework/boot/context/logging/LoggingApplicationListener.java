@@ -413,21 +413,16 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 	}
 
 	private BiConsumer<String, LogLevel> getLogLevelConfigurer(@Nullable LoggingSystem system) {
-			if (system == null) {
-				return (name, level) -> {
-					// No LoggingSystem available; ignore log level configuration
-				};
+		return (name, level) -> {
+			try {
+				name = name.equalsIgnoreCase(LoggingSystem.ROOT_LOGGER_NAME) ? null : name;
+				system.setLogLevel(name, level);
 			}
-			return (name, level) -> {
-				try {
-					name = name.equalsIgnoreCase(LoggingSystem.ROOT_LOGGER_NAME) ? null : name;
-					system.setLogLevel(name, level);
-				}
-				catch (RuntimeException ex) {
-					this.logger.error(LogMessage.format("Cannot set level %s for %s", level, name));
-				}
-			};
-		}
+			catch (RuntimeException ex) {
+				this.logger.error(LogMessage.format("Cannot set level '%s' for '%s'", level, name));
+			}
+		};
+	}
 
 	private void registerShutdownHookIfNecessary(Environment environment, @Nullable LoggingSystem loggingSystem) {
 		if (environment.getProperty(REGISTER_SHUTDOWN_HOOK_PROPERTY, Boolean.class, true)) {
