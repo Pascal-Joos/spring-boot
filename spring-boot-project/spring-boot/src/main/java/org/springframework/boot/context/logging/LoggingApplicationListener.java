@@ -301,7 +301,10 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 		}
 		this.loggerGroups = new LoggerGroups(DEFAULT_GROUP_LOGGERS);
 		initializeEarlyLoggingLevel(environment);
-		initializeSystem(environment, this.loggingSystem, this.logFile);
+		if (this.loggingSystem != null) {
+			initializeSystem(environment, this.loggingSystem, this.logFile);
+		}
+
 		initializeFinalLoggingLevels(environment, this.loggingSystem);
 		registerShutdownHookIfNecessary(environment, this.loggingSystem);
 	}
