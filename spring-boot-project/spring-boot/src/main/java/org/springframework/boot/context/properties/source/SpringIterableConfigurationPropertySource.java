@@ -209,11 +209,13 @@ class SpringIterableConfigurationPropertySource extends SpringConfigurationPrope
 		@Nullable
 		private volatile String[] lastUpdated;
 
-		Mappings(PropertyMapper[] mappers, boolean immutable, boolean trackDescendants) {
-			this.mappers = mappers;
-			this.immutable = immutable;
-			this.trackDescendants = trackDescendants;
-		}
+			Mappings(PropertyMapper[] mappers, boolean immutable, boolean trackDescendants) {
+				this.mappers = mappers;
+				this.immutable = immutable;
+				this.trackDescendants = trackDescendants;
+				this.mappings = java.util.Collections.emptyMap();
+				this.descendants = java.util.Collections.emptyMap();
+			}
 
 		void updateMappings(Supplier<String[]> propertyNames) {
 			if (this.mappings == null || !this.immutable) {
