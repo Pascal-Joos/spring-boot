@@ -159,6 +159,9 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		}
 
 		private void handleJavaBeanProperties(ReflectionHints hints) {
+ 			if (this.beanInfo == null) {
+				return;
+			}
 			for (PropertyDescriptor propertyDescriptor : this.beanInfo.getPropertyDescriptors()) {
 				Method writeMethod = propertyDescriptor.getWriteMethod();
 				if (writeMethod != null) {
