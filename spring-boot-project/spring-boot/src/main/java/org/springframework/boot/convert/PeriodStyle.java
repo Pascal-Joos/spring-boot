@@ -16,6 +16,8 @@
 
 package org.springframework.boot.convert;
 
+import java.util.Objects;
+
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Function;
@@ -267,7 +269,8 @@ public enum PeriodStyle {
 
 		private int intValue(Period value) {
 			Assert.notNull(this.intValue, () -> "intValue cannot be extracted from " + this.name());
-			return this.intValue.apply(value);
+			Function<Period, Integer> intValue = Objects.requireNonNull(this.intValue);
+			return intValue.apply(value);
 		}
 
 		private static Unit fromChronoUnit(@Nullable ChronoUnit chronoUnit) {
