@@ -16,6 +16,10 @@
 
 package org.springframework.boot.context.properties;
 
+import java.util.Objects;
+
+import com.uber.nullaway.annotations.Initializer;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -28,9 +32,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.Ordered;
 import org.springframework.core.PriorityOrdered;
 import org.springframework.core.env.PropertySources;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
-import com.uber.nullaway.annotations.Initializer;
-import javax.annotation.Nullable;
 
 /**
  * {@link BeanPostProcessor} to bind {@link PropertySources} to beans annotated with
@@ -51,6 +54,7 @@ public class ConfigurationPropertiesBindingPostProcessor
 	 */
 	public static final String BEAN_NAME = ConfigurationPropertiesBindingPostProcessor.class.getName();
 
+	@Nullable
 	private ApplicationContext applicationContext;
 
 	private BeanDefinitionRegistry registry;
@@ -65,10 +69,12 @@ public class ConfigurationPropertiesBindingPostProcessor
 	@Initializer
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		ApplicationContext applicationContext = Objects.requireNonNull(this.applicationContext,
+				"ApplicationContext must not be null");
 		// We can't use constructor injection of the application context because
 		// it causes eager factory bean initialization
-		this.registry = (BeanDefinitionRegistry) this.applicationContext.getAutowireCapableBeanFactory();
-		this.binder = ConfigurationPropertiesBinder.get(this.applicationContext);
+		this.registry = (BeanDefinitionRegistry) applicationContext.getAutowireCapableBeanFactory();
+		this.binder = ConfigurationPropertiesBinder.get(applicationContext);
 	}
 
 	@Override
@@ -78,7 +84,9 @@ public class ConfigurationPropertiesBindingPostProcessor
 
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		bind(ConfigurationPropertiesBean.get(this.applicationContext, bean, beanName));
+		ApplicationContext applicationContext = Objects.requireNonNull(this.applicationContext,
+				"ApplicationContext must not be null");
+		bind(ConfigurationPropertiesBean.get(applicationContext, bean, beanName));
 		return bean;
 	}
 
@@ -97,8 +105,10 @@ public class ConfigurationPropertiesBindingPostProcessor
 	}
 
 	private boolean hasBoundValueObject(String beanName) {
-		return this.registry.containsBeanDefinition(beanName) && BindMethod.VALUE_OBJECT
-				.equals(this.registry.getBeanDefinition(beanName).getAttribute(BindMethod.class.getName()));
+		BeanDefinitionRegistry registry = Objects.requireNonNull(this.registry,
+				"BeanDefinitionRegistry must not be null");
+		return registry.containsBeanDefinition(beanName) && BindMethod.VALUE_OBJECT
+				.equals(registry.getBeanDefinition(beanName).getAttribute(BindMethod.class.getName()));
 	}
 
 	/**
