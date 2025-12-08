@@ -376,7 +376,7 @@ public class Log4J2LoggingSystem extends AbstractLoggingSystem {
 		if (logger instanceof LevelSetLoggerConfig) {
 			getLoggerContext().getConfiguration().removeLogger(loggerName);
 		}
-		else {
+		else if (logger != null) {
 			logger.setLevel(null);
 		}
 	}
