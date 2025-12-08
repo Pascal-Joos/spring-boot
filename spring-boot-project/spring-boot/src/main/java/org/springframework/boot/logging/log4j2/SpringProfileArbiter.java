@@ -103,7 +103,7 @@ final class SpringProfileArbiter implements Arbiter {
 				statusLogger.warn("Cannot create Arbiter, no Spring Environment available");
 				return null;
 			}
-			String name = this.configuration.getStrSubstitutor().replace(this.name);
+				String name = (this.configuration != null) ? this.configuration.getStrSubstitutor().replace(this.name) : this.name;
 			String[] profiles = StringUtils.trimArrayElements(StringUtils.commaDelimitedListToStringArray(name));
 			return new SpringProfileArbiter(environment, profiles);
 		}
