@@ -85,8 +85,9 @@ public class MustacheView extends AbstractTemplateView {
 	}
 
 	private Template createTemplate(Resource resource) throws IOException {
+		Compiler compiler = Objects.requireNonNull(this.compiler, "Mustache Compiler must not be null");
 		try (Reader reader = getReader(resource)) {
-			return this.compiler.compile(reader);
+			return compiler.compile(reader);
 		}
 	}
 
