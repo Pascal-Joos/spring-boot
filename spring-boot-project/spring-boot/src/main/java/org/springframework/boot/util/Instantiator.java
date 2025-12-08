@@ -122,7 +122,7 @@ public class Instantiator<T> {
 	 * @return a list of instantiated instances
 	 * @since 2.4.8
 	 */
-	public List<T> instantiate(@Nullable ClassLoader classLoader, @Nullable Collection<String> names) {
+	public List<T> instantiate(@Nullable ClassLoader classLoader, Collection<String> names) {
 		Assert.notNull(names, "Names must not be null");
 		return instantiate(names.stream().map((name) -> TypeSupplier.forName(classLoader, name)));
 	}

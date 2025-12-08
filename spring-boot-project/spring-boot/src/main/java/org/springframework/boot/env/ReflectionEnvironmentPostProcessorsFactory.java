@@ -18,6 +18,7 @@ package org.springframework.boot.env;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -27,6 +28,7 @@ import org.springframework.boot.BootstrapRegistry;
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.logging.DeferredLogFactory;
 import org.springframework.boot.util.Instantiator;
+
 import javax.annotation.Nullable;
 
 /**
@@ -41,14 +43,14 @@ class ReflectionEnvironmentPostProcessorsFactory implements EnvironmentPostProce
 	private final List<Class<?>> classes;
 
 	@Nullable
-	private ClassLoader classLoader;
+	private final ClassLoader classLoader;
 
-	@Nullable
 	private final List<String> classNames;
 
 	ReflectionEnvironmentPostProcessorsFactory(Class<?>... classes) {
 		this.classes = new ArrayList<>(Arrays.asList(classes));
-		this.classNames = null;
+		this.classLoader = null;
+		this.classNames = Collections.emptyList();
 	}
 
 	ReflectionEnvironmentPostProcessorsFactory(@Nullable ClassLoader classLoader, String... classNames) {
@@ -58,7 +60,7 @@ class ReflectionEnvironmentPostProcessorsFactory implements EnvironmentPostProce
 	ReflectionEnvironmentPostProcessorsFactory(@Nullable ClassLoader classLoader, List<String> classNames) {
 		this.classes = null;
 		this.classLoader = classLoader;
-		this.classNames = classNames;
+		this.classNames = new ArrayList<>(classNames);
 	}
 
 	@Override
