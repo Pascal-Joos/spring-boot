@@ -39,6 +39,7 @@ public class DeferredLog implements Log {
 	@Nullable
 	private volatile Log destination;
 
+	@Nullable
 	private final Supplier<Log> destinationSupplier;
 
 	private final Lines lines;
@@ -170,14 +171,16 @@ public class DeferredLog implements Log {
 			if (this.destination != null) {
 				logTo(this.destination, level, message, t);
 			}
-			else {
+			else if (this.destinationSupplier != null) {
 				this.lines.add(this.destinationSupplier, level, message, t);
 			}
 		}
 	}
 
 	void switchOver() {
-		this.destination = this.destinationSupplier.get();
+		if (this.destinationSupplier != null) {
+			this.destination = this.destinationSupplier.get();
+		}
 	}
 
 	/**
