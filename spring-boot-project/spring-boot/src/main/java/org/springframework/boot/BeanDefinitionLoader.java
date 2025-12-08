@@ -164,7 +164,10 @@ class BeanDefinitionLoader {
 		if (isGroovyPresent() && GroovyBeanDefinitionSource.class.isAssignableFrom(source)) {
 			// Any GroovyLoaders added in beans{} DSL can contribute beans here
 			GroovyBeanDefinitionSource loader = BeanUtils.instantiateClass(source, GroovyBeanDefinitionSource.class);
-			((GroovyBeanDefinitionReader) this.groovyReader).beans(loader.getBeans());
+				if (this.groovyReader == null) {
+					throw new BeanDefinitionStoreException("Cannot load Groovy beans without Groovy on classpath");
+				}
+				((GroovyBeanDefinitionReader) this.groovyReader).beans(loader.getBeans());
 		}
 		if (isEligible(source)) {
 			this.annotatedReader.register(source);
