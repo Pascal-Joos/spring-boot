@@ -132,7 +132,9 @@ public abstract class SpringBootServletInitializer implements WebApplicationInit
 		builder.main(getClass());
 		ApplicationContext parent = getExistingRootWebApplicationContext(servletContext);
 		if (parent != null) {
-			this.logger.info("Root context already created (using as parent).");
+			if (this.logger != null) {
+				this.logger.info("Root context already created (using as parent).");
+			}
 			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, null);
 			builder.initializers(new ParentContextApplicationContextInitializer(parent));
 		}
