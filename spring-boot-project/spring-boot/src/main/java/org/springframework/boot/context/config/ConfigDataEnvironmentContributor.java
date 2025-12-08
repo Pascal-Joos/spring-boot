@@ -277,20 +277,35 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 				this.configDataOptions, updatedChildren);
 	}
 
-	private void moveProfileSpecific(Map<ImportPhase, List<ConfigDataEnvironmentContributor>> children) {
-		List<ConfigDataEnvironmentContributor> before = children.get(ImportPhase.BEFORE_PROFILE_ACTIVATION);
-		if (!hasAnyProfileSpecificChildren(before)) {
-			return;
+		private void moveProfileSpecific(Map<ImportPhase, List<ConfigDataEnvironmentContributor>> children) {
+
+			List<ConfigDataEnvironmentContributor> before = children.get(ImportPhase.BEFORE_PROFILE_ACTIVATION);
+
+			if (!hasAnyProfileSpecificChildren(before)) {
+
+				return;
+
+			}
+
+			before = (before != null) ? before : java.util.Collections.emptyList();
+
+			List<ConfigDataEnvironmentContributor> updatedBefore = new java.util.ArrayList<>(before.size());
+
+			List<ConfigDataEnvironmentContributor> updatedAfter = new java.util.ArrayList<>();
+
+			for (ConfigDataEnvironmentContributor contributor : before) {
+
+				updatedBefore.add(moveProfileSpecificChildren(contributor, updatedAfter));
+
+			}
+
+			updatedAfter.addAll(children.getOrDefault(ImportPhase.AFTER_PROFILE_ACTIVATION, java.util.Collections.emptyList()));
+
+			children.put(ImportPhase.BEFORE_PROFILE_ACTIVATION, updatedBefore);
+
+			children.put(ImportPhase.AFTER_PROFILE_ACTIVATION, updatedAfter);
+
 		}
-		List<ConfigDataEnvironmentContributor> updatedBefore = new ArrayList<>(before.size());
-		List<ConfigDataEnvironmentContributor> updatedAfter = new ArrayList<>();
-		for (ConfigDataEnvironmentContributor contributor : before) {
-			updatedBefore.add(moveProfileSpecificChildren(contributor, updatedAfter));
-		}
-		updatedAfter.addAll(children.getOrDefault(ImportPhase.AFTER_PROFILE_ACTIVATION, Collections.emptyList()));
-		children.put(ImportPhase.BEFORE_PROFILE_ACTIVATION, updatedBefore);
-		children.put(ImportPhase.AFTER_PROFILE_ACTIVATION, updatedAfter);
-	}
 
 	private ConfigDataEnvironmentContributor moveProfileSpecificChildren(ConfigDataEnvironmentContributor contributor,
 			List<ConfigDataEnvironmentContributor> removed) {
