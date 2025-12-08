@@ -416,7 +416,9 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 		return (name, level) -> {
 			try {
 				name = name.equalsIgnoreCase(LoggingSystem.ROOT_LOGGER_NAME) ? null : name;
-				system.setLogLevel(name, level);
+					if (system != null) {
+						system.setLogLevel(name, level);
+					}
 			}
 			catch (RuntimeException ex) {
 				this.logger.error(LogMessage.format("Cannot set level '%s' for '%s'", level, name));
