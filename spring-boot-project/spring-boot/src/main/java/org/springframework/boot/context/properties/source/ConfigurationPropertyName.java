@@ -332,7 +332,9 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
 		if (e2 == null) {
 			return 1;
 		}
-		int result = Boolean.compare(type2.isIndexed(), type1.isIndexed());
+		boolean type1Indexed = (type1 != null) && type1.isIndexed();
+		boolean type2Indexed = (type2 != null) && type2.isIndexed();
+		int result = Boolean.compare(type2Indexed, type1Indexed);
 		if (result != 0) {
 			return result;
 		}
@@ -343,6 +345,7 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
 		}
 		return e1.compareTo(e2);
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
