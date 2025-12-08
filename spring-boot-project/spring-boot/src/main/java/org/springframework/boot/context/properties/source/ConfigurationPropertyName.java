@@ -766,6 +766,9 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
 		}
 
 		Elements append(@Nullable Elements additional) {
+			if (additional == null) {
+				return this;
+			}
 			int size = this.size + additional.size;
 			ElementType[] type = new ElementType[size];
 			System.arraycopy(this.type, 0, type, 0, this.size);
