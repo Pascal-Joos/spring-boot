@@ -50,6 +50,7 @@ import org.springframework.boot.web.server.SslStoreProvider;
 import org.springframework.boot.web.server.WebServerException;
 import org.springframework.util.ResourceUtils;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * {@link NettyServerCustomizer} that configures SSL for the given Reactor Netty server
@@ -73,7 +74,7 @@ public class SslServerCustomizer implements NettyServerCustomizer {
 	private final SslStoreProvider sslStoreProvider;
 
 	public SslServerCustomizer(@Nullable Ssl ssl, @Nullable Http2 http2, @Nullable SslStoreProvider sslStoreProvider) {
-		this.ssl = ssl;
+		this.ssl = Objects.requireNonNull(ssl, "Ssl must not be null");
 		this.http2 = http2;
 		this.sslStoreProvider = sslStoreProvider;
 	}
