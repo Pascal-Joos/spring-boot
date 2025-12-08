@@ -210,7 +210,7 @@ plugins.withType(EclipsePlugin) {
 sourceSets {
 	main {
 	 java {
-	 srcDirs = ["src/main/java", "build/generated-sources/main"]
+	 srcDirs syncJavaTemplates
 	 }
 	}
 	test {
