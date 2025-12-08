@@ -112,8 +112,7 @@ class ConfigDataLoaders {
 				}
 			}
 		}
-		Assert.state(result != null, () -> "No loader found for resource '" + resource + "'");
-		return result;
+			return java.util.Objects.requireNonNull(result, () -> "No loader found for resource '" + resource + "'");
 	}
 
 }
