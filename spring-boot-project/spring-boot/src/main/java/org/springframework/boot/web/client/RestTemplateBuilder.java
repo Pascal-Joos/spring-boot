@@ -787,6 +787,9 @@ public class RestTemplateBuilder {
 		}
 
 		private void setReadTimeout(ClientHttpRequestFactory factory) {
+			if (this.readTimeout == null) {
+				return;
+			}
 			Method method = findMethod(factory, "setReadTimeout", int.class);
 			int timeout = Math.toIntExact(this.readTimeout.toMillis());
 			invoke(factory, method, timeout);
