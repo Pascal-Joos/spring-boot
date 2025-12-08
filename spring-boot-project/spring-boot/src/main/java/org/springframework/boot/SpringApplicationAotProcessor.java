@@ -111,7 +111,7 @@ public class SpringApplicationAotProcessor extends ContextAotProcessor {
 				ApplicationContext context = ex.getApplicationContext();
 				Assert.isInstanceOf(GenericApplicationContext.class, context,
 						() -> "AOT processing requires a GenericApplicationContext but got a "
-								+ context.getClass().getName());
+								+ (context != null ? context.getClass().getName() : "null"));
 				return (GenericApplicationContext) context;
 			}
 			throw new IllegalStateException(
