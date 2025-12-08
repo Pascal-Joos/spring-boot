@@ -49,16 +49,16 @@ abstract class ServletComponentHandler {
 		return this.typeFilter;
 	}
 
-	@Nullable
-	protected String[] extractUrlPatterns(Map<String, Object> attributes) {
-		String[] value = (String[]) attributes.get("value");
-		String[] urlPatterns = (String[]) attributes.get("urlPatterns");
-		if (urlPatterns.length > 0) {
-			Assert.state(value.length == 0, "The urlPatterns and value attributes are mutually exclusive.");
-			return urlPatterns;
+		@Nullable
+		protected String[] extractUrlPatterns(Map<String, Object> attributes) {
+			String[] value = (String[]) attributes.get("value");
+			String[] urlPatterns = (String[]) attributes.get("urlPatterns");
+			if (urlPatterns != null && urlPatterns.length > 0) {
+				if (value != null) { Assert.state(value.length == 0, "The urlPatterns and value attributes are mutually exclusive."); }
+				return urlPatterns;
+			}
+			return value;
 		}
-		return value;
-	}
 
 	protected final Map<String, String> extractInitParameters(Map<String, Object> attributes) {
 		Map<String, String> initParameters = new HashMap<>();
