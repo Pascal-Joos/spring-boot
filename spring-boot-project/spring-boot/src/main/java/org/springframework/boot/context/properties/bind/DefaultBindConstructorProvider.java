@@ -24,8 +24,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.KotlinDetector;
 import org.springframework.core.annotation.MergedAnnotations;
-import org.springframework.util.Assert;
 import javax.annotation.Nullable;
+import org.springframework.util.Assert;
 
 /**
  * Default {@link BindConstructorProvider} implementation.
@@ -80,38 +80,28 @@ class DefaultBindConstructorProvider implements BindConstructorProvider {
 		}
 
 		static Constructors getConstructors(Class<?> type) {
-			Constructor<?>[] candidates = getCandidateConstructors(type);
-			MergedAnnotations[] candidateAnnotations = getAnnotations(candidates);
-			boolean hasAutowiredConstructor = isAutowiredPresent(candidateAnnotations);
-			Constructor<?> bind = getConstructorBindingAnnotated(type, candidates, candidateAnnotations);
-			if (bind == null && !hasAutowiredConstructor) {
+			if (!isKotlinType(type)) {
+				return getJavaConstructors(type);
+			}
+			return getKotlinConstructors(type);
+		}
+
+		private static Constructors getJavaConstructors(Class<?> type) {
+			Constructor<?>[] declaredConstructors = type.getDeclaredConstructors();
+			Constructor<?>[] candidates = Arrays.stream(declaredConstructors)
+					.filter((candidate) -> !candidate.isSynthetic()).toArray(Constructor<?>[]::new);
+			MergedAnnotations[] mergedAnnotations = getAnnotations(candidates);
+			boolean hasAutowired = isAutowiredPresent(mergedAnnotations);
+			Constructor<?> bind = getConstructorBindingAnnotated(type, candidates, mergedAnnotations);
+			if (bind == null && !hasAutowired) {
 				bind = deduceBindConstructor(type, candidates);
 			}
-			if (bind == null && !hasAutowiredConstructor && isKotlinType(type)) {
-				bind = deduceKotlinBindConstructor(type);
-			}
-			return new Constructors(hasAutowiredConstructor, bind);
+			return new Constructors(hasAutowired, bind);
 		}
 
-		private static Constructor<?>[] getCandidateConstructors(Class<?> type) {
-			if (isInnerClass(type)) {
-				return new Constructor<?>[0];
-			}
-			return Arrays.stream(type.getDeclaredConstructors())
-					.filter((constructor) -> isNonSynthetic(constructor, type)).toArray(Constructor[]::new);
-		}
-
-		private static boolean isInnerClass(Class<?> type) {
-			try {
-				return type.getDeclaredField("this$0").isSynthetic();
-			}
-			catch (NoSuchFieldException ex) {
-				return false;
-			}
-		}
-
-		private static boolean isNonSynthetic(Constructor<?> constructor, Class<?> type) {
-			return !constructor.isSynthetic();
+		private static Constructors getKotlinConstructors(Class<?> type) {
+			Constructor<?> bind = deduceKotlinBindConstructor(type);
+			return new Constructors(false, bind);
 		}
 
 		private static MergedAnnotations[] getAnnotations(Constructor<?>[] candidates) {
@@ -147,6 +137,7 @@ class DefaultBindConstructorProvider implements BindConstructorProvider {
 
 		}
 
+		@Nullable
 		private static Constructor<?> deduceBindConstructor(Class<?> type, Constructor<?>[] candidates) {
 			if (candidates.length == 1 && candidates[0].getParameterCount() > 0) {
 				if (type.isMemberClass() && Modifier.isPrivate(candidates[0].getModifiers())) {
