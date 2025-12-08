@@ -384,27 +384,29 @@ public class UndertowWebServer implements WebServer {
 			this.closeable = closeable;
 		}
 
-		@Override
-		public HttpHandler getHandler(HttpHandler next) {
-			if (this.closeable == null) {
-				return next;
+ 			@Override
+			public HttpHandler getHandler(HttpHandler next) {
+				if (this.closeable == null) {
+					return next;
+				}
+				Closeable closeable = this.closeable;
+				return new CloseableHttpHandler() {
+
+					@Override
+					public void handleRequest(HttpServerExchange exchange) throws Exception {
+						next.handleRequest(exchange);
+					}
+
+					@Override
+					public void close() throws IOException {
+						closeable.close();
+					}
+
+				};
 			}
-			return new CloseableHttpHandler() {
 
-				@Override
-				public void handleRequest(HttpServerExchange exchange) throws Exception {
-					next.handleRequest(exchange);
-				}
-
-				@Override
-				public void close() throws IOException {
-					CloseableHttpHandlerFactory.this.closeable.close();
-				}
-
-			};
 		}
 
-	}
 
 	/**
 	 * {@link Closeable} {@link HttpHandler}.
