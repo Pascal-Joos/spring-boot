@@ -172,7 +172,12 @@ public class UndertowWebServer implements WebServer {
 	protected HttpHandler createHttpHandler() {
 		HttpHandler handler = null;
 		for (HttpHandlerFactory factory : this.httpHandlerFactories) {
-			handler = factory.getHandler(handler);
+			if (handler == null) {
+				handler = factory.getHandler(io.undertow.Handlers.routing());
+			}
+			else {
+				handler = factory.getHandler(handler);
+			}
 			if (handler instanceof Closeable closeable) {
 				this.closeables.add(closeable);
 			}
