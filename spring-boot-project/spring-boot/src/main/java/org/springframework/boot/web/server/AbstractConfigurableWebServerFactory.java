@@ -68,6 +68,8 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 	 * Create a new {@link AbstractConfigurableWebServerFactory} instance.
 	 */
 	public AbstractConfigurableWebServerFactory() {
+		this.ssl = new Ssl();
+		this.compression = new Compression();
 	}
 
 	/**
@@ -77,8 +79,9 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 	 */
 	public AbstractConfigurableWebServerFactory(int port) {
 		this.port = port;
+		this.ssl = new Ssl();
+		this.compression = new Compression();
 	}
-
 	/**
 	 * The port that the web server listens on.
 	 * @return the port
