@@ -16,10 +16,11 @@
 
 package org.springframework.boot.context.config;
 
+import javax.annotation.Nullable;
+
 import org.springframework.boot.origin.Origin;
 import org.springframework.boot.origin.OriginProvider;
 import org.springframework.util.StringUtils;
-import javax.annotation.Nullable;
 
 /**
  * A user specified location that can be {@link ConfigDataLocationResolver resolved} to
@@ -121,7 +122,10 @@ public final class ConfigDataLocation implements OriginProvider {
 		String[] values = StringUtils.delimitedListToStringArray(toString(), delimiter);
 		ConfigDataLocation[] result = new ConfigDataLocation[values.length];
 		for (int i = 0; i < values.length; i++) {
-			result[i] = of(values[i]).withOrigin(getOrigin());
+			// StringUtils.delimitedListToStringArray may return null elements; normalize
+			// them to empty strings so that {@link #of(String)} is never called with null.
+			String value = (values[i] != null) ? values[i] : "";
+			result[i] = of(value).withOrigin(getOrigin());
 		}
 		return result;
 	}
@@ -160,15 +164,13 @@ public final class ConfigDataLocation implements OriginProvider {
 	/**
 	 * Factory method to create a new {@link ConfigDataLocation} from a string.
 	 * @param location the location string
-	 * @return a {@link ConfigDataLocation} instance or {@code null} if no location was
-	 * provided
+	 * @return a {@link ConfigDataLocation} instance
 	 */
-	@Nullable
 	public static ConfigDataLocation of(String location) {
-		boolean optional = location != null && location.startsWith(OPTIONAL_PREFIX);
+		boolean optional = location.startsWith(OPTIONAL_PREFIX);
 		String value = (!optional) ? location : location.substring(OPTIONAL_PREFIX.length());
 		if (!StringUtils.hasText(value)) {
-			return null;
+			throw new IllegalArgumentException("Config data location must not be empty");
 		}
 		return new ConfigDataLocation(optional, value, null);
 	}
