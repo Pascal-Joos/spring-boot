@@ -277,8 +277,11 @@ class SpringBootJoranConfigurator extends JoranConfigurator {
 			}
 		}
 
-		@Nullable
+ 		@Nullable
 		private Object instantiate(@Nullable Class<?> type) {
+			if (type == null) {
+				return null;
+			}
 			try {
 				return type.getConstructor().newInstance();
 			}
@@ -286,7 +289,6 @@ class SpringBootJoranConfigurator extends JoranConfigurator {
 				return null;
 			}
 		}
-
 		private void processComponent(Class<?> componentType, Set<String> reflectionTypes) {
 			BeanDescription beanDescription = this.modelInterpretationContext.getBeanDescriptionCache()
 					.getBeanDescription(componentType);
@@ -294,6 +296,7 @@ class SpringBootJoranConfigurator extends JoranConfigurator {
 			reflectionTypes.addAll(parameterTypesNames(beanDescription.getPropertyNameToSetter().values()));
 			reflectionTypes.add(componentType.getCanonicalName());
 		}
+
 
 		private Collection<String> parameterTypesNames(Collection<Method> methods) {
 			return methods.stream()
