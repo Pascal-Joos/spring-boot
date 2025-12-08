@@ -55,7 +55,7 @@ class ServletComponentRegisteringPostProcessor implements BeanFactoryPostProcess
 
 	private final Set<String> packagesToScan;
 
-	private ApplicationContext applicationContext;
+	@Nullable private ApplicationContext applicationContext;
 
 	ServletComponentRegisteringPostProcessor(Set<String> packagesToScan) {
 		this.packagesToScan = packagesToScan;
@@ -75,22 +75,22 @@ class ServletComponentRegisteringPostProcessor implements BeanFactoryPostProcess
 		for (BeanDefinition candidate : componentProvider.findCandidateComponents(packageToScan)) {
 			if (candidate instanceof AnnotatedBeanDefinition annotatedBeanDefinition) {
 				for (ServletComponentHandler handler : HANDLERS) {
-					handler.handle(annotatedBeanDefinition, (BeanDefinitionRegistry) this.applicationContext);
+					handler.handle(annotatedBeanDefinition, (BeanDefinitionRegistry) getApplicationContext());
 				}
 			}
 		}
 	}
 
 	private boolean isRunningInEmbeddedWebServer() {
-		return this.applicationContext instanceof WebApplicationContext webApplicationContext
+		return getApplicationContext() instanceof WebApplicationContext webApplicationContext
 				&& webApplicationContext.getServletContext() == null;
 	}
 
 	private ClassPathScanningCandidateComponentProvider createComponentProvider() {
 		ClassPathScanningCandidateComponentProvider componentProvider = new ClassPathScanningCandidateComponentProvider(
 				false);
-		componentProvider.setEnvironment(this.applicationContext.getEnvironment());
-		componentProvider.setResourceLoader(this.applicationContext);
+		componentProvider.setEnvironment(getApplicationContext().getEnvironment());
+		componentProvider.setResourceLoader(getApplicationContext());
 		for (ServletComponentHandler handler : HANDLERS) {
 			componentProvider.addIncludeFilter(handler.getTypeFilter());
 		}
@@ -99,6 +99,10 @@ class ServletComponentRegisteringPostProcessor implements BeanFactoryPostProcess
 
 	Set<String> getPackagesToScan() {
 		return Collections.unmodifiableSet(this.packagesToScan);
+	}
+
+ 	private ApplicationContext getApplicationContext() {
+		return java.util.Objects.requireNonNull(this.applicationContext);
 	}
 
 	@Override
