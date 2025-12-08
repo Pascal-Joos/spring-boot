@@ -83,13 +83,15 @@ class NoUniqueBeanDefinitionFailureAnalyzer extends AbstractInjectionFailureAnal
 		return String.format("\t- %s: defined in %s%n", beanName, definition.getResourceDescription());
 	}
 
-	@Nullable
-	private String[] extractBeanNames(NoUniqueBeanDefinitionException cause) {
-		if (cause.getMessage().contains("but found")) {
-			return StringUtils.commaDelimitedListToStringArray(
-					cause.getMessage().substring(cause.getMessage().lastIndexOf(':') + 1).trim());
+
+		@Nullable
+		private String[] extractBeanNames(NoUniqueBeanDefinitionException cause) {
+			String message = cause.getMessage();
+			if (message != null && message.contains("but found")) {
+				return StringUtils.commaDelimitedListToStringArray(
+						message.substring(message.lastIndexOf(':') + 1).trim());
+			}
+			return null;
 		}
-		return null;
-	}
 
 }
