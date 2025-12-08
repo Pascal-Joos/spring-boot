@@ -15,6 +15,7 @@
  */
 
 package org.springframework.boot.web.servlet.view;
+import java.util.Objects;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

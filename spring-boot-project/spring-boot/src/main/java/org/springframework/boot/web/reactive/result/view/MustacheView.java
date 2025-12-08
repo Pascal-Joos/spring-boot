@@ -15,6 +15,7 @@
  */
 
 package org.springframework.boot.web.reactive.result.view;
+import java.util.Objects;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -88,7 +89,8 @@ public class MustacheView extends AbstractUrlBasedView {
 		DataBuffer dataBuffer = exchange.getResponse().bufferFactory()
 				.allocateBuffer(DefaultDataBufferFactory.DEFAULT_INITIAL_CAPACITY);
 		try (Reader reader = getReader(resource)) {
-			Template template = this.compiler.compile(reader);
+			Compiler compiler = Objects.requireNonNull(this.compiler, "Mustache Compiler must not be null");
+			Template template = compiler.compile(reader);
 			Charset charset = getCharset(contentType).orElseGet(this::getDefaultCharset);
 			try (Writer writer = new OutputStreamWriter(dataBuffer.asOutputStream(), charset)) {
 				template.execute(model, writer);
