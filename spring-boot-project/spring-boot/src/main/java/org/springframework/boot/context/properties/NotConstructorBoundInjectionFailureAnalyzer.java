@@ -50,7 +50,7 @@ class NotConstructorBoundInjectionFailureAnalyzer
 	protected FailureAnalysis analyze(Throwable rootFailure, NoSuchBeanDefinitionException cause,
 			@Nullable String description) {
 		InjectionPoint injectionPoint = findInjectionPoint(rootFailure);
-		if (isConstructorBindingConfigurationProperties(injectionPoint)) {
+		if (injectionPoint != null && isConstructorBindingConfigurationProperties(injectionPoint)) {
 			String simpleName = injectionPoint.getMember().getDeclaringClass().getSimpleName();
 			String action = String.format("Update your configuration so that " + simpleName + " is defined via @"
 					+ ConfigurationPropertiesScan.class.getSimpleName() + " or @"
