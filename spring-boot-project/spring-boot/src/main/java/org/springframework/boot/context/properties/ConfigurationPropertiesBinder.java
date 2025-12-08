@@ -234,9 +234,9 @@ class ConfigurationPropertiesBinder {
 			this.applicationContext = applicationContext;
 		}
 
-		ConfigurationPropertiesBinder create() {
-			return new ConfigurationPropertiesBinder(this.applicationContext);
-		}
+ 			ConfigurationPropertiesBinder create() {
+				return new ConfigurationPropertiesBinder(java.util.Objects.requireNonNull(this.applicationContext));
+			}
 
 	}
 
