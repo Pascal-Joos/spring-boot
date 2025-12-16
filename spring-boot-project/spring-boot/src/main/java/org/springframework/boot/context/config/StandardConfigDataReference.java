@@ -74,8 +74,8 @@ class StandardConfigDataReference {
 	}
 
 	String getDirectory() {
- 		return (this.directory != null) ? this.directory : "";
- 	}
+		return this.directory;
+	}
 
 	@Nullable
 	String getProfile() {
