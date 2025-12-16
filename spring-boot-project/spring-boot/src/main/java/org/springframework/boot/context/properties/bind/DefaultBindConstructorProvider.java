@@ -132,20 +132,22 @@ class DefaultBindConstructorProvider implements BindConstructorProvider {
 		}
 
 		private static Constructor<?> getConstructorBindingAnnotated(Class<?> type, Constructor<?>[] candidates,
-				MergedAnnotations[] mergedAnnotations) {
-			Constructor<?> result = null;
-			for (int i = 0; i < candidates.length; i++) {
-				if (mergedAnnotations[i].isPresent(ConstructorBinding.class)) {
-					Assert.state(candidates[i].getParameterCount() > 0,
-							() -> type.getName() + " declares @ConstructorBinding on a no-args constructor");
-					Assert.state(result == null,
-							() -> type.getName() + " has more than one @ConstructorBinding constructor");
-					result = candidates[i];
-				}
-			}
-			return result;
-
-		}
+  				MergedAnnotations[] mergedAnnotations) {
+  			Constructor<?> result = null;
+  			for (int i = 0; i < candidates.length; i++) {
+  				if (mergedAnnotations[i].isPresent(ConstructorBinding.class)) {
+  					Assert.state(candidates[i].getParameterCount() > 0,
+  							() -> type.getName() + " declares @ConstructorBinding on a no-args constructor");
+  					Assert.state(result == null,
+  							() -> type.getName() + " has more than one @ConstructorBinding constructor");
+  					result = candidates[i];
+  				}
+  			}
+  			Assert.state(result != null,
+  					() -> type.getName() + " does not declare any @ConstructorBinding constructor");
+  			return result;
+  
+  		}
 
 		private static Constructor<?> deduceBindConstructor(Class<?> type, Constructor<?>[] candidates) {
 			if (candidates.length == 1 && candidates[0].getParameterCount() > 0) {
