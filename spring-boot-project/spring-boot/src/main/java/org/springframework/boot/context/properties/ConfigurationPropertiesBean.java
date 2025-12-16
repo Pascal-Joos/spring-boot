@@ -274,25 +274,25 @@ public final class ConfigurationPropertiesBean {
 	}
 
 	private static ConfigurationPropertiesBean create(String name, @Nullable Object instance, Class<?> type,
- 			@Nullable Method factory) {
- 		ConfigurationProperties annotation = findAnnotation(instance, type, factory, ConfigurationProperties.class);
- 		if (annotation == null) {
- 			throw new IllegalStateException("Missing @ConfigurationProperties on " + type.getName());
- 		}
- 		Validated validated = findAnnotation(instance, type, factory, Validated.class);
- 		Annotation[] annotations = (validated != null) ? new Annotation[] { annotation, validated }
- 				: new Annotation[] { annotation };
- 		ResolvableType bindType = (factory != null) ? ResolvableType.forMethodReturnType(factory)
- 				: ResolvableType.forClass(type);
- 		Bindable<Object> bindable = Bindable.of(bindType).withAnnotations(annotations);
- 		if (instance != null) {
- 			bindable = bindable.withExistingValue(instance);
- 		}
- 		if (factory != null) {
- 			return new ConfigurationPropertiesBean(name, instance, annotation, bindable, BindMethod.JAVA_BEAN);
- 		}
- 		return new ConfigurationPropertiesBean(name, instance, annotation, bindable);
- 	}
+			@Nullable Method factory) {
+		ConfigurationProperties annotation = findAnnotation(instance, type, factory, ConfigurationProperties.class);
+		if (annotation == null) {
+			return null;
+		}
+		Validated validated = findAnnotation(instance, type, factory, Validated.class);
+		Annotation[] annotations = (validated != null) ? new Annotation[] { annotation, validated }
+				: new Annotation[] { annotation };
+		ResolvableType bindType = (factory != null) ? ResolvableType.forMethodReturnType(factory)
+				: ResolvableType.forClass(type);
+		Bindable<Object> bindable = Bindable.of(bindType).withAnnotations(annotations);
+		if (instance != null) {
+			bindable = bindable.withExistingValue(instance);
+		}
+		if (factory != null) {
+			return new ConfigurationPropertiesBean(name, instance, annotation, bindable, BindMethod.JAVA_BEAN);
+		}
+		return new ConfigurationPropertiesBean(name, instance, annotation, bindable);
+	}
 
 	@Nullable
 	private static <A extends Annotation> A findAnnotation(@Nullable Object instance, Class<?> type,
