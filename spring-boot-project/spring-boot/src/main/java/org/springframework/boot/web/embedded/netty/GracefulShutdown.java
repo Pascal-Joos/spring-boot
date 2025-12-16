@@ -75,18 +75,14 @@ final class GracefulShutdown {
 	}
 
 	void abort() {
- 		Thread shutdownThread = this.shutdownThread;
- 		if (shutdownThread != null) {
- 			while (!this.shuttingDown) {
- 				sleep(50);
- 				shutdownThread = this.shutdownThread;
- 				if (shutdownThread == null) {
- 					return;
- 				}
- 			}
- 			shutdownThread.interrupt();
- 		}
- 	}
+		Thread shutdownThread = this.shutdownThread;
+		if (shutdownThread != null) {
+			while (!this.shuttingDown) {
+				sleep(50);
+			}
+			this.shutdownThread.interrupt();
+		}
+	}
 
 	private void sleep(long millis) {
 		try {
