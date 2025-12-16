@@ -38,16 +38,17 @@ class UnboundConfigurationPropertyFailureAnalyzer
 		return analyzeUnboundConfigurationPropertiesException(exception, cause);
 	}
 
-	private FailureAnalysis analyzeUnboundConfigurationPropertiesException(@Nullable BindException cause,
-			UnboundConfigurationPropertiesException exception) {
-		StringBuilder description = new StringBuilder(
-				String.format("Binding to target %s failed:%n", cause.getTarget()));
-		for (ConfigurationProperty property : exception.getUnboundProperties()) {
-			buildDescription(description, property);
-			description.append(String.format("%n    Reason: %s", exception.getMessage()));
-		}
-		return getFailureAnalysis(description, cause);
-	}
+	private FailureAnalysis analyzeUnboundConfigurationPropertiesException( @Nullable BindException cause,
+ 			UnboundConfigurationPropertiesException exception) {
+ 		Object target = (cause != null) ? cause.getTarget() : null;
+ 		StringBuilder description = new StringBuilder(
+ 				String.format("Binding to target %s failed:%n", target));
+ 		for (ConfigurationProperty property : exception.getUnboundProperties()) {
+ 			buildDescription(description, property);
+ 			description.append(String.format("%n    Reason: %s", exception.getMessage()));
+ 		}
+ 		return getFailureAnalysis(description, cause);
+ 	}
 
 	private void buildDescription(StringBuilder description, ConfigurationProperty property) {
 		if (property != null) {
