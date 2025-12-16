@@ -151,12 +151,15 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		}
 
 		private void handleValueObjectProperties(ReflectionHints hints) {
-			for (int i = 0; i < this.bindConstructor.getParameterCount(); i++) {
-				String propertyName = this.bindConstructor.getParameters()[i].getName();
-				ResolvableType propertyType = ResolvableType.forConstructorParameter(this.bindConstructor, i);
-				handleProperty(hints, propertyName, propertyType);
-			}
-		}
+  			if (this.bindConstructor == null) {
+  				return;
+  			}
+  			for (int i = 0; i < this.bindConstructor.getParameterCount(); i++) {
+  				String propertyName = this.bindConstructor.getParameters()[i].getName();
+  				ResolvableType propertyType = ResolvableType.forConstructorParameter(this.bindConstructor, i);
+  				handleProperty(hints, propertyName, propertyType);
+  			}
+  		}
 
 		private void handleJavaBeanProperties(ReflectionHints hints) {
 			for (PropertyDescriptor propertyDescriptor : this.beanInfo.getPropertyDescriptors()) {
