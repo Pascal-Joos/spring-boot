@@ -102,22 +102,22 @@ public class SpringApplicationAotProcessor extends ContextAotProcessor {
 			};
 		}
 
-		@Nullable
-		private <T> GenericApplicationContext run(ThrowingSupplier<T> action) {
-			try {
-				SpringApplication.withHook(this, action);
-			}
-			catch (AbandonedRunException ex) {
-				ApplicationContext context = ex.getApplicationContext();
-				Assert.isInstanceOf(GenericApplicationContext.class, context,
-						() -> "AOT processing requires a GenericApplicationContext but got a "
-								+ context.getClass().getName());
-				return (GenericApplicationContext) context;
-			}
-			throw new IllegalStateException(
-					"No application context available after calling main method of '%s'. Does it run a SpringApplication?"
-							.formatted(this.application.getName()));
-		}
+		@Nullable private <T> GenericApplicationContext run(ThrowingSupplier<T> action) {
+  			try {
+  				SpringApplication.withHook(this, action);
+  			}
+  			catch (AbandonedRunException ex) {
+  				ApplicationContext context = ex.getApplicationContext();
+  				Assert.notNull(context, "AOT processing requires a GenericApplicationContext but got a null ApplicationContext");
+  				Assert.isInstanceOf(GenericApplicationContext.class, context,
+  						() -> "AOT processing requires a GenericApplicationContext but got a "
+  								+ context.getClass().getName());
+  				return (GenericApplicationContext) context;
+  			}
+  			throw new IllegalStateException(
+  					"No application context available after calling main method of '%s'. Does it run a SpringApplication?"
+  							.formatted(this.application.getName()));
+  		}
 
 	}
 
