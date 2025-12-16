@@ -118,13 +118,15 @@ public final class ConfigDataLocation implements OriginProvider {
 	 * @since 2.4.7
 	 */
 	public ConfigDataLocation[] split(String delimiter) {
-		String[] values = StringUtils.delimitedListToStringArray(toString(), delimiter);
-		ConfigDataLocation[] result = new ConfigDataLocation[values.length];
-		for (int i = 0; i < values.length; i++) {
-			result[i] = of(values[i]).withOrigin(getOrigin());
-		}
-		return result;
-	}
+ 		String[] values = StringUtils.delimitedListToStringArray(toString(), delimiter);
+ 		ConfigDataLocation[] result = new ConfigDataLocation[values.length];
+ 		for (int i = 0; i < values.length; i++) {
+ 			if (values[i] != null) {
+ 				result[i] = of(values[i]).withOrigin(getOrigin());
+ 			}
+ 		}
+ 		return result;
+ 	}
 
 	@Override
 	public boolean equals(Object obj) {
