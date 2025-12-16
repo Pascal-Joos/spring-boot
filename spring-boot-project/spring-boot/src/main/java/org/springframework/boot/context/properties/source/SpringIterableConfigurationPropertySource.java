@@ -210,15 +210,10 @@ class SpringIterableConfigurationPropertySource extends SpringConfigurationPrope
 		private volatile String[] lastUpdated;
 
 		Mappings(PropertyMapper[] mappers, boolean immutable, boolean trackDescendants) {
-  			this.mappers = mappers;
-  			this.immutable = immutable;
-  			this.trackDescendants = trackDescendants;
-  			this.mappings = new HashMap<ConfigurationPropertyName, Set<String>>();
-  			this.reverseMappings = new HashMap<String, ConfigurationPropertyName>();
-  			this.descendants = new HashMap<ConfigurationPropertyName, Set<ConfigurationPropertyName>>();
-  			this.configurationPropertyNames = new ConfigurationPropertyName[0];
-  			this.lastUpdated = new String[0];
-  		}
+			this.mappers = mappers;
+			this.immutable = immutable;
+			this.trackDescendants = trackDescendants;
+		}
 
 		void updateMappings(Supplier<String[]> propertyNames) {
 			if (this.mappings == null || !this.immutable) {
