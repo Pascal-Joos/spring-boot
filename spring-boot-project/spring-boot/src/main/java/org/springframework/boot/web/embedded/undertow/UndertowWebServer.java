@@ -98,13 +98,11 @@ public class UndertowWebServer implements WebServer {
 	 * @since 2.3.0
 	 */
 	public UndertowWebServer(Undertow.Builder builder, Iterable<HttpHandlerFactory> httpHandlerFactories,
- 			boolean autoStart) {
- 		this.builder = builder;
- 		this.httpHandlerFactories = httpHandlerFactories;
- 		this.autoStart = autoStart;
- 		this.undertow = null;
- 		this.closeables = new ArrayList<>();
- 	}
+			boolean autoStart) {
+		this.builder = builder;
+		this.httpHandlerFactories = httpHandlerFactories;
+		this.autoStart = autoStart;
+	}
 
 	@Override
 	public void start() throws WebServerException {
