@@ -37,16 +37,16 @@ class ValidationExceptionFailureAnalyzer extends AbstractFailureAnalyzer<Validat
 	private static final String JAKARTA_MISSING_IMPLEMENTATION_MESSAGE = "Unable to create a "
 			+ "Configuration, because no Jakarta Bean Validation provider could be found";
 
-	@Nullable
-	@Override
-	protected FailureAnalysis analyze(Throwable rootFailure, ValidationException cause) {
-		if (cause.getMessage().startsWith(JAVAX_MISSING_IMPLEMENTATION_MESSAGE)
-				|| cause.getMessage().startsWith(JAKARTA_MISSING_IMPLEMENTATION_MESSAGE)) {
-			return new FailureAnalysis(
-					"The Bean Validation API is on the classpath but no implementation could be found",
-					"Add an implementation, such as Hibernate Validator, to the classpath", cause);
-		}
-		return null;
-	}
+	@Nullable @Override
+ 	protected FailureAnalysis analyze(Throwable rootFailure, ValidationException cause) {
+ 		String message = cause.getMessage();
+ 		if (message != null && (message.startsWith(JAVAX_MISSING_IMPLEMENTATION_MESSAGE)
+ 				|| message.startsWith(JAKARTA_MISSING_IMPLEMENTATION_MESSAGE))) {
+ 			return new FailureAnalysis(
+ 					"The Bean Validation API is on the classpath but no implementation could be found",
+ 					"Add an implementation, such as Hibernate Validator, to the classpath", cause);
+ 		}
+ 		return null;
+ 	}
 
 }
