@@ -57,9 +57,13 @@ class SpringConfigurationPropertySources implements Iterable<ConfigurationProper
 	}
 
 	@Override
-	public Iterator<ConfigurationPropertySource> iterator() {
-		return new SourcesIterator(this.sources.iterator(), this::adapt);
-	}
+ 	public Iterator<ConfigurationPropertySource> iterator() {
+ 		Iterable<PropertySource<?>> localSources = this.sources;
+ 		if (localSources == null) {
+ 			return Collections.emptyIterator();
+ 		}
+ 		return new SourcesIterator(localSources.iterator(), this::adapt);
+ 	}
 
 	private ConfigurationPropertySource adapt(PropertySource<?> source) {
 		ConfigurationPropertySource result = this.cache.get(source);
