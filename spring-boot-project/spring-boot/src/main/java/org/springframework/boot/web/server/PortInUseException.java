@@ -80,14 +80,13 @@ public class PortInUseException extends WebServerException {
 	 * @since 2.2.7
 	 */
 	public static void ifPortBindingException(Exception ex, Consumer<BindException> action) {
- 		ifCausedBy(ex, BindException.class, (bindException) -> {
- 			// bind exception can be also thrown because an address can't be assigned
- 			String message = bindException.getMessage();
- 			if (message != null && message.toLowerCase().contains("in use")) {
- 				action.accept(bindException);
- 			}
- 		});
- 	}
+		ifCausedBy(ex, BindException.class, (bindException) -> {
+			// bind exception can be also thrown because an address can't be assigned
+			if (bindException.getMessage().toLowerCase().contains("in use")) {
+				action.accept(bindException);
+			}
+		});
+	}
 
 	/**
 	 * Perform an action if the given exception was caused by a specific exception type.
