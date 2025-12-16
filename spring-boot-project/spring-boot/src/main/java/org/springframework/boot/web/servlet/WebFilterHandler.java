@@ -57,15 +57,15 @@ class WebFilterHandler extends ServletComponentHandler {
 	}
 
 	private EnumSet<DispatcherType> extractDispatcherTypes(Map<String, Object> attributes) {
-		DispatcherType[] dispatcherTypes = (DispatcherType[]) attributes.get("dispatcherTypes");
-		if (dispatcherTypes.length == 0) {
-			return EnumSet.noneOf(DispatcherType.class);
-		}
-		if (dispatcherTypes.length == 1) {
-			return EnumSet.of(dispatcherTypes[0]);
-		}
-		return EnumSet.of(dispatcherTypes[0], Arrays.copyOfRange(dispatcherTypes, 1, dispatcherTypes.length));
-	}
+       DispatcherType[] dispatcherTypes = (DispatcherType[]) attributes.get("dispatcherTypes");
+       if (dispatcherTypes == null || dispatcherTypes.length == 0) {
+           return EnumSet.noneOf(DispatcherType.class);
+       }
+       if (dispatcherTypes.length == 1) {
+           return EnumSet.of(dispatcherTypes[0]);
+       }
+       return EnumSet.of(dispatcherTypes[0], Arrays.copyOfRange(dispatcherTypes, 1, dispatcherTypes.length));
+   }
 
 	@Nullable
 	private String determineName(Map<String, Object> attributes, BeanDefinition beanDefinition) {
