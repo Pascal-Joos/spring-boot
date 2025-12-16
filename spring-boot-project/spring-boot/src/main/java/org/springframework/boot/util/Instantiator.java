@@ -171,17 +171,17 @@ public class Instantiator<T> {
 		throw new IllegalAccessException("Class [" + type.getName() + "] has no suitable constructor");
 	}
 
-	private Object[] getArgs(Class<?>[] parameterTypes) {
-		Object[] args = new Object[parameterTypes.length];
-		for (int i = 0; i < parameterTypes.length; i++) {
-			Function<Class<?>, Object> parameter = getAvailableParameter(parameterTypes[i]);
-			if (parameter == null) {
-				return null;
-			}
-			args[i] = parameter.apply(this.type);
-		}
-		return args;
-	}
+	private Optional<Object[]> getArgs(Class<?>[] parameterTypes) {
+ 		Object[] args = new Object[parameterTypes.length];
+ 		for (int i = 0; i < parameterTypes.length; i++) {
+ 			Function<Class<?>, Object> parameter = getAvailableParameter(parameterTypes[i]);
+ 			if (parameter == null) {
+ 				return Optional.empty();
+ 			}
+ 			args[i] = parameter.apply(this.type);
+ 		}
+ 		return Optional.of(args);
+ 	}
 
 	@Nullable
 	private Function<Class<?>, Object> getAvailableParameter(Class<?> parameterType) {
