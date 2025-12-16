@@ -99,16 +99,9 @@ public final class BindResult<T> {
 	 * {@code null})
 	 * @return the value, if bound, otherwise {@code other}
 	 */
-	/**
- 	 * Return the object that was bound, or {@code other} if no value has been bound.
- 	 * @param other the value to be returned if there is no bound value (may be
- 	 * {@code null})
- 	 * @return the value, if bound, otherwise {@code other}
- 	 */
- 	@Nullable
- 	public T orElse(@Nullable T other) {
- 		return (this.value != null) ? this.value : other;
- 	}
+	public T orElse(@Nullable T other) {
+		return (this.value != null) ? this.value : other;
+	}
 
 	/**
 	 * Return the object that was bound, or the result of invoking {@code other} if no
