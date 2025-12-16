@@ -32,16 +32,16 @@ class LiquibaseChangelogMissingFailureAnalyzer extends AbstractFailureAnalyzer<C
 
 	private static final String MESSAGE_SUFFIX = " does not exist";
 
-	@Nullable
-	@Override
-	protected FailureAnalysis analyze(Throwable rootFailure, ChangeLogParseException cause) {
-		if (cause.getMessage().endsWith(MESSAGE_SUFFIX)) {
-			String changelogPath = extractChangelogPath(cause);
-			return new FailureAnalysis(getDescription(changelogPath),
-					"Make sure a Liquibase changelog is present at the configured path.", cause);
-		}
-		return null;
-	}
+	@Nullable @Override
+ 	protected FailureAnalysis analyze(Throwable rootFailure, ChangeLogParseException cause) {
+ 		String message = cause.getMessage();
+ 		if (message != null && message.endsWith(MESSAGE_SUFFIX)) {
+ 			String changelogPath = extractChangelogPath(cause);
+ 			return new FailureAnalysis(getDescription(changelogPath),
+ 					"Make sure a Liquibase changelog is present at the configured path.", cause);
+ 		}
+ 		return null;
+ 	}
 
 	private String extractChangelogPath(ChangeLogParseException cause) {
 		return cause.getMessage().substring(0, cause.getMessage().length() - MESSAGE_SUFFIX.length());
