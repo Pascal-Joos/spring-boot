@@ -97,23 +97,23 @@ class ConfigDataLoaders {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <R extends ConfigDataResource> ConfigDataLoader<R> getLoader(ConfigDataLoaderContext context, R resource) {
-		ConfigDataLoader<R> result = null;
-		for (int i = 0; i < this.loaders.size(); i++) {
-			ConfigDataLoader<?> candidate = this.loaders.get(i);
-			if (this.resourceTypes.get(i).isInstance(resource)) {
-				ConfigDataLoader<R> loader = (ConfigDataLoader<R>) candidate;
-				if (loader.isLoadable(context, resource)) {
-					if (result != null) {
-						throw new IllegalStateException("Multiple loaders found for resource '" + resource + "' ["
-								+ candidate.getClass().getName() + "," + result.getClass().getName() + "]");
-					}
-					result = loader;
-				}
-			}
-		}
-		Assert.state(result != null, () -> "No loader found for resource '" + resource + "'");
-		return result;
-	}
+ 	private <R extends ConfigDataResource> ConfigDataLoader<R> getLoader(ConfigDataLoaderContext context, R resource) {
+ 		ConfigDataLoader<R> result = null;
+ 		for (int i = 0; i < this.loaders.size(); i++) {
+ 			ConfigDataLoader<?> candidate = this.loaders.get(i);
+ 			if (this.resourceTypes.get(i).isInstance(resource)) {
+ 				ConfigDataLoader<R> loader = (ConfigDataLoader<R>) candidate;
+ 				if (loader.isLoadable(context, resource)) {
+ 					if (result != null) {
+ 						throw new IllegalStateException("Multiple loaders found for resource '" + resource + "' ["
+ 								+ candidate.getClass().getName() + "," + result.getClass().getName() + "]");
+ 					}
+ 					result = loader;
+ 				}
+ 			}
+ 		}
+ 		Assert.state(result != null, () -> "No loader found for resource '" + resource + "'");
+ 		return Objects.requireNonNull(result);
+ 	}
 
 }
