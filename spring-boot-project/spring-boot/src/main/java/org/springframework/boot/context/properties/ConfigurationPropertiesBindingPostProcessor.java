@@ -63,14 +63,13 @@ public class ConfigurationPropertiesBindingPostProcessor
 	}
 
 	@Initializer
- 	@Override
- 	public void afterPropertiesSet() throws Exception {
- 		// We can't use constructor injection of the application context because
- 		// it causes eager factory bean initialization
- 		Assert.state(this.applicationContext != null, "ApplicationContext must not be null");
- 		this.registry = (BeanDefinitionRegistry) this.applicationContext.getAutowireCapableBeanFactory();
- 		this.binder = ConfigurationPropertiesBinder.get(this.applicationContext);
- 	}
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		// We can't use constructor injection of the application context because
+		// it causes eager factory bean initialization
+		this.registry = (BeanDefinitionRegistry) this.applicationContext.getAutowireCapableBeanFactory();
+		this.binder = ConfigurationPropertiesBinder.get(this.applicationContext);
+	}
 
 	@Override
 	public int getOrder() {
