@@ -218,38 +218,38 @@ public abstract class AbstractFilterRegistrationBean<T extends Filter> extends D
 	 * @param registration the registration
 	 */
 	@Override
-	protected void configure(FilterRegistration.Dynamic registration) {
-		super.configure(registration);
-		EnumSet<DispatcherType> dispatcherTypes = this.dispatcherTypes;
-		if (dispatcherTypes == null) {
-			T filter = getFilter();
-			if (ClassUtils.isPresent("org.springframework.web.filter.OncePerRequestFilter",
-					filter.getClass().getClassLoader()) && filter instanceof OncePerRequestFilter) {
-				dispatcherTypes = EnumSet.allOf(DispatcherType.class);
-			}
-			else {
-				dispatcherTypes = EnumSet.of(DispatcherType.REQUEST);
-			}
-		}
-		Set<String> servletNames = new LinkedHashSet<>();
-		for (ServletRegistrationBean<?> servletRegistrationBean : this.servletRegistrationBeans) {
-			servletNames.add(servletRegistrationBean.getServletName());
-		}
-		servletNames.addAll(this.servletNames);
-		if (servletNames.isEmpty() && this.urlPatterns.isEmpty()) {
-			registration.addMappingForUrlPatterns(dispatcherTypes, this.matchAfter, DEFAULT_URL_MAPPINGS);
-		}
-		else {
-			if (!servletNames.isEmpty()) {
-				registration.addMappingForServletNames(dispatcherTypes, this.matchAfter,
-						StringUtils.toStringArray(servletNames));
-			}
-			if (!this.urlPatterns.isEmpty()) {
-				registration.addMappingForUrlPatterns(dispatcherTypes, this.matchAfter,
-						StringUtils.toStringArray(this.urlPatterns));
-			}
-		}
-	}
+ 	protected void configure(FilterRegistration.Dynamic registration) {
+ 		super.configure(registration);
+ 		EnumSet<DispatcherType> dispatcherTypes = this.dispatcherTypes;
+ 		if (dispatcherTypes == null) {
+ 			T filter = getFilter();
+ 			if (filter != null && ClassUtils.isPresent("org.springframework.web.filter.OncePerRequestFilter",
+ 					filter.getClass().getClassLoader()) && filter instanceof OncePerRequestFilter) {
+ 				dispatcherTypes = EnumSet.allOf(DispatcherType.class);
+ 			}
+ 			else {
+ 				dispatcherTypes = EnumSet.of(DispatcherType.REQUEST);
+ 			}
+ 		}
+ 		Set<String> servletNames = new LinkedHashSet<>();
+ 		for (ServletRegistrationBean<?> servletRegistrationBean : this.servletRegistrationBeans) {
+ 			servletNames.add(servletRegistrationBean.getServletName());
+ 		}
+ 		servletNames.addAll(this.servletNames);
+ 		if (servletNames.isEmpty() && this.urlPatterns.isEmpty()) {
+ 			registration.addMappingForUrlPatterns(dispatcherTypes, this.matchAfter, DEFAULT_URL_MAPPINGS);
+ 		}
+ 		else {
+ 			if (!servletNames.isEmpty()) {
+ 				registration.addMappingForServletNames(dispatcherTypes, this.matchAfter,
+ 						StringUtils.toStringArray(servletNames));
+ 			}
+ 			if (!this.urlPatterns.isEmpty()) {
+ 				registration.addMappingForUrlPatterns(dispatcherTypes, this.matchAfter,
+ 						StringUtils.toStringArray(this.urlPatterns));
+ 			}
+ 		}
+ 	}
 
 	/**
 	 * Return the {@link Filter} to be registered.
