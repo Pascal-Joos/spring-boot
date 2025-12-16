@@ -585,10 +585,10 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
 	 * @throws InvalidConfigurationPropertyNameException if the name is not valid and
 	 * {@code returnNullIfInvalid} is {@code false}
 	 */
-	static ConfigurationPropertyName of(CharSequence name, boolean returnNullIfInvalid) {
-		Elements elements = elementsOf(name, returnNullIfInvalid);
-		return (elements != null) ? new ConfigurationPropertyName(elements) : null;
-	}
+	static @Nullable ConfigurationPropertyName of(CharSequence name, boolean returnNullIfInvalid) {
+ 		Elements elements = elementsOf(name, returnNullIfInvalid);
+ 		return (elements != null) ? new ConfigurationPropertyName(elements) : null;
+ 	}
 
 	@Nullable
 	private static Elements probablySingleElementOf(CharSequence name) {
