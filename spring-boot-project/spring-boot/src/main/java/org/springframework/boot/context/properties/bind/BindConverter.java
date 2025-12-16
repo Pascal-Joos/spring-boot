@@ -91,11 +91,8 @@ final class BindConverter {
 	}
 
 	<T> T convert(@Nullable Object source, Bindable<T> target) {
- 		if (source == null) {
- 			return target.getValue().orElse(null);
- 		}
- 		return convert(source, target.getType(), target.getAnnotations());
- 	}
+		return convert(source, target.getType(), target.getAnnotations());
+	}
 
 	@Nullable
 	@SuppressWarnings("unchecked")
