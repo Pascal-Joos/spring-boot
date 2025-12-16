@@ -270,17 +270,20 @@ public class SpringApplication {
 	 * @see #setSources(Set)
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public SpringApplication(@Nullable ResourceLoader resourceLoader, Class<?>... primarySources) {
-		this.resourceLoader = resourceLoader;
-		Assert.notNull(primarySources, "PrimarySources must not be null");
-		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
-		this.webApplicationType = WebApplicationType.deduceFromClasspath();
-		this.bootstrapRegistryInitializers = new ArrayList<>(
-				getSpringFactoriesInstances(BootstrapRegistryInitializer.class));
-		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
-		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
-		this.mainApplicationClass = deduceMainApplicationClass();
-	}
+ 	public SpringApplication( @Nullable ResourceLoader resourceLoader, Class<?>... primarySources) {
+ 		this.resourceLoader = resourceLoader;
+ 		Assert.notNull(primarySources, "PrimarySources must not be null");
+ 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
+ 		this.webApplicationType = WebApplicationType.deduceFromClasspath();
+ 		this.bootstrapRegistryInitializers = new ArrayList<>(
+ 				getSpringFactoriesInstances(BootstrapRegistryInitializer.class));
+ 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class));
+ 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
+ 		Class<?> mainClass = deduceMainApplicationClass();
+ 		if (mainClass != null) {
+ 			this.mainApplicationClass = mainClass;
+ 		}
+ 	}
 
 	@Nullable
 	private Class<?> deduceMainApplicationClass() {
