@@ -46,12 +46,10 @@ public class DeferredLog implements Log {
 	/**
 	 * Create a new {@link DeferredLog} instance.
 	 */
-	/**
- 	 * Create a new {@link DeferredLog} instance.
- 	 */
- 	public DeferredLog() {
- 		this(destination -> destination, new Lines());
- 	}
+	public DeferredLog() {
+		this.destinationSupplier = null;
+		this.lines = new Lines();
+	}
 
 	/**
 	 * Create a new {@link DeferredLog} instance managed by a {@link DeferredLogFactory}.
