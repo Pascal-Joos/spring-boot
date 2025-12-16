@@ -266,10 +266,9 @@ public enum PeriodStyle {
 		}
 
 		private int intValue(Period value) {
-  			java.util.function.Function<Period, Integer> localIntValue = this.intValue;
-  			Assert.notNull(localIntValue, () -> "intValue cannot be extracted from " + this.name());
-  			return localIntValue.apply(value);
-  		}
+			Assert.notNull(this.intValue, () -> "intValue cannot be extracted from " + this.name());
+			return this.intValue.apply(value);
+		}
 
 		private static Unit fromChronoUnit(@Nullable ChronoUnit chronoUnit) {
 			if (chronoUnit == null) {
