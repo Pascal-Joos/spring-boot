@@ -84,13 +84,10 @@ public class MustacheView extends AbstractTemplateView {
 	}
 
 	private Template createTemplate(Resource resource) throws IOException {
- 		if (this.compiler == null) {
- 			throw new IllegalStateException("Compiler must not be null");
- 		}
- 		try (Reader reader = getReader(resource)) {
- 			return this.compiler.compile(reader);
- 		}
- 	}
+		try (Reader reader = getReader(resource)) {
+			return this.compiler.compile(reader);
+		}
+	}
 
 	private Reader getReader(Resource resource) throws IOException {
 		if (this.charset != null) {
