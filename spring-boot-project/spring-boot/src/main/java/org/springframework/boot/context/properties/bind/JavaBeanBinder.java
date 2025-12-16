@@ -90,24 +90,27 @@ class JavaBeanBinder implements DataObjectBinder {
 	}
 
 	private <T> boolean bind(BeanSupplier<T> beanSupplier, DataObjectPropertyBinder propertyBinder,
-			BeanProperty property) {
-		String propertyName = property.getName();
-		ResolvableType type = property.getType();
-		Supplier<Object> value = property.getValue(beanSupplier);
-		Annotation[] annotations = property.getAnnotations();
-		Object bound = propertyBinder.bindProperty(propertyName,
-				Bindable.of(type).withSuppliedValue(value).withAnnotations(annotations));
-		if (bound == null) {
-			return false;
-		}
-		if (property.isSettable()) {
-			property.setValue(beanSupplier, bound);
-		}
-		else if (value == null || !bound.equals(value.get())) {
-			throw new IllegalStateException("No setter found for property: " + property.getName());
-		}
-		return true;
-	}
+ 			BeanProperty property) {
+ 		String propertyName = property.getName();
+ 		ResolvableType type = property.getType();
+ 		Supplier<Object> value = property.getValue(beanSupplier);
+ 		Annotation[] annotations = property.getAnnotations();
+ 		if (annotations == null) {
+ 			annotations = new Annotation[0];
+ 		}
+ 		Object bound = propertyBinder.bindProperty(propertyName,
+ 				Bindable.of(type).withSuppliedValue(value).withAnnotations(annotations));
+ 		if (bound == null) {
+ 			return false;
+ 		}
+ 		if (property.isSettable()) {
+ 			property.setValue(beanSupplier, bound);
+ 		}
+ 		else if (value == null || !bound.equals(value.get())) {
+ 			throw new IllegalStateException("No setter found for property: " + property.getName());
+ 		}
+ 		return true;
+ 	}
 
 	/**
 	 * The bean being bound.
