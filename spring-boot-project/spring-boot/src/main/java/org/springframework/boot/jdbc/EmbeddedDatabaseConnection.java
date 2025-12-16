@@ -196,23 +196,22 @@ public enum EmbeddedDatabaseConnection {
 	private static class IsEmbedded implements ConnectionCallback<Boolean> {
 
 		@Override
-  		public Boolean doInConnection(Connection connection) throws SQLException, DataAccessException {
-  			DatabaseMetaData metaData = connection.getMetaData();
-  			String productName = metaData.getDatabaseProductName();
-  			if (productName == null) {
-  				return false;
-  			}
-  			productName = productName.toUpperCase(Locale.ENGLISH);
-  			EmbeddedDatabaseConnection[] candidates = EmbeddedDatabaseConnection.values();
-  			for (EmbeddedDatabaseConnection candidate : candidates) {
-  				EmbeddedDatabaseType candidateType = candidate.getType();
-  				if (candidate != NONE && candidateType != null && productName.contains(candidateType.name())) {
-  					String url = metaData.getURL();
-  					return (url == null || candidate.isEmbeddedUrl(url));
-  				}
-  			}
-  			return false;
-  		}
+		public Boolean doInConnection(Connection connection) throws SQLException, DataAccessException {
+			DatabaseMetaData metaData = connection.getMetaData();
+			String productName = metaData.getDatabaseProductName();
+			if (productName == null) {
+				return false;
+			}
+			productName = productName.toUpperCase(Locale.ENGLISH);
+			EmbeddedDatabaseConnection[] candidates = EmbeddedDatabaseConnection.values();
+			for (EmbeddedDatabaseConnection candidate : candidates) {
+				if (candidate != NONE && productName.contains(candidate.getType().name())) {
+					String url = metaData.getURL();
+					return (url == null || candidate.isEmbeddedUrl(url));
+				}
+			}
+			return false;
+		}
 
 	}
 
