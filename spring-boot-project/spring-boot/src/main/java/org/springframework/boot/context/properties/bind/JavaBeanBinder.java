@@ -294,12 +294,9 @@ class JavaBeanBinder implements DataObjectBinder {
 		private Field field;
 
 		BeanProperty(String name, ResolvableType declaringClassType) {
-  			this.name = DataObjectPropertyName.toDashedForm(name);
-  			this.declaringClassType = declaringClassType;
-  			this.getter = null;
-  			this.setter = null;
-  			this.field = null;
-  		}
+			this.name = DataObjectPropertyName.toDashedForm(name);
+			this.declaringClassType = declaringClassType;
+		}
 
 		void addGetter(Method getter) {
 			if (this.getter == null || isBetterGetter(getter)) {
