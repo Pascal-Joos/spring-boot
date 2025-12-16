@@ -86,8 +86,12 @@ public class WebServerFactoryCustomizerBeanPostProcessor implements BeanPostProc
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Collection<WebServerFactoryCustomizer<?>> getWebServerFactoryCustomizerBeans() {
-		return (Collection) this.beanFactory.getBeansOfType(WebServerFactoryCustomizer.class, false, false).values();
-	}
+ 	private Collection<WebServerFactoryCustomizer<?>> getWebServerFactoryCustomizerBeans() {
+ 		BeanFactory localBeanFactory = this.beanFactory;
+ 		if (localBeanFactory == null) {
+ 			return Collections.emptyList();
+ 		}
+ 		return (Collection) localBeanFactory.getBeansOfType(WebServerFactoryCustomizer.class, false, false).values();
+ 	}
 
 }
