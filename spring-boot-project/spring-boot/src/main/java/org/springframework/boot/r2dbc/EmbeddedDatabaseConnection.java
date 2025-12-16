@@ -104,19 +104,20 @@ public enum EmbeddedDatabaseConnection {
 	 * @since 2.5.1
 	 */
 	public static boolean isEmbedded(ConnectionFactory connectionFactory) {
-		OptionsCapableConnectionFactory optionsCapable = OptionsCapableConnectionFactory.unwrapFrom(connectionFactory);
-		Assert.notNull(optionsCapable,
-				() -> "Cannot determine database's type as ConnectionFactory is not options-capable. To be "
-						+ "options-capable, a ConnectionFactory should be created with "
-						+ ConnectionFactoryBuilder.class.getName());
-		ConnectionFactoryOptions options = optionsCapable.getOptions();
-		for (EmbeddedDatabaseConnection candidate : values()) {
-			if (candidate.embedded.test(options)) {
-				return true;
-			}
-		}
-		return false;
-
-	}
+ 		OptionsCapableConnectionFactory optionsCapable = OptionsCapableConnectionFactory.unwrapFrom(connectionFactory);
+ 		if (optionsCapable == null) {
+ 			throw new IllegalStateException("Cannot determine database's type as ConnectionFactory is not options-capable. To be "
+ 					+ "options-capable, a ConnectionFactory should be created with "
+ 					+ ConnectionFactoryBuilder.class.getName());
+ 		}
+ 		ConnectionFactoryOptions options = optionsCapable.getOptions();
+ 		for (EmbeddedDatabaseConnection candidate : values()) {
+ 			if (candidate.embedded.test(options)) {
+ 				return true;
+ 			}
+ 		}
+ 		return false;
+ 
+ 	}
 
 }
