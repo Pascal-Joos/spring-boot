@@ -76,9 +76,8 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 	 * @param port the port number for the web server
 	 */
 	public AbstractConfigurableWebServerFactory(int port) {
- 		this.port = port;
- 		this.compression = new Compression();
- 	}
+		this.port = port;
+	}
 
 	/**
 	 * The port that the web server listens on.
