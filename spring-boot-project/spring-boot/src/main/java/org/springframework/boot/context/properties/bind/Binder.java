@@ -182,26 +182,25 @@ public class Binder {
 	 * constructor to use when binding
 	 * @since 2.5.0
 	 */
-	public Binder( @Nullable Iterable<ConfigurationPropertySource> sources,
- 			 @Nullable PlaceholdersResolver placeholdersResolver,  @Nullable List<ConversionService> conversionServices,
- 			 @Nullable Consumer<PropertyEditorRegistry> propertyEditorInitializer,
- 			 @Nullable BindHandler defaultBindHandler,  @Nullable BindConstructorProvider constructorProvider) {
- 		Assert.notNull(sources, "Sources must not be null");
- 		Iterable<ConfigurationPropertySource> nonNullSources = sources;
- 		for (ConfigurationPropertySource source : nonNullSources) {
- 			Assert.notNull(source, "Sources must not contain null elements");
- 		}
- 		this.sources = nonNullSources;
- 		this.placeholdersResolver = (placeholdersResolver != null) ? placeholdersResolver : PlaceholdersResolver.NONE;
- 		this.bindConverter = BindConverter.get(conversionServices, propertyEditorInitializer);
- 		this.defaultBindHandler = (defaultBindHandler != null) ? defaultBindHandler : BindHandler.DEFAULT;
- 		if (constructorProvider == null) {
- 			constructorProvider = BindConstructorProvider.DEFAULT;
- 		}
- 		ValueObjectBinder valueObjectBinder = new ValueObjectBinder(constructorProvider);
- 		JavaBeanBinder javaBeanBinder = JavaBeanBinder.INSTANCE;
- 		this.dataObjectBinders = Collections.unmodifiableList(Arrays.asList(valueObjectBinder, javaBeanBinder));
- 	}
+	public Binder(@Nullable Iterable<ConfigurationPropertySource> sources,
+			@Nullable PlaceholdersResolver placeholdersResolver, @Nullable List<ConversionService> conversionServices,
+			@Nullable Consumer<PropertyEditorRegistry> propertyEditorInitializer,
+			@Nullable BindHandler defaultBindHandler, @Nullable BindConstructorProvider constructorProvider) {
+		Assert.notNull(sources, "Sources must not be null");
+		for (ConfigurationPropertySource source : sources) {
+			Assert.notNull(source, "Sources must not contain null elements");
+		}
+		this.sources = sources;
+		this.placeholdersResolver = (placeholdersResolver != null) ? placeholdersResolver : PlaceholdersResolver.NONE;
+		this.bindConverter = BindConverter.get(conversionServices, propertyEditorInitializer);
+		this.defaultBindHandler = (defaultBindHandler != null) ? defaultBindHandler : BindHandler.DEFAULT;
+		if (constructorProvider == null) {
+			constructorProvider = BindConstructorProvider.DEFAULT;
+		}
+		ValueObjectBinder valueObjectBinder = new ValueObjectBinder(constructorProvider);
+		JavaBeanBinder javaBeanBinder = JavaBeanBinder.INSTANCE;
+		this.dataObjectBinders = Collections.unmodifiableList(Arrays.asList(valueObjectBinder, javaBeanBinder));
+	}
 
 	/**
 	 * Bind the specified target {@link Class} using this binder's
