@@ -148,26 +148,23 @@ class DefaultBindConstructorProvider implements BindConstructorProvider {
 		}
 
 		private static Constructor<?> deduceBindConstructor(Class<?> type, Constructor<?>[] candidates) {
-  			if (candidates.length == 1 && candidates[0].getParameterCount() > 0) {
-  				if (type.isMemberClass() && Modifier.isPrivate(candidates[0].getModifiers())) {
-  					throw new IllegalStateException(type.getName() + " has no suitable bind constructor");
-  				}
-  				return candidates[0];
-  			}
-  			Constructor<?> result = null;
-  			for (Constructor<?> candidate : candidates) {
-  				if (!Modifier.isPrivate(candidate.getModifiers())) {
-  					if (result != null) {
-  						throw new IllegalStateException(type.getName() + " has no suitable bind constructor");
-  					}
-  					result = candidate;
-  				}
-  			}
-  			if (result != null && result.getParameterCount() > 0) {
-  				return result;
-  			}
-  			throw new IllegalStateException(type.getName() + " has no suitable bind constructor");
-  		}
+			if (candidates.length == 1 && candidates[0].getParameterCount() > 0) {
+				if (type.isMemberClass() && Modifier.isPrivate(candidates[0].getModifiers())) {
+					return null;
+				}
+				return candidates[0];
+			}
+			Constructor<?> result = null;
+			for (Constructor<?> candidate : candidates) {
+				if (!Modifier.isPrivate(candidate.getModifiers())) {
+					if (result != null) {
+						return null;
+					}
+					result = candidate;
+				}
+			}
+			return (result != null && result.getParameterCount() > 0) ? result : null;
+		}
 
 		private static boolean isKotlinType(Class<?> type) {
 			return KotlinDetector.isKotlinPresent() && KotlinDetector.isKotlinType(type);
