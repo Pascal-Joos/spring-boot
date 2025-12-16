@@ -424,14 +424,17 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 		};
 	}
 
-	private void registerShutdownHookIfNecessary(Environment environment, @Nullable LoggingSystem loggingSystem) {
-		if (environment.getProperty(REGISTER_SHUTDOWN_HOOK_PROPERTY, Boolean.class, true)) {
-			Runnable shutdownHandler = loggingSystem.getShutdownHandler();
-			if (shutdownHandler != null && shutdownHookRegistered.compareAndSet(false, true)) {
-				registerShutdownHook(shutdownHandler);
-			}
-		}
-	}
+	private void registerShutdownHookIfNecessary(Environment environment,  @Nullable LoggingSystem loggingSystem) {
+ 		if (loggingSystem == null) {
+ 			return;
+ 		}
+ 		if (environment.getProperty(REGISTER_SHUTDOWN_HOOK_PROPERTY, Boolean.class, true)) {
+ 			Runnable shutdownHandler = loggingSystem.getShutdownHandler();
+ 			if (shutdownHandler != null && shutdownHookRegistered.compareAndSet(false, true)) {
+ 				registerShutdownHook(shutdownHandler);
+ 			}
+ 		}
+ 	}
 
 	void registerShutdownHook(Runnable shutdownHandler) {
 		SpringApplication.getShutdownHandlers().add(shutdownHandler);
