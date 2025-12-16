@@ -90,12 +90,15 @@ class NoSuchMethodFailureAnalyzer extends AbstractFailureAnalyzer<NoSuchMethodEr
 	}
 
 	private String cleanMessage(@Nullable String message) {
-		int loadedFromIndex = message.indexOf(" (loaded from");
-		if (loadedFromIndex == -1) {
-			return message;
-		}
-		return message.substring(0, loadedFromIndex);
-	}
+       if (message == null) {
+           return null;
+       }
+       int loadedFromIndex = message.indexOf(" (loaded from");
+       if (loadedFromIndex == -1) {
+           return message;
+       }
+       return message.substring(0, loadedFromIndex);
+   }
 
 	@Nullable
 	private String extractClassName(String message) {
