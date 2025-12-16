@@ -235,11 +235,8 @@ class ConfigurationPropertiesBinder {
 		}
 
 		ConfigurationPropertiesBinder create() {
-  			if (this.applicationContext == null) {
-  				throw new IllegalStateException("ApplicationContext must not be null");
-  			}
-  			return new ConfigurationPropertiesBinder(this.applicationContext);
-  		}
+			return new ConfigurationPropertiesBinder(this.applicationContext);
+		}
 
 	}
 
