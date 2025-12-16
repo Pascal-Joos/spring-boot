@@ -278,19 +278,19 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 	}
 
 	private void moveProfileSpecific(Map<ImportPhase, List<ConfigDataEnvironmentContributor>> children) {
- 		List<ConfigDataEnvironmentContributor> before = children.get(ImportPhase.BEFORE_PROFILE_ACTIVATION);
- 		if (before == null || !hasAnyProfileSpecificChildren(before)) {
- 			return;
- 		}
- 		List<ConfigDataEnvironmentContributor> updatedBefore = new ArrayList<>(before.size());
- 		List<ConfigDataEnvironmentContributor> updatedAfter = new ArrayList<>();
- 		for (ConfigDataEnvironmentContributor contributor : before) {
- 			updatedBefore.add(moveProfileSpecificChildren(contributor, updatedAfter));
- 		}
- 		updatedAfter.addAll(children.getOrDefault(ImportPhase.AFTER_PROFILE_ACTIVATION, Collections.emptyList()));
- 		children.put(ImportPhase.BEFORE_PROFILE_ACTIVATION, updatedBefore);
- 		children.put(ImportPhase.AFTER_PROFILE_ACTIVATION, updatedAfter);
- 	}
+		List<ConfigDataEnvironmentContributor> before = children.get(ImportPhase.BEFORE_PROFILE_ACTIVATION);
+		if (!hasAnyProfileSpecificChildren(before)) {
+			return;
+		}
+		List<ConfigDataEnvironmentContributor> updatedBefore = new ArrayList<>(before.size());
+		List<ConfigDataEnvironmentContributor> updatedAfter = new ArrayList<>();
+		for (ConfigDataEnvironmentContributor contributor : before) {
+			updatedBefore.add(moveProfileSpecificChildren(contributor, updatedAfter));
+		}
+		updatedAfter.addAll(children.getOrDefault(ImportPhase.AFTER_PROFILE_ACTIVATION, Collections.emptyList()));
+		children.put(ImportPhase.BEFORE_PROFILE_ACTIVATION, updatedBefore);
+		children.put(ImportPhase.AFTER_PROFILE_ACTIVATION, updatedAfter);
+	}
 
 	private ConfigDataEnvironmentContributor moveProfileSpecificChildren(ConfigDataEnvironmentContributor contributor,
 			List<ConfigDataEnvironmentContributor> removed) {
