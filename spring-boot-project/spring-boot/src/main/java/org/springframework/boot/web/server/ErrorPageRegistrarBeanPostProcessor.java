@@ -73,14 +73,20 @@ public class ErrorPageRegistrarBeanPostProcessor implements BeanPostProcessor, B
 	}
 
 	private Collection<ErrorPageRegistrar> getRegistrars() {
-		if (this.registrars == null) {
-			// Look up does not include the parent context
-			this.registrars = new ArrayList<>(
-					this.beanFactory.getBeansOfType(ErrorPageRegistrar.class, false, false).values());
-			this.registrars.sort(AnnotationAwareOrderComparator.INSTANCE);
-			this.registrars = Collections.unmodifiableList(this.registrars);
-		}
-		return this.registrars;
-	}
+ 		if (this.registrars == null) {
+ 			// Look up does not include the parent context
+ 			ConfigurableListableBeanFactory localBeanFactory = this.beanFactory;
+ 			if (localBeanFactory == null) {
+ 				this.registrars = Collections.emptyList();
+ 			}
+ 			else {
+ 				List<ErrorPageRegistrar> localRegistrars = new ArrayList<>(
+ 						localBeanFactory.getBeansOfType(ErrorPageRegistrar.class, false, false).values());
+ 				localRegistrars.sort(AnnotationAwareOrderComparator.INSTANCE);
+ 				this.registrars = Collections.unmodifiableList(localRegistrars);
+ 			}
+ 		}
+ 		return this.registrars;
+ 	}
 
 }
