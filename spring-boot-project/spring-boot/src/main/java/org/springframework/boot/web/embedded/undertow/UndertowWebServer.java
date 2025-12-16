@@ -392,11 +392,9 @@ public class UndertowWebServer implements WebServer {
 				}
 
 				@Override
-    				public void close() throws IOException {
-    					if (CloseableHttpHandlerFactory.this.closeable != null) {
-    						CloseableHttpHandlerFactory.this.closeable.close();
-    					}
-    				}
+				public void close() throws IOException {
+					CloseableHttpHandlerFactory.this.closeable.close();
+				}
 
 			};
 		}
