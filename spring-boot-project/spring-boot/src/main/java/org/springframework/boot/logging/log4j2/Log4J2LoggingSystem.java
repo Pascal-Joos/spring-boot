@@ -372,14 +372,17 @@ public class Log4J2LoggingSystem extends AbstractLoggingSystem {
 		getLoggerContext().updateLoggers();
 	}
 
-	private void clearLogLevel(@Nullable String loggerName, @Nullable LoggerConfig logger) {
-		if (logger instanceof LevelSetLoggerConfig) {
-			getLoggerContext().getConfiguration().removeLogger(loggerName);
-		}
-		else {
-			logger.setLevel(null);
-		}
-	}
+	private void clearLogLevel( @Nullable String loggerName,  @Nullable LoggerConfig logger) {
+       if (logger == null) {
+           return;
+       }
+       if (logger instanceof LevelSetLoggerConfig) {
+           getLoggerContext().getConfiguration().removeLogger(loggerName);
+       }
+       else {
+           logger.setLevel(null);
+       }
+   }
 
 	private void setLogLevel(@Nullable String loggerName, @Nullable LoggerConfig logger, Level level) {
 		if (logger == null) {
