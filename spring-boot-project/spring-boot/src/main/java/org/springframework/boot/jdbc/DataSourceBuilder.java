@@ -492,19 +492,25 @@ public final class DataSourceBuilder<T extends DataSource> {
 			this.setter = setter;
 		}
 
-		void set(T dataSource, @Nullable String value) {
-			try {
-				if (this.setter == null) {
-					UnsupportedDataSourcePropertyException.throwIf(!this.property.isOptional(),
-							() -> "No setter mapped for '" + this.property + "' property");
-					return;
-				}
-				this.setter.set(dataSource, convertFromString(value));
-			}
-			catch (SQLException ex) {
-				throw new IllegalStateException(ex);
-			}
-		}
+		void set(T dataSource,  @Nullable String value) {
+  			try {
+  				if (this.setter == null) {
+  					UnsupportedDataSourcePropertyException.throwIf(!this.property.isOptional(),
+  							() -> "No setter mapped for '" + this.property + "' property");
+  					return;
+  				}
+  				V convertedValue = convertFromString(value);
+  				if (convertedValue == null) {
+  					UnsupportedDataSourcePropertyException.throwIf(!this.property.isOptional(),
+  							() -> "No value mapped for '" + this.property + "' property");
+  					return;
+  				}
+  				this.setter.set(dataSource, convertedValue);
+  			}
+  			catch (SQLException ex) {
+  				throw new IllegalStateException(ex);
+  			}
+  		}
 
 		@Nullable String get( @Nullable T dataSource) {
   			if (dataSource == null) {
