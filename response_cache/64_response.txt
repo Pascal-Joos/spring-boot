@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	public SslServerCustomizer(@Nullable Ssl ssl, @Nullable Http2 http2, @Nullable SslStoreProvider sslStoreProvider) {
+		this.ssl = Objects.requireNonNull(ssl);
+		this.http2 = http2;
+		this.sslStoreProvider = sslStoreProvider;
+	}
+  ```
+    ]]>
+  </code>
+</response>

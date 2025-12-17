@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	/**
+	 * Create a new {@link DeferredLog} instance.
+	 */
+	public DeferredLog() {
+		this(destination -> destination, new Lines());
+	}
+  ```
+    ]]>
+  </code>
+</response>

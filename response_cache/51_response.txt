@@ -1,0 +1,15 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	private String extractChangelogPath(ChangeLogParseException cause) {
+		String message = cause.getMessage();
+		if (message == null || !message.endsWith(MESSAGE_SUFFIX)) {
+			return "";
+		}
+		return message.substring(0, message.length() - MESSAGE_SUFFIX.length());
+	}
+  ```
+    ]]>
+  </code>
+</response>

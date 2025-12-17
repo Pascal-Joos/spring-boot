@@ -1,0 +1,12 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	public SpringApplicationAdminMXBeanRegistrar(String name) throws MalformedObjectNameException {
+		this.applicationContext = null;
+		this.objectName = new ObjectName(name);
+	}
+  ```
+    ]]>
+  </code>
+</response>

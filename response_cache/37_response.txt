@@ -1,0 +1,12 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	static @Nullable ConfigurationPropertyName of(CharSequence name, boolean returnNullIfInvalid) {
+		Elements elements = elementsOf(name, returnNullIfInvalid);
+		return (elements != null) ? new ConfigurationPropertyName(elements) : null;
+	}
+  ```
+    ]]>
+  </code>
+</response>

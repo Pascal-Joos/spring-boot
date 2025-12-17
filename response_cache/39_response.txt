@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	private static Set<String> asSet(Collection<String> collection) {
+		return new LinkedHashSet<>((collection != null) ? collection : Collections.emptyList());
+	}
+  ```
+    ]]>
+  </code>
+</response>

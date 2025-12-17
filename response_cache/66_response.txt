@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	public UndertowWebServer(Undertow.Builder builder, Iterable<HttpHandlerFactory> httpHandlerFactories,
+			boolean autoStart) {
+		this.builder = builder;
+		this.httpHandlerFactories = httpHandlerFactories;
+		this.autoStart = autoStart;
+		this.undertow = null;
+		this.closeables = new ArrayList<>();
+	}
+  ```
+    ]]>
+  </code>
+</response>

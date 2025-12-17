@@ -1,0 +1,19 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	@Override
+	protected FailureAnalysis analyze(Throwable rootFailure, ValidationException cause) {
+		String message = cause.getMessage();
+		if (message != null && (message.startsWith(JAVAX_MISSING_IMPLEMENTATION_MESSAGE)
+				|| message.startsWith(JAKARTA_MISSING_IMPLEMENTATION_MESSAGE))) {
+			return new FailureAnalysis(
+					"The Bean Validation API is on the classpath but no implementation could be found",
+					"Add an implementation, such as Hibernate Validator, to the classpath", cause);
+		}
+		return null;
+	}
+  ```
+    ]]>
+  </code>
+</response>

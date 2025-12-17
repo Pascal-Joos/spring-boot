@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+				@Override
+				public void close() throws IOException {
+					if (CloseableHttpHandlerFactory.this.closeable != null) {
+						CloseableHttpHandlerFactory.this.closeable.close();
+					}
+				}
+  ```
+    ]]>
+  </code>
+</response>

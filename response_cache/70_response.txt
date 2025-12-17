@@ -1,0 +1,12 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	public AbstractConfigurableWebServerFactory() {
+		this.ssl = new Ssl();
+		this.compression = new Compression();
+	}
+  ```
+    ]]>
+  </code>
+</response>

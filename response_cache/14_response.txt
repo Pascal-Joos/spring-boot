@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	String getDirectory() {
+		return (this.directory != null) ? this.directory : "";
+	}
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,24 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	@Override
+	protected FailureAnalysis analyze(Throwable rootFailure, NoSuchBeanDefinitionException cause,
+			 String description) {
+		InjectionPoint injectionPoint = findInjectionPoint(rootFailure);
+		if (injectionPoint != null && isConstructorBindingConfigurationProperties(injectionPoint)) {
+			String simpleName = injectionPoint.getMember().getDeclaringClass().getSimpleName();
+			String action = String.format("Update your configuration so that " + simpleName + " is defined via @"
+					+ ConfigurationPropertiesScan.class.getSimpleName() + " or @"
+					+ EnableConfigurationProperties.class.getSimpleName() + ".", simpleName);
+			return new FailureAnalysis(
+					simpleName + " is annotated with @" + ConstructorBinding.class.getSimpleName()
+							+ " but it is defined as a regular bean which caused dependency injection to fail.",
+					action, cause);
+		}
+		return null;
+	}
+  ```
+    ]]>
+  </code>
+</response>

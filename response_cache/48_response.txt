@@ -1,0 +1,27 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+		void set(T dataSource, String value) {
+			try {
+				if (this.setter == null) {
+					UnsupportedDataSourcePropertyException.throwIf(!this.property.isOptional(),
+							() -> "No setter mapped for '" + this.property + "' property");
+					return;
+				}
+				V converted = convertFromString(value);
+				if (converted == null) {
+					UnsupportedDataSourcePropertyException.throwIf(!this.property.isOptional(),
+							() -> "No value mapped for '" + this.property + "' property");
+					return;
+				}
+				this.setter.set(dataSource, converted);
+			}
+			catch (SQLException ex) {
+				throw new IllegalStateException(ex);
+			}
+		}
+  ```
+    ]]>
+  </code>
+</response>

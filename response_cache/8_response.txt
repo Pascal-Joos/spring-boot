@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	private Collection<TypeExcludeFilter> getDelegates() {
+		Collection<TypeExcludeFilter> delegates = this.delegates;
+		if (delegates == null && this.beanFactory instanceof ListableBeanFactory) {
+			delegates = ((ListableBeanFactory) this.beanFactory).getBeansOfType(TypeExcludeFilter.class).values();
+			this.delegates = delegates;
+		}
+		return delegates;
+	}
+  ```
+    ]]>
+  </code>
+</response>

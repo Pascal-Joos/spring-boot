@@ -1,0 +1,17 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	private ConfigurationProperty( ConfigurationPropertySource source,
+			 ConfigurationPropertyName name, Object value,  Origin origin) {
+		Assert.notNull(name, "Name must not be null");
+		Assert.notNull(value, "Value must not be null");
+		this.source = source;
+		this.name = Objects.requireNonNull(name, "Name must not be null");
+		this.value = value;
+		this.origin = origin;
+	}
+  ```
+    ]]>
+  </code>
+</response>

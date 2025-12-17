@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	private String[] extractBeanNames(NoUniqueBeanDefinitionException cause) {
+		String message = cause.getMessage();
+		if (message != null && message.contains("but found")) {
+			return StringUtils.commaDelimitedListToStringArray(
+					message.substring(message.lastIndexOf(':') + 1).trim());
+		}
+		return null;
+	}
+  ```
+    ]]>
+  </code>
+</response>

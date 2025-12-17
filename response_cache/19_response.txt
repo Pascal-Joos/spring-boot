@@ -1,0 +1,28 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	private static ConfigurationPropertiesBean create(String name, Object instance, Class<?> type,
+			Method factory) {
+		ConfigurationProperties annotation = findAnnotation(instance, type, factory, ConfigurationProperties.class);
+		if (annotation == null) {
+			throw new IllegalStateException("Missing @ConfigurationProperties on " + type.getName());
+		}
+		Validated validated = findAnnotation(instance, type, factory, Validated.class);
+		Annotation[] annotations = (validated != null) ? new Annotation[] { annotation, validated }
+				: new Annotation[] { annotation };
+		ResolvableType bindType = (factory != null) ? ResolvableType.forMethodReturnType(factory)
+				: ResolvableType.forClass(type);
+		Bindable<Object> bindable = Bindable.of(bindType).withAnnotations(annotations);
+		if (instance != null) {
+			bindable = bindable.withExistingValue(instance);
+		}
+		if (factory != null) {
+			return new ConfigurationPropertiesBean(name, instance, annotation, bindable, BindMethod.JAVA_BEAN);
+		}
+		return new ConfigurationPropertiesBean(name, instance, annotation, bindable);
+	}
+  ```
+    ]]>
+  </code>
+</response>

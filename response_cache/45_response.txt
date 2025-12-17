@@ -1,0 +1,19 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	private FailureAnalysis analyzeUnboundConfigurationPropertiesException( BindException cause,
+			UnboundConfigurationPropertiesException exception) {
+		Object target = (cause != null) ? cause.getTarget() : null;
+		StringBuilder description = new StringBuilder(
+				String.format("Binding to target %s failed:%n", target));
+		for (ConfigurationProperty property : exception.getUnboundProperties()) {
+			buildDescription(description, property);
+			description.append(String.format("%n    Reason: %s", exception.getMessage()));
+		}
+		return getFailureAnalysis(description, cause);
+	}
+  ```
+    ]]>
+  </code>
+</response>

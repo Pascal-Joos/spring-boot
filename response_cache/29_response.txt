@@ -1,0 +1,29 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+		private static Constructor<?> deduceBindConstructor(Class<?> type, Constructor<?>[] candidates) {
+			if (candidates.length == 1 && candidates[0].getParameterCount() > 0) {
+				if (type.isMemberClass() && Modifier.isPrivate(candidates[0].getModifiers())) {
+					throw new IllegalStateException(type.getName() + " has a single private @ConstructorBinding constructor");
+				}
+				return candidates[0];
+			}
+			Constructor<?> result = null;
+			for (Constructor<?> candidate : candidates) {
+				if (!Modifier.isPrivate(candidate.getModifiers())) {
+					if (result != null) {
+						throw new IllegalStateException(type.getName() + " has more than one suitable @ConstructorBinding constructor");
+					}
+					result = candidate;
+				}
+			}
+			if (result != null && result.getParameterCount() > 0) {
+				return result;
+			}
+			throw new IllegalStateException(type.getName() + " does not have a suitable @ConstructorBinding constructor");
+		}
+  ```
+    ]]>
+  </code>
+</response>

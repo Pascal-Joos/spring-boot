@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	@Override
+	public Iterator<ConfigurationPropertySource> iterator() {
+		Iterable<PropertySource<?>> localSources = this.sources;
+		if (localSources == null) {
+			return Collections.emptyIterator();
+		}
+		return new SourcesIterator(localSources.iterator(), this::adapt);
+	}
+  ```
+    ]]>
+  </code>
+</response>

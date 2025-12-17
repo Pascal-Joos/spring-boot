@@ -1,0 +1,19 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	private Optional<Object[]> getArgs(Class<?>[] parameterTypes) {
+		Object[] args = new Object[parameterTypes.length];
+		for (int i = 0; i < parameterTypes.length; i++) {
+			Function<Class<?>, Object> parameter = getAvailableParameter(parameterTypes[i]);
+			if (parameter == null) {
+				return Optional.empty();
+			}
+			args[i] = parameter.apply(this.type);
+		}
+		return Optional.of(args);
+	}
+  ```
+    ]]>
+  </code>
+</response>

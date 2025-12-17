@@ -1,0 +1,18 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private String cleanMessage(String message) {
+      if (message == null) {
+          return null;
+      }
+      int loadedFromIndex = message.indexOf(" (loaded from");
+      if (loadedFromIndex == -1) {
+          return message;
+      }
+      return message.substring(0, loadedFromIndex);
+  }
+  ```
+    ]]>
+  </code>
+</response>

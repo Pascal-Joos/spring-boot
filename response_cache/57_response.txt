@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	@Override
+	public void start() {
+		this.server.start();
+		ApplicationEventPublisher publisher = this.eventPublisher;
+		if (publisher != null) {
+			publisher.publishEvent(new RSocketServerInitializedEvent(this.server));
+		}
+	}
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,17 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public void start() throws RSocketServerException {
+      this.channel = block(this.starter, this.lifecycleTimeout);
+      InetSocketAddress address = address();
+      if (address != null) {
+          logger.info("Netty RSocket started on port(s): " + address.getPort());
+      }
+      startDaemonAwaitThread(this.channel);
+  }
+  ```
+    ]]>
+  </code>
+</response>

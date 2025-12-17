@@ -1,0 +1,24 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+		private <T> GenericApplicationContext run(ThrowingSupplier<T> action) {
+			try {
+				SpringApplication.withHook(this, action);
+			}
+			catch (AbandonedRunException ex) {
+				ApplicationContext context = ex.getApplicationContext();
+				Assert.notNull(context, "AOT processing requires a GenericApplicationContext but got a null ApplicationContext");
+				Assert.isInstanceOf(GenericApplicationContext.class, context,
+						() -> "AOT processing requires a GenericApplicationContext but got a "
+								+ context.getClass().getName());
+				return (GenericApplicationContext) context;
+			}
+			throw new IllegalStateException(
+					"No application context available after calling main method of '%s'. Does it run a SpringApplication?"
+							.formatted(this.application.getName()));
+		}
+  ```
+    ]]>
+  </code>
+</response>

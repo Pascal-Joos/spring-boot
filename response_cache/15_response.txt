@@ -1,0 +1,22 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private BiConsumer<String, LogLevel> getLogLevelConfigurer(LoggingSystem system) {
+      return (name, level) -> {
+          if (system == null) {
+              return;
+          }
+          try {
+              name = name.equalsIgnoreCase(LoggingSystem.ROOT_LOGGER_NAME) ? null : name;
+              system.setLogLevel(name, level);
+          }
+          catch (RuntimeException ex) {
+              this.logger.error(LogMessage.format("Cannot set level '%s' for '%s'", level, name));
+          }
+      };
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	ServletComponentRegisteringPostProcessor(Set<String> packagesToScan) {
+		if (packagesToScan == null) {
+			throw new IllegalArgumentException("packagesToScan must not be null");
+		}
+		this.packagesToScan = packagesToScan;
+	}
+  ```
+    ]]>
+  </code>
+</response>

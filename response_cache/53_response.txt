@@ -1,0 +1,19 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private void clearLogLevel( String loggerName,  LoggerConfig logger) {
+      if (logger == null) {
+          return;
+      }
+      if (logger instanceof LevelSetLoggerConfig) {
+          getLoggerContext().getConfiguration().removeLogger(loggerName);
+      }
+      else {
+          logger.setLevel(null);
+      }
+  }
+  ```
+    ]]>
+  </code>
+</response>

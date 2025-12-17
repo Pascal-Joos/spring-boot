@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+		ConfigurationPropertiesBinder create() {
+			if (this.applicationContext == null) {
+				throw new IllegalStateException("ApplicationContext must not be null");
+			}
+			return new ConfigurationPropertiesBinder(this.applicationContext);
+		}
+  ```
+    ]]>
+  </code>
+</response>

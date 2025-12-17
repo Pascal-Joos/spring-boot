@@ -1,0 +1,15 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+		BeanProperty(String name, ResolvableType declaringClassType) {
+			this.name = DataObjectPropertyName.toDashedForm(name);
+			this.declaringClassType = declaringClassType;
+			this.getter = null;
+			this.setter = null;
+			this.field = null;
+		}
+  ```
+    ]]>
+  </code>
+</response>
