@@ -159,23 +159,26 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		}
 
 		private void handleJavaBeanProperties(ReflectionHints hints) {
-			for (PropertyDescriptor propertyDescriptor : this.beanInfo.getPropertyDescriptors()) {
-				Method writeMethod = propertyDescriptor.getWriteMethod();
-				if (writeMethod != null) {
-					hints.registerMethod(writeMethod, ExecutableMode.INVOKE);
-				}
-				Method readMethod = propertyDescriptor.getReadMethod();
-				if (readMethod != null) {
-					ResolvableType propertyType = ResolvableType.forMethodReturnType(readMethod, this.type);
-					String propertyName = propertyDescriptor.getName();
-					if (isSetterMandatory(propertyName, propertyType) && writeMethod == null) {
-						continue;
-					}
-					handleProperty(hints, propertyName, propertyType);
-					hints.registerMethod(readMethod, ExecutableMode.INVOKE);
-				}
-			}
-		}
+  			if (this.beanInfo == null) {
+  				return;
+  			}
+  			for (PropertyDescriptor propertyDescriptor : this.beanInfo.getPropertyDescriptors()) {
+  				Method writeMethod = propertyDescriptor.getWriteMethod();
+  				if (writeMethod != null) {
+  					hints.registerMethod(writeMethod, ExecutableMode.INVOKE);
+  				}
+  				Method readMethod = propertyDescriptor.getReadMethod();
+  				if (readMethod != null) {
+  					ResolvableType propertyType = ResolvableType.forMethodReturnType(readMethod, this.type);
+  					String propertyName = propertyDescriptor.getName();
+  					if (isSetterMandatory(propertyName, propertyType) && writeMethod == null) {
+  						continue;
+  					}
+  					handleProperty(hints, propertyName, propertyType);
+  					hints.registerMethod(readMethod, ExecutableMode.INVOKE);
+  				}
+  			}
+  		}
 
 		private boolean isSetterMandatory(String propertyName, ResolvableType propertyType) {
 			Class<?> propertyClass = propertyType.resolve();
