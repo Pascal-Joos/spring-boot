@@ -64,7 +64,7 @@ import javax.annotation.Nullable;
 @Deprecated(since = "2.0.0", forRemoval = false)
 public class SslServerCustomizer implements NettyServerCustomizer {
 
-	private final Ssl ssl;
+	@Nullable private final Ssl ssl;
 
 	@Nullable
 	private final Http2 http2;
@@ -85,32 +85,36 @@ public class SslServerCustomizer implements NettyServerCustomizer {
 	}
 
 	protected AbstractProtocolSslContextSpec<?> createSslContextSpec() {
-		AbstractProtocolSslContextSpec<?> sslContextSpec;
-		if (this.http2 != null && this.http2.isEnabled()) {
-			sslContextSpec = Http2SslContextSpec.forServer(getKeyManagerFactory(this.ssl, this.sslStoreProvider));
-		}
-		else {
-			sslContextSpec = Http11SslContextSpec.forServer(getKeyManagerFactory(this.ssl, this.sslStoreProvider));
-		}
-		sslContextSpec.configure((builder) -> {
-			builder.trustManager(getTrustManagerFactory(this.ssl, this.sslStoreProvider));
-			if (this.ssl.getEnabledProtocols() != null) {
-				builder.protocols(this.ssl.getEnabledProtocols());
-			}
-			if (this.ssl.getCiphers() != null) {
-				builder.ciphers(Arrays.asList(this.ssl.getCiphers()));
-			}
-			if (this.ssl.getClientAuth() == Ssl.ClientAuth.NEED) {
-				builder.clientAuth(ClientAuth.REQUIRE);
-			}
-			else if (this.ssl.getClientAuth() == Ssl.ClientAuth.WANT) {
-				builder.clientAuth(ClientAuth.OPTIONAL);
-			}
-		});
-		return sslContextSpec;
-	}
+  		if (this.ssl == null) {
+  			return null;
+  		}
+  		Ssl ssl = this.ssl;
+  		AbstractProtocolSslContextSpec<?> sslContextSpec;
+  		if (this.http2 != null && this.http2.isEnabled()) {
+  			sslContextSpec = Http2SslContextSpec.forServer(getKeyManagerFactory(ssl, this.sslStoreProvider));
+  		}
+  		else {
+  			sslContextSpec = Http11SslContextSpec.forServer(getKeyManagerFactory(ssl, this.sslStoreProvider));
+  		}
+  		sslContextSpec.configure((builder) -> {
+  			builder.trustManager(getTrustManagerFactory(ssl, this.sslStoreProvider));
+  			if (ssl.getEnabledProtocols() != null) {
+  				builder.protocols(ssl.getEnabledProtocols());
+  			}
+  			if (ssl.getCiphers() != null) {
+  				builder.ciphers(Arrays.asList(ssl.getCiphers()));
+  			}
+  			if (ssl.getClientAuth() == Ssl.ClientAuth.NEED) {
+  				builder.clientAuth(ClientAuth.REQUIRE);
+  			}
+  			else if (ssl.getClientAuth() == Ssl.ClientAuth.WANT) {
+  				builder.clientAuth(ClientAuth.OPTIONAL);
+  			}
+  		});
+  		return sslContextSpec;
+ }
 
-	KeyManagerFactory getKeyManagerFactory(Ssl ssl, @Nullable SslStoreProvider sslStoreProvider) {
+	KeyManagerFactory getKeyManagerFactory(@Nullable Ssl ssl, @Nullable SslStoreProvider sslStoreProvider) {
 		try {
 			KeyStore keyStore = getKeyStore(ssl, sslStoreProvider);
 			SslConfigurationValidator.validateKeyAlias(keyStore, ssl.getKeyAlias());
@@ -138,7 +142,7 @@ public class SslServerCustomizer implements NettyServerCustomizer {
 				ssl.getKeyStorePassword());
 	}
 
-	TrustManagerFactory getTrustManagerFactory(Ssl ssl, @Nullable SslStoreProvider sslStoreProvider) {
+	TrustManagerFactory getTrustManagerFactory(@Nullable Ssl ssl, @Nullable SslStoreProvider sslStoreProvider) {
 		try {
 			KeyStore store = getTrustStore(ssl, sslStoreProvider);
 			TrustManagerFactory trustManagerFactory = TrustManagerFactory
