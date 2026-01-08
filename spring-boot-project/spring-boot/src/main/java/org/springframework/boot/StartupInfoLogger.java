@@ -48,7 +48,7 @@ class StartupInfoLogger {
 
 	private final Class<?> sourceClass;
 
-	StartupInfoLogger(@Nullable Class<?> sourceClass) {
+	StartupInfoLogger(Class<?> sourceClass) {
 		this.sourceClass = sourceClass;
 	}
 
