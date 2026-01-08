@@ -22,7 +22,6 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyS
 import org.springframework.boot.origin.Origin;
 import org.springframework.core.env.PropertySource;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Exception thrown when an attempt is made to resolve a property against an inactive
@@ -63,24 +62,24 @@ public class InactiveConfigDataAccessException extends ConfigDataException {
 		this.origin = origin;
 	}
 
-	private static String getMessage( @Nullable PropertySource<?> propertySource,  @Nullable ConfigDataResource location,
- 			String propertyName,  @Nullable Origin origin) {
- 		StringBuilder message = new StringBuilder("Inactive property source '");
- 		message.append(Nullability.castToNonnull(propertySource).getName());
- 		if (location != null) {
- 			message.append("' imported from location '");
- 			message.append(location);
- 		}
- 		message.append("' cannot contain property '");
- 		message.append(propertyName);
- 		message.append("'");
- 		if (origin != null) {
- 			message.append(" [origin: ");
- 			message.append(origin);
- 			message.append("]");
- 		}
- 		return message.toString();
- }
+	private static String getMessage(@Nullable PropertySource<?> propertySource, @Nullable ConfigDataResource location,
+			String propertyName, @Nullable Origin origin) {
+		StringBuilder message = new StringBuilder("Inactive property source '");
+		message.append(propertySource.getName());
+		if (location != null) {
+			message.append("' imported from location '");
+			message.append(location);
+		}
+		message.append("' cannot contain property '");
+		message.append(propertyName);
+		message.append("'");
+		if (origin != null) {
+			message.append(" [origin: ");
+			message.append(origin);
+			message.append("]");
+		}
+		return message.toString();
+	}
 
 	/**
 	 * Return the inactive property source that contained the property.
