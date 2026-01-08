@@ -22,6 +22,7 @@ import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * An {@link AbstractFailureAnalyzer} that performs analysis of failures caused by any
@@ -38,16 +39,16 @@ class UnboundConfigurationPropertyFailureAnalyzer
 		return analyzeUnboundConfigurationPropertiesException(exception, cause);
 	}
 
-	private FailureAnalysis analyzeUnboundConfigurationPropertiesException(@Nullable BindException cause,
-			UnboundConfigurationPropertiesException exception) {
-		StringBuilder description = new StringBuilder(
-				String.format("Binding to target %s failed:%n", cause.getTarget()));
-		for (ConfigurationProperty property : exception.getUnboundProperties()) {
-			buildDescription(description, property);
-			description.append(String.format("%n    Reason: %s", exception.getMessage()));
-		}
-		return getFailureAnalysis(description, cause);
-	}
+	private FailureAnalysis analyzeUnboundConfigurationPropertiesException( @Nullable BindException cause,
+ 			UnboundConfigurationPropertiesException exception) {
+ 		StringBuilder description = new StringBuilder(
+ 				String.format("Binding to target %s failed:%n", Nullability.castToNonnull(cause).getTarget()));
+ 		for (ConfigurationProperty property : exception.getUnboundProperties()) {
+ 			buildDescription(description, property);
+ 			description.append(String.format("%n    Reason: %s", exception.getMessage()));
+ 		}
+ 		return getFailureAnalysis(description, cause);
+ }
 
 	private void buildDescription(StringBuilder description, ConfigurationProperty property) {
 		if (property != null) {
