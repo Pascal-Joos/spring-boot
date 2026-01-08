@@ -31,6 +31,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Strategy interface for loading resources from a location. Supports single resource and
@@ -73,13 +74,13 @@ class LocationResourceLoader {
 	 * @see #isPattern(String)
 	 */
 	Resource getResource(String location) {
-		validateNonPattern(location);
-		location = StringUtils.cleanPath(location);
-		if (!ResourceUtils.isUrl(location)) {
-			location = ResourceUtils.FILE_URL_PREFIX + location;
-		}
-		return this.resourceLoader.getResource(location);
-	}
+ 		validateNonPattern(Nullability.castToNonnull(location));
+ 		location = StringUtils.cleanPath(location);
+ 		if (!ResourceUtils.isUrl(location)) {
+ 			location = ResourceUtils.FILE_URL_PREFIX + location;
+ 		}
+ 		return this.resourceLoader.getResource(location);
+ }
 
 	private void validateNonPattern(String location) {
 		Assert.state(!isPattern(location), () -> String.format("Location '%s' must not be a pattern", location));
@@ -93,36 +94,36 @@ class LocationResourceLoader {
 	 * @see #isPattern(String)
 	 */
 	Resource[] getResources(String location, ResourceType type) {
-		validatePattern(location, type);
-		String directoryPath = location.substring(0, location.indexOf("*/"));
-		String fileName = location.substring(location.lastIndexOf("/") + 1);
-		Resource resource = getResource(directoryPath);
-		if (!resource.exists()) {
-			return EMPTY_RESOURCES;
-		}
-		File file = getFile(location, resource);
-		if (!file.isDirectory()) {
-			return EMPTY_RESOURCES;
-		}
-		File[] subDirectories = file.listFiles(this::isVisibleDirectory);
-		if (subDirectories == null) {
-			return EMPTY_RESOURCES;
-		}
-		Arrays.sort(subDirectories, FILE_PATH_COMPARATOR);
-		if (type == ResourceType.DIRECTORY) {
-			return Arrays.stream(subDirectories).map(FileSystemResource::new).toArray(Resource[]::new);
-		}
-		List<Resource> resources = new ArrayList<>();
-		FilenameFilter filter = (dir, name) -> name.equals(fileName);
-		for (File subDirectory : subDirectories) {
-			File[] files = subDirectory.listFiles(filter);
-			if (files != null) {
-				Arrays.sort(files, FILE_NAME_COMPARATOR);
-				Arrays.stream(files).map(FileSystemResource::new).forEach(resources::add);
-			}
-		}
-		return resources.toArray(EMPTY_RESOURCES);
-	}
+   		validatePattern(Nullability.castToNonnull(location), type);
+   		String directoryPath = Nullability.castToNonnull(location).substring(0, Nullability.castToNonnull(location).indexOf("*/"));
+   		String fileName = Nullability.castToNonnull(location).substring(Nullability.castToNonnull(location).lastIndexOf("/") + 1);
+   		Resource resource = getResource(directoryPath);
+   		if (!resource.exists()) {
+   			return EMPTY_RESOURCES;
+   		}
+   		File file = getFile(Nullability.castToNonnull(location), resource);
+   		if (!file.isDirectory()) {
+   			return EMPTY_RESOURCES;
+   		}
+   		File[] subDirectories = file.listFiles(this::isVisibleDirectory);
+   		if (subDirectories == null) {
+   			return EMPTY_RESOURCES;
+   		}
+   		Arrays.sort(subDirectories, FILE_PATH_COMPARATOR);
+   		if (type == ResourceType.DIRECTORY) {
+   			return Arrays.stream(subDirectories).map(FileSystemResource::new).toArray(Resource[]::new);
+   		}
+   		List<Resource> resources = new ArrayList<>();
+   		FilenameFilter filter = (dir, name) -> name.equals(fileName);
+   		for (File subDirectory : subDirectories) {
+   			File[] files = subDirectory.listFiles(filter);
+   			if (files != null) {
+   				Arrays.sort(files, FILE_NAME_COMPARATOR);
+   				Arrays.stream(files).map(FileSystemResource::new).forEach(resources::add);
+   			}
+   		}
+   		return resources.toArray(EMPTY_RESOURCES);
+ }
 
 	private void validatePattern(String location, ResourceType type) {
 		Assert.state(isPattern(location), () -> String.format("Location '%s' must be a pattern", location));

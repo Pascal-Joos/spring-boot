@@ -73,7 +73,7 @@ class StandardConfigDataReference {
 		return !this.configDataLocation.isOptional() && this.directory != null;
 	}
 
-	String getDirectory() {
+	@Nullable String getDirectory() {
 		return this.directory;
 	}
 
