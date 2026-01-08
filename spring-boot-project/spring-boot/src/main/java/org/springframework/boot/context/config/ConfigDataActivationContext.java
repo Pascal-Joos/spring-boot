@@ -90,8 +90,8 @@ class ConfigDataActivationContext {
 	 * Return profile information if it is available.
 	 * @return profile information or {@code null}
 	 */
-	
-	@Nullable Profiles getProfiles() {
+	@Nullable
+	Profiles getProfiles() {
 		return this.profiles;
 	}
 
