@@ -717,8 +717,8 @@ public class RestTemplateBuilder {
 	 */
 	private static class RequestFactoryCustomizer implements Consumer<ClientHttpRequestFactory> {
 
-		
-		@Nullable private final Duration connectTimeout;
+		@Nullable
+		private final Duration connectTimeout;
 
 		@Nullable
 		private final Duration readTimeout;
@@ -778,12 +778,10 @@ public class RestTemplateBuilder {
 		}
 
 		private void setConnectTimeout(ClientHttpRequestFactory factory) {
-  			if (this.connectTimeout != null) {
-  				Method method = findMethod(factory, "setConnectTimeout", int.class);
-  				int timeout = Math.toIntExact(this.connectTimeout.toMillis());
-  				invoke(factory, method, timeout);
-  			}
-    }
+			Method method = findMethod(factory, "setConnectTimeout", int.class);
+			int timeout = Math.toIntExact(this.connectTimeout.toMillis());
+			invoke(factory, method, timeout);
+		}
 
 		private void setReadTimeout(ClientHttpRequestFactory factory) {
 			Method method = findMethod(factory, "setReadTimeout", int.class);
