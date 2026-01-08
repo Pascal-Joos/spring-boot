@@ -59,6 +59,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import com.uber.nullaway.annotations.Initializer;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * An {@link ApplicationListener} that configures the {@link LoggingSystem}. If the
@@ -293,18 +294,18 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 	 * @param classLoader the classloader
 	 */
 	@Initializer
-	protected void initialize(ConfigurableEnvironment environment, ClassLoader classLoader) {
-		getLoggingSystemProperties(environment).apply();
-		this.logFile = LogFile.get(environment);
-		if (this.logFile != null) {
-			this.logFile.applyToSystemProperties();
-		}
-		this.loggerGroups = new LoggerGroups(DEFAULT_GROUP_LOGGERS);
-		initializeEarlyLoggingLevel(environment);
-		initializeSystem(environment, this.loggingSystem, this.logFile);
-		initializeFinalLoggingLevels(environment, this.loggingSystem);
-		registerShutdownHookIfNecessary(environment, this.loggingSystem);
-	}
+ 	protected void initialize(ConfigurableEnvironment environment, ClassLoader classLoader) {
+ 		getLoggingSystemProperties(environment).apply();
+ 		this.logFile = LogFile.get(environment);
+ 		if (this.logFile != null) {
+ 			this.logFile.applyToSystemProperties();
+ 		}
+ 		this.loggerGroups = new LoggerGroups(DEFAULT_GROUP_LOGGERS);
+ 		initializeEarlyLoggingLevel(environment);
+ 		initializeSystem(environment, Nullability.castToNonnull(this.loggingSystem), this.logFile);
+ 		initializeFinalLoggingLevels(environment, Nullability.castToNonnull(this.loggingSystem));
+ 		registerShutdownHookIfNecessary(environment, Nullability.castToNonnull(this.loggingSystem));
+ }
 
 	private LoggingSystemProperties getLoggingSystemProperties(ConfigurableEnvironment environment) {
 		return (this.loggingSystem != null) ? this.loggingSystem.getSystemProperties(environment)
