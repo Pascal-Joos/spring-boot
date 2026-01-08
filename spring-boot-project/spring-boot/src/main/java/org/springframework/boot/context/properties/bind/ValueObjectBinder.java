@@ -317,7 +317,7 @@ class ValueObjectBinder implements DataObjectBinder {
 			this.annotations = annotations;
 		}
 
-		Object bind(DataObjectPropertyBinder propertyBinder) {
+		@Nullable Object bind(DataObjectPropertyBinder propertyBinder) {
 			return propertyBinder.bindProperty(this.name, Bindable.of(this.type).withAnnotations(this.annotations));
 		}
 

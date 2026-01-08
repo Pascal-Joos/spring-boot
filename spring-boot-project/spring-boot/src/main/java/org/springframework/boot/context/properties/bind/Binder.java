@@ -279,7 +279,7 @@ public class Binder {
 	 * @since 2.2.0
 	 * @see #bind(ConfigurationPropertyName, Bindable, BindHandler)
 	 */
-	public <T> T bindOrCreate(String name, Class<T> target) {
+	@Nullable public <T> T bindOrCreate(String name, Class<T> target) {
 		return bindOrCreate(name, Bindable.of(target));
 	}
 
@@ -325,7 +325,7 @@ public class Binder {
 	 * @return the bound or created object
 	 * @since 2.2.0
 	 */
-	public <T> T bindOrCreate(ConfigurationPropertyName name, Bindable<T> target, @Nullable BindHandler handler) {
+	@Nullable public <T> T bindOrCreate(ConfigurationPropertyName name, Bindable<T> target, @Nullable BindHandler handler) {
 		return bind(name, target, handler, true);
 	}
 
@@ -338,7 +338,7 @@ public class Binder {
 		return bind(name, target, handler, context, false, create);
 	}
 
-	private <T> T bind(ConfigurationPropertyName name, Bindable<T> target, BindHandler handler, Context context,
+	@Nullable private <T> T bind(ConfigurationPropertyName name, Bindable<T> target, BindHandler handler, Context context,
 			boolean allowRecursiveBinding, boolean create) {
 		try {
 			Bindable<T> replacementTarget = handler.onStart(name, target, context);
