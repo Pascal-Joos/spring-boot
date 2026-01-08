@@ -49,7 +49,7 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 
 	private Set<ErrorPage> errorPages = new LinkedHashSet<>();
 
-	private Ssl ssl;
+	@Nullable private Ssl ssl;
 
 	@Nullable
 	private SslStoreProvider sslStoreProvider;
@@ -57,7 +57,7 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 	@Nullable
 	private Http2 http2;
 
-	private Compression compression;
+	@Nullable private Compression compression;
 
 	@Nullable
 	private String serverHeader;
@@ -127,7 +127,7 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 		this.errorPages.addAll(Arrays.asList(errorPages));
 	}
 
-	public Ssl getSsl() {
+	@Nullable public Ssl getSsl() {
 		return this.ssl;
 	}
 
@@ -156,7 +156,7 @@ public abstract class AbstractConfigurableWebServerFactory implements Configurab
 		this.http2 = http2;
 	}
 
-	public Compression getCompression() {
+	@Nullable public Compression getCompression() {
 		return this.compression;
 	}
 
