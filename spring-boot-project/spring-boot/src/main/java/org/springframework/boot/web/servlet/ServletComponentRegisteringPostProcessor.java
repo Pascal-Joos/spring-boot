@@ -32,7 +32,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * {@link BeanFactoryPostProcessor} that registers beans for Servlet components found via
@@ -56,7 +55,7 @@ class ServletComponentRegisteringPostProcessor implements BeanFactoryPostProcess
 
 	private final Set<String> packagesToScan;
 
-	@Nullable private ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 
 	ServletComponentRegisteringPostProcessor(Set<String> packagesToScan) {
 		this.packagesToScan = packagesToScan;
@@ -73,17 +72,14 @@ class ServletComponentRegisteringPostProcessor implements BeanFactoryPostProcess
 	}
 
 	private void scanPackage(ClassPathScanningCandidateComponentProvider componentProvider, String packageToScan) {
- 		if (!(this.applicationContext instanceof BeanDefinitionRegistry beanDefinitionRegistry)) {
- 			return;
- 		}
- 		for (BeanDefinition candidate : componentProvider.findCandidateComponents(packageToScan)) {
- 			if (candidate instanceof AnnotatedBeanDefinition annotatedBeanDefinition) {
- 				for (ServletComponentHandler handler : HANDLERS) {
- 					handler.handle(annotatedBeanDefinition, beanDefinitionRegistry);
- 				}
- 			}
- 		}
- }
+		for (BeanDefinition candidate : componentProvider.findCandidateComponents(packageToScan)) {
+			if (candidate instanceof AnnotatedBeanDefinition annotatedBeanDefinition) {
+				for (ServletComponentHandler handler : HANDLERS) {
+					handler.handle(annotatedBeanDefinition, (BeanDefinitionRegistry) this.applicationContext);
+				}
+			}
+		}
+	}
 
 	private boolean isRunningInEmbeddedWebServer() {
 		return this.applicationContext instanceof WebApplicationContext webApplicationContext
@@ -91,17 +87,15 @@ class ServletComponentRegisteringPostProcessor implements BeanFactoryPostProcess
 	}
 
 	private ClassPathScanningCandidateComponentProvider createComponentProvider() {
- 		ClassPathScanningCandidateComponentProvider componentProvider = new ClassPathScanningCandidateComponentProvider(
- 				false);
- 		if (this.applicationContext != null) {
- 			componentProvider.setEnvironment(this.applicationContext.getEnvironment());
- 			componentProvider.setResourceLoader(this.applicationContext);
- 		}
- 		for (ServletComponentHandler handler : HANDLERS) {
- 			componentProvider.addIncludeFilter(handler.getTypeFilter());
- 		}
- 		return componentProvider;
- }
+		ClassPathScanningCandidateComponentProvider componentProvider = new ClassPathScanningCandidateComponentProvider(
+				false);
+		componentProvider.setEnvironment(this.applicationContext.getEnvironment());
+		componentProvider.setResourceLoader(this.applicationContext);
+		for (ServletComponentHandler handler : HANDLERS) {
+			componentProvider.addIncludeFilter(handler.getTypeFilter());
+		}
+		return componentProvider;
+	}
 
 	Set<String> getPackagesToScan() {
 		return Collections.unmodifiableSet(this.packagesToScan);
