@@ -297,7 +297,7 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
 	}
 
 	@Override
-	public int compareTo(ConfigurationPropertyName other) {
+	public int compareTo(@Nullable ConfigurationPropertyName other) {
 		return compare(this, other);
 	}
 
