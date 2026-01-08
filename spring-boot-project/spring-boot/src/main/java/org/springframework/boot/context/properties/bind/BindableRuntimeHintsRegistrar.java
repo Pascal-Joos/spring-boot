@@ -93,8 +93,8 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		@Nullable
 		private final Constructor<?> bindConstructor;
 
-		
-		@Nullable private final BeanInfo beanInfo;
+		@Nullable
+		private final BeanInfo beanInfo;
 
 		private final Set<Class<?>> seen;
 
@@ -159,26 +159,23 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		}
 
 		private void handleJavaBeanProperties(ReflectionHints hints) {
-  			if (this.beanInfo == null) {
-  				return;
-  			}
-  			for (PropertyDescriptor propertyDescriptor : this.beanInfo.getPropertyDescriptors()) {
-  				Method writeMethod = propertyDescriptor.getWriteMethod();
-  				if (writeMethod != null) {
-  					hints.registerMethod(writeMethod, ExecutableMode.INVOKE);
-  				}
-  				Method readMethod = propertyDescriptor.getReadMethod();
-  				if (readMethod != null) {
-  					ResolvableType propertyType = ResolvableType.forMethodReturnType(readMethod, this.type);
-  					String propertyName = propertyDescriptor.getName();
-  					if (isSetterMandatory(propertyName, propertyType) && writeMethod == null) {
-  						continue;
-  					}
-  					handleProperty(hints, propertyName, propertyType);
-  					hints.registerMethod(readMethod, ExecutableMode.INVOKE);
-  				}
-  			}
-  }
+			for (PropertyDescriptor propertyDescriptor : this.beanInfo.getPropertyDescriptors()) {
+				Method writeMethod = propertyDescriptor.getWriteMethod();
+				if (writeMethod != null) {
+					hints.registerMethod(writeMethod, ExecutableMode.INVOKE);
+				}
+				Method readMethod = propertyDescriptor.getReadMethod();
+				if (readMethod != null) {
+					ResolvableType propertyType = ResolvableType.forMethodReturnType(readMethod, this.type);
+					String propertyName = propertyDescriptor.getName();
+					if (isSetterMandatory(propertyName, propertyType) && writeMethod == null) {
+						continue;
+					}
+					handleProperty(hints, propertyName, propertyType);
+					hints.registerMethod(readMethod, ExecutableMode.INVOKE);
+				}
+			}
+		}
 
 		private boolean isSetterMandatory(String propertyName, ResolvableType propertyType) {
 			Class<?> propertyClass = propertyType.resolve();
