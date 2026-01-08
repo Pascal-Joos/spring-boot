@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
  */
 public final class ConfigurationProperty implements OriginProvider, Comparable<ConfigurationProperty> {
 
-	@Nullable private final ConfigurationPropertyName name;
+	private final ConfigurationPropertyName name;
 
 	private final Object value;
 
@@ -74,7 +74,7 @@ public final class ConfigurationProperty implements OriginProvider, Comparable<C
 	 * Return the name of the configuration property.
 	 * @return the configuration property name
 	 */
-	@Nullable public ConfigurationPropertyName getName() {
+	public ConfigurationPropertyName getName() {
 		return this.name;
 	}
 
@@ -121,13 +121,9 @@ public final class ConfigurationProperty implements OriginProvider, Comparable<C
 	}
 
 	@Override
-   public int compareTo(ConfigurationProperty other) {
-     int result = ObjectUtils.nullSafeCompare(this.name, other.name);
-     if (result != 0) {
-       return result;
-     }
-     return ObjectUtils.nullSafeCompare(this.value, other.value);
-   }
+	public int compareTo(ConfigurationProperty other) {
+		return this.name.compareTo(other.name);
+	}
 
 	@Nullable
 	static ConfigurationProperty of(ConfigurationPropertyName name, OriginTrackedValue value) {
