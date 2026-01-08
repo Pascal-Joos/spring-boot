@@ -32,7 +32,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Connection details for {@link EmbeddedDatabaseType embedded databases}.
@@ -197,22 +196,22 @@ public enum EmbeddedDatabaseConnection {
 	private static class IsEmbedded implements ConnectionCallback<Boolean> {
 
 		@Override
-  		public Boolean doInConnection(Connection connection) throws SQLException, DataAccessException {
-  			DatabaseMetaData metaData = connection.getMetaData();
-  			String productName = metaData.getDatabaseProductName();
-  			if (productName == null) {
-  				return false;
-  			}
-  			productName = productName.toUpperCase(Locale.ENGLISH);
-  			EmbeddedDatabaseConnection[] candidates = EmbeddedDatabaseConnection.values();
-  			for (EmbeddedDatabaseConnection candidate : candidates) {
-  				if (candidate != NONE && productName.contains(Nullability.castToNonnull(candidate.getType()).name())) {
-  					String url = metaData.getURL();
-  					return (url == null || candidate.isEmbeddedUrl(url));
-  				}
-  			}
-  			return false;
-  }
+		public Boolean doInConnection(Connection connection) throws SQLException, DataAccessException {
+			DatabaseMetaData metaData = connection.getMetaData();
+			String productName = metaData.getDatabaseProductName();
+			if (productName == null) {
+				return false;
+			}
+			productName = productName.toUpperCase(Locale.ENGLISH);
+			EmbeddedDatabaseConnection[] candidates = EmbeddedDatabaseConnection.values();
+			for (EmbeddedDatabaseConnection candidate : candidates) {
+				if (candidate != NONE && productName.contains(candidate.getType().name())) {
+					String url = metaData.getURL();
+					return (url == null || candidate.isEmbeddedUrl(url));
+				}
+			}
+			return false;
+		}
 
 	}
 
