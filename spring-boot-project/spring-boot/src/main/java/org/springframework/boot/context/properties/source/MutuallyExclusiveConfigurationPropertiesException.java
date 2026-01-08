@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.util.Assert;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Exception thrown when more than one mutually exclusive configuration property has been
@@ -39,7 +38,7 @@ import edu.ucr.cs.riple.annotator.util.Nullability;
 @SuppressWarnings("serial")
 public class MutuallyExclusiveConfigurationPropertiesException extends RuntimeException {
 
-	@Nullable private final Set<String> configuredNames;
+	private final Set<String> configuredNames;
 
 	private final Set<String> mutuallyExclusiveNames;
 
@@ -51,22 +50,22 @@ public class MutuallyExclusiveConfigurationPropertiesException extends RuntimeEx
 	 * exclusive
 	 */
 	public MutuallyExclusiveConfigurationPropertiesException(Collection<String> configuredNames,
- 			Collection<String> mutuallyExclusiveNames) {
- 		this(asSet(configuredNames), Nullability.castToNonnull(asSet(mutuallyExclusiveNames)));
- }
+			Collection<String> mutuallyExclusiveNames) {
+		this(asSet(configuredNames), asSet(mutuallyExclusiveNames));
+	}
 
-	private MutuallyExclusiveConfigurationPropertiesException(  @Nullable Set<String> configuredNames,
-  			  @Nullable Set<String> mutuallyExclusiveNames) {
-  		super(buildMessage(Nullability.castToNonnull(mutuallyExclusiveNames), Nullability.castToNonnull(configuredNames)));
-  		this.configuredNames = configuredNames;
-  		this.mutuallyExclusiveNames = mutuallyExclusiveNames;
- }
+	private MutuallyExclusiveConfigurationPropertiesException(Set<String> configuredNames,
+			Set<String> mutuallyExclusiveNames) {
+		super(buildMessage(mutuallyExclusiveNames, configuredNames));
+		this.configuredNames = configuredNames;
+		this.mutuallyExclusiveNames = mutuallyExclusiveNames;
+	}
 
 	/**
 	 * Return the names of the properties that have been configured.
 	 * @return the names of the configured properties
 	 */
-	@Nullable public Set<String> getConfiguredNames() {
+	public Set<String> getConfiguredNames() {
 		return this.configuredNames;
 	}
 
@@ -74,11 +73,11 @@ public class MutuallyExclusiveConfigurationPropertiesException extends RuntimeEx
 	 * Return the names of the properties that are mutually exclusive.
 	 * @return the names of the mutually exclusive properties
 	 */
-	@Nullable public Set<String> getMutuallyExclusiveNames() {
+	public Set<String> getMutuallyExclusiveNames() {
 		return this.mutuallyExclusiveNames;
 	}
 
-	@Nullable private static Set<String> asSet(Collection<String> collection) {
+	private static Set<String> asSet(Collection<String> collection) {
 		return (collection != null) ? new LinkedHashSet<>(collection) : null;
 	}
 
