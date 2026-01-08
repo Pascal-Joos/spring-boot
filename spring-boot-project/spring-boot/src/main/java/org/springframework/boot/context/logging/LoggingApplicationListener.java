@@ -59,6 +59,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import com.uber.nullaway.annotations.Initializer;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * An {@link ApplicationListener} that configures the {@link LoggingSystem}. If the
@@ -239,9 +240,9 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 	}
 
 	private void onApplicationStartingEvent(ApplicationStartingEvent event) {
-		this.loggingSystem = LoggingSystem.get(event.getSpringApplication().getClassLoader());
-		this.loggingSystem.beforeInitialize();
-	}
+ 		this.loggingSystem = LoggingSystem.get(event.getSpringApplication().getClassLoader());
+ 		Nullability.castToNonnull(this.loggingSystem).beforeInitialize();
+ }
 
 	private void onApplicationEnvironmentPreparedEvent(ApplicationEnvironmentPreparedEvent event) {
 		SpringApplication springApplication = event.getSpringApplication();
