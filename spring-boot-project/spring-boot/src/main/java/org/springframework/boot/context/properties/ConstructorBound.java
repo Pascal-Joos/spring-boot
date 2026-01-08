@@ -17,7 +17,6 @@
 package org.springframework.boot.context.properties;
 
 import org.springframework.beans.factory.BeanFactory;
-import javax.annotation.Nullable;
 
 /**
  * Helper class to programmatically bind configuration properties that use constructor

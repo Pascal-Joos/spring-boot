@@ -99,7 +99,7 @@ class ConfigurationPropertiesBinder {
 		return getBinder().bind(annotation.prefix(), target, bindHandler);
 	}
 
-	@Nullable Object bindOrCreate(ConfigurationPropertiesBean propertiesBean) {
+	Object bindOrCreate(ConfigurationPropertiesBean propertiesBean) {
 		Bindable<?> target = propertiesBean.asBindTarget();
 		ConfigurationProperties annotation = propertiesBean.getAnnotation();
 		BindHandler bindHandler = getBindHandler(target, annotation);
