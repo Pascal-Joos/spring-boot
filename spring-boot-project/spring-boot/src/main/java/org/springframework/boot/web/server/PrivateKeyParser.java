@@ -36,6 +36,7 @@ import org.springframework.util.Base64Utils;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Parser for PKCS private key files in PEM format.
@@ -95,22 +96,22 @@ final class PrivateKeyParser {
 	}
 
 	private static PKCS8EncodedKeySpec createKeySpecForAlgorithm(byte[] bytes, int[] algorithm,
-			@Nullable int[] parameters) {
-		try {
-			DerEncoder encoder = new DerEncoder();
-			encoder.integer(0x00); // Version 0
-			DerEncoder algorithmIdentifier = new DerEncoder();
-			algorithmIdentifier.objectIdentifier(algorithm);
-			algorithmIdentifier.objectIdentifier(parameters);
-			byte[] byteArray = algorithmIdentifier.toByteArray();
-			encoder.sequence(byteArray);
-			encoder.octetString(bytes);
-			return new PKCS8EncodedKeySpec(encoder.toSequence());
-		}
-		catch (IOException ex) {
-			throw new IllegalStateException(ex);
-		}
-	}
+ 			 @Nullable int[] parameters) {
+ 		try {
+ 			DerEncoder encoder = new DerEncoder();
+ 			encoder.integer(0x00); // Version 0
+ 			DerEncoder algorithmIdentifier = new DerEncoder();
+ 			algorithmIdentifier.objectIdentifier(algorithm);
+ 			algorithmIdentifier.objectIdentifier(Nullability.castToNonnull(parameters));
+ 			byte[] byteArray = algorithmIdentifier.toByteArray();
+ 			encoder.sequence(byteArray);
+ 			encoder.octetString(bytes);
+ 			return new PKCS8EncodedKeySpec(encoder.toSequence());
+ 		}
+ 		catch (IOException ex) {
+ 			throw new IllegalStateException(ex);
+ 		}
+ }
 
 	/**
 	 * Load a private key from the specified resource.
