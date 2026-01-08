@@ -70,7 +70,7 @@ class SslConnectorCustomizer implements TomcatConnectorCustomizer {
 	 * @param ssl the ssl details
 	 * @param sslStoreProvider the ssl store provider
 	 */
-	protected void configureSsl(AbstractHttp11JsseProtocol<?> protocol, Ssl ssl,
+	protected void configureSsl(AbstractHttp11JsseProtocol<?> protocol, @Nullable Ssl ssl,
 			@Nullable SslStoreProvider sslStoreProvider) {
 		protocol.setSSLEnabled(true);
 		SSLHostConfig sslHostConfig = new SSLHostConfig();

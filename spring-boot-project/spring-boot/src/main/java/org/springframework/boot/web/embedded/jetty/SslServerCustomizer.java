@@ -57,7 +57,7 @@ class SslServerCustomizer implements JettyServerCustomizer {
 
 	private final InetSocketAddress address;
 
-	private final Ssl ssl;
+	@Nullable private final Ssl ssl;
 
 	@Nullable
 	private final SslStoreProvider sslStoreProvider;
@@ -108,11 +108,12 @@ class SslServerCustomizer implements JettyServerCustomizer {
 	}
 
 	private ServerConnector createHttp11ServerConnector(Server server, HttpConfiguration config,
-			SslContextFactory.Server sslContextFactory) {
-		HttpConnectionFactory connectionFactory = new HttpConnectionFactory(config);
-		return new SslValidatingServerConnector(server, sslContextFactory, this.ssl.getKeyAlias(),
-				createSslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()), connectionFactory);
-	}
+ 			SslContextFactory.Server sslContextFactory) {
+ 		HttpConnectionFactory connectionFactory = new HttpConnectionFactory(config);
+ 		return new SslValidatingServerConnector(server, sslContextFactory,
+ 				(this.ssl != null) ? this.ssl.getKeyAlias() : null,
+ 				createSslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()), connectionFactory);
+ }
 
 	private SslConnectionFactory createSslConnectionFactory(SslContextFactory.Server sslContextFactory,
 			String protocol) {
@@ -140,17 +141,18 @@ class SslServerCustomizer implements JettyServerCustomizer {
 	}
 
 	private ServerConnector createHttp2ServerConnector(Server server, HttpConfiguration config,
-			SslContextFactory.Server sslContextFactory) {
-		HttpConnectionFactory http = new HttpConnectionFactory(config);
-		HTTP2ServerConnectionFactory h2 = new HTTP2ServerConnectionFactory(config);
-		ALPNServerConnectionFactory alpn = createAlpnServerConnectionFactory();
-		sslContextFactory.setCipherComparator(HTTP2Cipher.COMPARATOR);
-		if (isConscryptPresent()) {
-			sslContextFactory.setProvider("Conscrypt");
-		}
-		SslConnectionFactory ssl = createSslConnectionFactory(sslContextFactory, alpn.getProtocol());
-		return new SslValidatingServerConnector(server, sslContextFactory, this.ssl.getKeyAlias(), ssl, alpn, h2, http);
-	}
+ 			SslContextFactory.Server sslContextFactory) {
+ 		HttpConnectionFactory http = new HttpConnectionFactory(config);
+ 		HTTP2ServerConnectionFactory h2 = new HTTP2ServerConnectionFactory(config);
+ 		ALPNServerConnectionFactory alpn = createAlpnServerConnectionFactory();
+ 		sslContextFactory.setCipherComparator(HTTP2Cipher.COMPARATOR);
+ 		if (isConscryptPresent()) {
+ 			sslContextFactory.setProvider("Conscrypt");
+ 		}
+ 		SslConnectionFactory ssl = createSslConnectionFactory(sslContextFactory, alpn.getProtocol());
+ 		return new SslValidatingServerConnector(server, sslContextFactory,
+ 				(this.ssl != null) ? this.ssl.getKeyAlias() : null, ssl, alpn, h2, http);
+ }
 
 	private ALPNServerConnectionFactory createAlpnServerConnectionFactory() {
 		try {
@@ -173,7 +175,7 @@ class SslServerCustomizer implements JettyServerCustomizer {
 	 * @param ssl the ssl details.
 	 * @param sslStoreProvider the ssl store provider
 	 */
-	protected void configureSsl(SslContextFactory.Server factory, Ssl ssl,
+	protected void configureSsl(SslContextFactory.Server factory, @Nullable Ssl ssl,
 			@Nullable SslStoreProvider sslStoreProvider) {
 		factory.setProtocol(ssl.getProtocol());
 		configureSslClientAuth(factory, ssl);
