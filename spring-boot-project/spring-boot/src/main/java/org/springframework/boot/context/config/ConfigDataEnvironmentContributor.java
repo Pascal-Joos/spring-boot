@@ -33,7 +33,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySource;
 import org.springframework.util.CollectionUtils;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * A single element that may directly or indirectly contribute configuration data to the
@@ -279,19 +278,19 @@ class ConfigDataEnvironmentContributor implements Iterable<ConfigDataEnvironment
 	}
 
 	private void moveProfileSpecific(Map<ImportPhase, List<ConfigDataEnvironmentContributor>> children) {
- 		List<ConfigDataEnvironmentContributor> before = children.get(ImportPhase.BEFORE_PROFILE_ACTIVATION);
- 		if (!hasAnyProfileSpecificChildren(before)) {
- 			return;
- 		}
- 		List<ConfigDataEnvironmentContributor> updatedBefore = new ArrayList<>(Nullability.castToNonnull(before).size());
- 		List<ConfigDataEnvironmentContributor> updatedAfter = new ArrayList<>();
- 		for (ConfigDataEnvironmentContributor contributor : Nullability.castToNonnull(before)) {
- 			updatedBefore.add(moveProfileSpecificChildren(contributor, updatedAfter));
- 		}
- 		updatedAfter.addAll(children.getOrDefault(ImportPhase.AFTER_PROFILE_ACTIVATION, Collections.emptyList()));
- 		children.put(ImportPhase.BEFORE_PROFILE_ACTIVATION, updatedBefore);
- 		children.put(ImportPhase.AFTER_PROFILE_ACTIVATION, updatedAfter);
- }
+		List<ConfigDataEnvironmentContributor> before = children.get(ImportPhase.BEFORE_PROFILE_ACTIVATION);
+		if (!hasAnyProfileSpecificChildren(before)) {
+			return;
+		}
+		List<ConfigDataEnvironmentContributor> updatedBefore = new ArrayList<>(before.size());
+		List<ConfigDataEnvironmentContributor> updatedAfter = new ArrayList<>();
+		for (ConfigDataEnvironmentContributor contributor : before) {
+			updatedBefore.add(moveProfileSpecificChildren(contributor, updatedAfter));
+		}
+		updatedAfter.addAll(children.getOrDefault(ImportPhase.AFTER_PROFILE_ACTIVATION, Collections.emptyList()));
+		children.put(ImportPhase.BEFORE_PROFILE_ACTIVATION, updatedBefore);
+		children.put(ImportPhase.AFTER_PROFILE_ACTIVATION, updatedAfter);
+	}
 
 	private ConfigDataEnvironmentContributor moveProfileSpecificChildren(ConfigDataEnvironmentContributor contributor,
 			List<ConfigDataEnvironmentContributor> removed) {
