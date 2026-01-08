@@ -147,7 +147,7 @@ class DefaultBindConstructorProvider implements BindConstructorProvider {
 
 		}
 
-		private static Constructor<?> deduceBindConstructor(Class<?> type, Constructor<?>[] candidates) {
+		@Nullable private static Constructor<?> deduceBindConstructor(Class<?> type, Constructor<?>[] candidates) {
 			if (candidates.length == 1 && candidates[0].getParameterCount() > 0) {
 				if (type.isMemberClass() && Modifier.isPrivate(candidates[0].getModifiers())) {
 					return null;
