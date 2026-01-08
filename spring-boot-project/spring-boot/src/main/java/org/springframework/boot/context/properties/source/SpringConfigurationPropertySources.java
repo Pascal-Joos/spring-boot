@@ -41,8 +41,8 @@ import javax.annotation.Nullable;
  */
 class SpringConfigurationPropertySources implements Iterable<ConfigurationPropertySource> {
 
-	
-	@Nullable private final Iterable<PropertySource<?>> sources;
+	@Nullable
+	private final Iterable<PropertySource<?>> sources;
 
 	private final Map<PropertySource<?>, ConfigurationPropertySource> cache = new ConcurrentReferenceHashMap<>(16,
 			ReferenceType.SOFT);
@@ -57,10 +57,9 @@ class SpringConfigurationPropertySources implements Iterable<ConfigurationProper
 	}
 
 	@Override
- 	public Iterator<ConfigurationPropertySource> iterator() {
- 		Assert.notNull(this.sources, "Sources must not be null");
- 		return new SourcesIterator(this.sources.iterator(), this::adapt);
- 	}
+	public Iterator<ConfigurationPropertySource> iterator() {
+		return new SourcesIterator(this.sources.iterator(), this::adapt);
+	}
 
 	private ConfigurationPropertySource adapt(PropertySource<?> source) {
 		ConfigurationPropertySource result = this.cache.get(source);
