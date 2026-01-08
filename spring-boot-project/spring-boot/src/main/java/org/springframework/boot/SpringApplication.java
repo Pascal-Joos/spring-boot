@@ -90,7 +90,6 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.function.ThrowingSupplier;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Class that can be used to bootstrap and launch a Spring application from a Java main
@@ -192,7 +191,7 @@ public class SpringApplication {
 
 	private Set<String> sources = new LinkedHashSet<>();
 
-	@Nullable private Class<?> mainApplicationClass;
+	private Class<?> mainApplicationClass;
 
 	private Banner.Mode bannerMode = Banner.Mode.CONSOLE;
 
@@ -220,9 +219,9 @@ public class SpringApplication {
 
 	private boolean registerShutdownHook = true;
 
-	@Nullable private List<ApplicationContextInitializer<?>> initializers;
+	private List<ApplicationContextInitializer<?>> initializers;
 
-	@Nullable private List<ApplicationListener<?>> listeners;
+	private List<ApplicationListener<?>> listeners;
 
 	@Nullable
 	private Map<String, Object> defaultProperties;
@@ -301,55 +300,50 @@ public class SpringApplication {
 	 * @return a running {@link ApplicationContext}
 	 */
 	public ConfigurableApplicationContext run(String... args) {
-    		long startTime = System.nanoTime();
-    		DefaultBootstrapContext bootstrapContext = createBootstrapContext();
-    		ConfigurableApplicationContext context = null;
-    		configureHeadlessProperty();
-    		SpringApplicationRunListeners listeners = getRunListeners(args);
-    		listeners.starting(bootstrapContext, Nullability.castToNonnull(this.mainApplicationClass));
-    		try {
-    			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
-    			ConfigurableEnvironment environment = prepareEnvironment(listeners, bootstrapContext, applicationArguments);
-    			Banner printedBanner = printBanner(environment);
-    			context = createApplicationContext();
-    			context.setApplicationStartup(this.applicationStartup);
-    			prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner);
-    			refreshContext(context);
-    			afterRefresh(context, applicationArguments);
-    			Duration timeTakenToStartup = Duration.ofNanos(System.nanoTime() - startTime);
-    			if (this.logStartupInfo) {
-    				if (this.mainApplicationClass != null) {
-    					new StartupInfoLogger(Nullability.castToNonnull(this.mainApplicationClass)).logStarted(getApplicationLog(), timeTakenToStartup);
-    				}
-    				else {
-    					getApplicationLog().info("Application started in " + timeTakenToStartup.toMillis() + " ms");
-    				}
-    			}
-    			listeners.started(context, timeTakenToStartup);
-    			callRunners(context, applicationArguments);
-    		}
-    		catch (Throwable ex) {
-    			if (ex instanceof AbandonedRunException) {
-    				throw ex;
-    			}
-    			handleRunFailure(context, ex, listeners);
-    			throw new IllegalStateException(ex);
-    		}
-    		try {
-    			if (context.isRunning()) {
-    				Duration timeTakenToReady = Duration.ofNanos(System.nanoTime() - startTime);
-    				listeners.ready(context, timeTakenToReady);
-    			}
-    		}
-    		catch (Throwable ex) {
-    			if (ex instanceof AbandonedRunException) {
-    				throw ex;
-    			}
-    			handleRunFailure(context, ex, null);
-    			throw new IllegalStateException(ex);
-    		}
-    		return context;
- }
+		long startTime = System.nanoTime();
+		DefaultBootstrapContext bootstrapContext = createBootstrapContext();
+		ConfigurableApplicationContext context = null;
+		configureHeadlessProperty();
+		SpringApplicationRunListeners listeners = getRunListeners(args);
+		listeners.starting(bootstrapContext, this.mainApplicationClass);
+		try {
+			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+			ConfigurableEnvironment environment = prepareEnvironment(listeners, bootstrapContext, applicationArguments);
+			Banner printedBanner = printBanner(environment);
+			context = createApplicationContext();
+			context.setApplicationStartup(this.applicationStartup);
+			prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner);
+			refreshContext(context);
+			afterRefresh(context, applicationArguments);
+			Duration timeTakenToStartup = Duration.ofNanos(System.nanoTime() - startTime);
+			if (this.logStartupInfo) {
+				new StartupInfoLogger(this.mainApplicationClass).logStarted(getApplicationLog(), timeTakenToStartup);
+			}
+			listeners.started(context, timeTakenToStartup);
+			callRunners(context, applicationArguments);
+		}
+		catch (Throwable ex) {
+			if (ex instanceof AbandonedRunException) {
+				throw ex;
+			}
+			handleRunFailure(context, ex, listeners);
+			throw new IllegalStateException(ex);
+		}
+		try {
+			if (context.isRunning()) {
+				Duration timeTakenToReady = Duration.ofNanos(System.nanoTime() - startTime);
+				listeners.ready(context, timeTakenToReady);
+			}
+		}
+		catch (Throwable ex) {
+			if (ex instanceof AbandonedRunException) {
+				throw ex;
+			}
+			handleRunFailure(context, ex, null);
+			throw new IllegalStateException(ex);
+		}
+		return context;
+	}
 
 	private DefaultBootstrapContext createBootstrapContext() {
 		DefaultBootstrapContext bootstrapContext = new DefaultBootstrapContext();
@@ -389,57 +383,55 @@ public class SpringApplication {
 	}
 
 	private void prepareContext(DefaultBootstrapContext bootstrapContext, ConfigurableApplicationContext context,
-  			ConfigurableEnvironment environment, SpringApplicationRunListeners listeners,
-  			ApplicationArguments applicationArguments,   @Nullable Banner printedBanner) {
-  		context.setEnvironment(environment);
-  		postProcessApplicationContext(context);
-  		addAotGeneratedInitializerIfNecessary(this.initializers);
-  		applyInitializers(context);
-  		listeners.contextPrepared(context);
-  		bootstrapContext.close(context);
-  		if (this.logStartupInfo) {
-  			logStartupInfo(context.getParent() == null);
-  			logStartupProfileInfo(context);
-  		}
-  		// Add boot specific singleton beans
-  		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
-  		beanFactory.registerSingleton("springApplicationArguments", applicationArguments);
-  		if (printedBanner != null) {
-  			beanFactory.registerSingleton("springBootBanner", printedBanner);
-  		}
-  		if (beanFactory instanceof AbstractAutowireCapableBeanFactory autowireCapableBeanFactory) {
-  			autowireCapableBeanFactory.setAllowCircularReferences(this.allowCircularReferences);
-  			if (beanFactory instanceof DefaultListableBeanFactory listableBeanFactory) {
-  				listableBeanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
-  			}
-  		}
-  		if (this.lazyInitialization) {
-  			context.addBeanFactoryPostProcessor(new LazyInitializationBeanFactoryPostProcessor());
-  		}
-  		context.addBeanFactoryPostProcessor(new PropertySourceOrderingBeanFactoryPostProcessor(context));
-  		if (!AotDetector.useGeneratedArtifacts()) {
-  			// Load the sources
-  			Set<Object> sources = getAllSources();
-  			Assert.notEmpty(sources, "Sources must not be empty");
-  			load(context, sources.toArray(new Object[0]));
-  		}
-  		listeners.contextLoaded(context);
- }
+			ConfigurableEnvironment environment, SpringApplicationRunListeners listeners,
+			ApplicationArguments applicationArguments, @Nullable Banner printedBanner) {
+		context.setEnvironment(environment);
+		postProcessApplicationContext(context);
+		addAotGeneratedInitializerIfNecessary(this.initializers);
+		applyInitializers(context);
+		listeners.contextPrepared(context);
+		bootstrapContext.close(context);
+		if (this.logStartupInfo) {
+			logStartupInfo(context.getParent() == null);
+			logStartupProfileInfo(context);
+		}
+		// Add boot specific singleton beans
+		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+		beanFactory.registerSingleton("springApplicationArguments", applicationArguments);
+		if (printedBanner != null) {
+			beanFactory.registerSingleton("springBootBanner", printedBanner);
+		}
+		if (beanFactory instanceof AbstractAutowireCapableBeanFactory autowireCapableBeanFactory) {
+			autowireCapableBeanFactory.setAllowCircularReferences(this.allowCircularReferences);
+			if (beanFactory instanceof DefaultListableBeanFactory listableBeanFactory) {
+				listableBeanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
+			}
+		}
+		if (this.lazyInitialization) {
+			context.addBeanFactoryPostProcessor(new LazyInitializationBeanFactoryPostProcessor());
+		}
+		context.addBeanFactoryPostProcessor(new PropertySourceOrderingBeanFactoryPostProcessor(context));
+		if (!AotDetector.useGeneratedArtifacts()) {
+			// Load the sources
+			Set<Object> sources = getAllSources();
+			Assert.notEmpty(sources, "Sources must not be empty");
+			load(context, sources.toArray(new Object[0]));
+		}
+		listeners.contextLoaded(context);
+	}
 
 	private void addAotGeneratedInitializerIfNecessary(List<ApplicationContextInitializer<?>> initializers) {
- 		if (AotDetector.useGeneratedArtifacts()) {
- 			List<ApplicationContextInitializer<?>> aotInitializers = new ArrayList<>(
- 					initializers.stream().filter(AotApplicationContextInitializer.class::isInstance).toList());
- 			if (aotInitializers.isEmpty()) {
- 				if (this.mainApplicationClass != null) {
- 					String initializerClassName = this.mainApplicationClass.getName() + "__ApplicationContextInitializer";
- 					aotInitializers.add(AotApplicationContextInitializer.forInitializerClasses(initializerClassName));
- 				}
- 			}
- 			initializers.removeAll(aotInitializers);
- 			initializers.addAll(0, aotInitializers);
- 		}
- }
+		if (AotDetector.useGeneratedArtifacts()) {
+			List<ApplicationContextInitializer<?>> aotInitializers = new ArrayList<>(
+					initializers.stream().filter(AotApplicationContextInitializer.class::isInstance).toList());
+			if (aotInitializers.isEmpty()) {
+				String initializerClassName = this.mainApplicationClass.getName() + "__ApplicationContextInitializer";
+				aotInitializers.add(AotApplicationContextInitializer.forInitializerClasses(initializerClassName));
+			}
+			initializers.removeAll(aotInitializers);
+			initializers.addAll(0, aotInitializers);
+		}
+	}
 
 	private void refreshContext(ConfigurableApplicationContext context) {
 		if (this.registerShutdownHook) {
@@ -557,19 +549,19 @@ public class SpringApplication {
 		}
 	}
 
-	@Nullable private Banner printBanner(ConfigurableEnvironment environment) {
-     		if (this.bannerMode == Banner.Mode.OFF) {
-     			return null;
-     		}
-     		ResourceLoader resourceLoader = (this.resourceLoader != null) ? this.resourceLoader
-     				: new DefaultResourceLoader(null);
-     		SpringApplicationBannerPrinter bannerPrinter = new SpringApplicationBannerPrinter(resourceLoader, this.banner);
-     		if (this.bannerMode == Mode.LOG) {
-     			return bannerPrinter.print(environment, Nullability.castToNonnull(this.mainApplicationClass), logger);
-     		}
-     		return bannerPrinter.print(environment, (this.mainApplicationClass != null) ? this.mainApplicationClass
-     				: SpringApplication.class, System.out);
- }
+	@Nullable
+	private Banner printBanner(ConfigurableEnvironment environment) {
+		if (this.bannerMode == Banner.Mode.OFF) {
+			return null;
+		}
+		ResourceLoader resourceLoader = (this.resourceLoader != null) ? this.resourceLoader
+				: new DefaultResourceLoader(null);
+		SpringApplicationBannerPrinter bannerPrinter = new SpringApplicationBannerPrinter(resourceLoader, this.banner);
+		if (this.bannerMode == Mode.LOG) {
+			return bannerPrinter.print(environment, this.mainApplicationClass, logger);
+		}
+		return bannerPrinter.print(environment, this.mainApplicationClass, System.out);
+	}
 
 	/**
 	 * Strategy method used to create the {@link ApplicationContext}. By default this
@@ -628,10 +620,10 @@ public class SpringApplication {
 	 * @param isRoot true if this application is the root of a context hierarchy
 	 */
 	protected void logStartupInfo(boolean isRoot) {
-  		if (isRoot && this.mainApplicationClass != null) {
-  			new StartupInfoLogger(Nullability.castToNonnull(this.mainApplicationClass)).logStarting(getApplicationLog());
-  		}
- }
+		if (isRoot) {
+			new StartupInfoLogger(this.mainApplicationClass).logStarting(getApplicationLog());
+		}
+	}
 
 	/**
 	 * Called to log active profile information.
@@ -912,7 +904,7 @@ public class SpringApplication {
 	 * Returns the main application class that has been deduced or explicitly configured.
 	 * @return the main application class or {@code null}
 	 */
-	@Nullable public Class<?> getMainApplicationClass() {
+	public Class<?> getMainApplicationClass() {
 		return this.mainApplicationClass;
 	}
 
@@ -1234,8 +1226,8 @@ public class SpringApplication {
 	 * @param initializers the initializers to add
 	 */
 	public void addInitializers(ApplicationContextInitializer<?>... initializers) {
- 		setInitializers(Arrays.asList(initializers));
-   }
+		this.initializers.addAll(Arrays.asList(initializers));
+	}
 
 	/**
 	 * Returns read-only ordered Set of the {@link ApplicationContextInitializer}s that
@@ -1243,11 +1235,8 @@ public class SpringApplication {
 	 * @return the initializers
 	 */
 	public Set<ApplicationContextInitializer<?>> getInitializers() {
- 		if (this.initializers == null) {
- 			this.initializers = new ArrayList<>();
- 		}
- 		return asUnmodifiableOrderedSet(this.initializers);
-   }
+		return asUnmodifiableOrderedSet(this.initializers);
+	}
 
 	/**
 	 * Sets the {@link ApplicationListener}s that will be applied to the SpringApplication
@@ -1264,13 +1253,8 @@ public class SpringApplication {
 	 * @param listeners the listeners to add
 	 */
 	public void addListeners(ApplicationListener<?>... listeners) {
- 		if (this.listeners == null) {
- 			this.listeners = new ArrayList<>(Arrays.asList(listeners));
- 		}
- 		else {
- 			this.listeners.addAll(Arrays.asList(listeners));
- 		}
-   }
+		this.listeners.addAll(Arrays.asList(listeners));
+	}
 
 	/**
 	 * Returns read-only ordered Set of the {@link ApplicationListener}s that will be
@@ -1279,8 +1263,8 @@ public class SpringApplication {
 	 * @return the listeners
 	 */
 	public Set<ApplicationListener<?>> getListeners() {
- 		return asUnmodifiableOrderedSet(Nullability.castToNonnull(this.listeners));
- }
+		return asUnmodifiableOrderedSet(this.listeners);
+	}
 
 	/**
 	 * Set the {@link ApplicationStartup} to use for collecting startup metrics.
