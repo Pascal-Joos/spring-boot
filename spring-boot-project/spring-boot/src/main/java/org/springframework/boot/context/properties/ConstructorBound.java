@@ -17,6 +17,7 @@
 package org.springframework.boot.context.properties;
 
 import org.springframework.beans.factory.BeanFactory;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Helper class to programmatically bind configuration properties that use constructor
@@ -37,14 +38,14 @@ public abstract class ConstructorBound {
 	 * @return an instance from the specified bean
 	 */
 	public static Object from(BeanFactory beanFactory, String beanName, Class<?> beanType) {
-		ConfigurationPropertiesBean bean = ConfigurationPropertiesBean.forValueObject(beanType, beanName);
-		ConfigurationPropertiesBinder binder = ConfigurationPropertiesBinder.get(beanFactory);
-		try {
-			return binder.bindOrCreate(bean);
-		}
-		catch (Exception ex) {
-			throw new ConfigurationPropertiesBindException(bean, ex);
-		}
-	}
+  		ConfigurationPropertiesBean bean = ConfigurationPropertiesBean.forValueObject(beanType, beanName);
+  		ConfigurationPropertiesBinder binder = ConfigurationPropertiesBinder.get(beanFactory);
+  		try {
+  			return binder.bindOrCreate(Nullability.castToNonnull(bean));
+  		}
+  		catch (Exception ex) {
+  			throw new ConfigurationPropertiesBindException(Nullability.castToNonnull(bean), ex);
+  		}
+ }
 
 }

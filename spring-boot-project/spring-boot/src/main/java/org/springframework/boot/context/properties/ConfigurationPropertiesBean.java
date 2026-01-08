@@ -273,7 +273,7 @@ public final class ConfigurationPropertiesBean {
 		return propertiesBean;
 	}
 
-	private static ConfigurationPropertiesBean create(String name, @Nullable Object instance, Class<?> type,
+	@Nullable private static ConfigurationPropertiesBean create(String name, @Nullable Object instance, Class<?> type,
 			@Nullable Method factory) {
 		ConfigurationProperties annotation = findAnnotation(instance, type, factory, ConfigurationProperties.class);
 		if (annotation == null) {
