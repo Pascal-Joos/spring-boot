@@ -36,8 +36,8 @@ public class RSocketServerBootstrap implements ApplicationEventPublisherAware, S
 
 	private final RSocketServer server;
 
-	
-	@Nullable private ApplicationEventPublisher eventPublisher;
+	@Nullable
+	private ApplicationEventPublisher eventPublisher;
 
 	public RSocketServerBootstrap(RSocketServerFactory serverFactory, SocketAcceptor socketAcceptor) {
 		Assert.notNull(serverFactory, "ServerFactory must not be null");
@@ -50,12 +50,10 @@ public class RSocketServerBootstrap implements ApplicationEventPublisherAware, S
 	}
 
 	@Override
- 	public void start() {
- 		this.server.start();
- 		if (this.eventPublisher != null) {
- 			this.eventPublisher.publishEvent(new RSocketServerInitializedEvent(this.server));
- 		}
- 	}
+	public void start() {
+		this.server.start();
+		this.eventPublisher.publishEvent(new RSocketServerInitializedEvent(this.server));
+	}
 
 	@Override
 	public void stop() {
