@@ -75,8 +75,8 @@ import javax.annotation.Nullable;
  */
 public abstract class SpringBootServletInitializer implements WebApplicationInitializer {
 
-	@Nullable
-	protected Log logger; // Don't initialize early
+	
+	@Nullable protected Log logger; // Don't initialize early
 
 	private boolean registerErrorPageFilter = true;
 
@@ -128,33 +128,36 @@ public abstract class SpringBootServletInitializer implements WebApplicationInit
 	}
 
 	protected WebApplicationContext createRootApplicationContext(ServletContext servletContext) {
-		SpringApplicationBuilder builder = createSpringApplicationBuilder();
-		builder.main(getClass());
-		ApplicationContext parent = getExistingRootWebApplicationContext(servletContext);
-		if (parent != null) {
-			this.logger.info("Root context already created (using as parent).");
-			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, null);
-			builder.initializers(new ParentContextApplicationContextInitializer(parent));
-		}
-		builder.initializers(new ServletContextApplicationContextInitializer(servletContext));
-		builder.contextFactory((webApplicationType) -> new AnnotationConfigServletWebServerApplicationContext());
-		builder = configure(builder);
-		builder.listeners(new WebEnvironmentPropertySourceInitializer(servletContext));
-		SpringApplication application = builder.build();
-		if (application.getAllSources().isEmpty()
-				&& MergedAnnotations.from(getClass(), SearchStrategy.TYPE_HIERARCHY).isPresent(Configuration.class)) {
-			application.addPrimarySources(Collections.singleton(getClass()));
-		}
-		Assert.state(!application.getAllSources().isEmpty(),
-				"No SpringApplication sources have been defined. Either override the "
-						+ "configure method or add an @Configuration annotation");
-		// Ensure error pages are registered
-		if (this.registerErrorPageFilter) {
-			application.addPrimarySources(Collections.singleton(ErrorPageFilterConfiguration.class));
-		}
-		application.setRegisterShutdownHook(false);
-		return run(application);
-	}
+ 		SpringApplicationBuilder builder = createSpringApplicationBuilder();
+ 		builder.main(getClass());
+ 		ApplicationContext parent = getExistingRootWebApplicationContext(servletContext);
+ 		if (parent != null) {
+ 			if (this.logger == null) {
+ 				this.logger = LogFactory.getLog(getClass());
+ 			}
+ 			this.logger.info("Root context already created (using as parent).");
+ 			servletContext.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, null);
+ 			builder.initializers(new ParentContextApplicationContextInitializer(parent));
+ 		}
+ 		builder.initializers(new ServletContextApplicationContextInitializer(servletContext));
+ 		builder.contextFactory((webApplicationType) -> new AnnotationConfigServletWebServerApplicationContext());
+ 		builder = configure(builder);
+ 		builder.listeners(new WebEnvironmentPropertySourceInitializer(servletContext));
+ 		SpringApplication application = builder.build();
+ 		if (application.getAllSources().isEmpty()
+ 				&& MergedAnnotations.from(getClass(), SearchStrategy.TYPE_HIERARCHY).isPresent(Configuration.class)) {
+ 			application.addPrimarySources(Collections.singleton(getClass()));
+ 		}
+ 		Assert.state(!application.getAllSources().isEmpty(),
+ 				"No SpringApplication sources have been defined. Either override the "
+ 						+ "configure method or add an @Configuration annotation");
+ 		// Ensure error pages are registered
+ 		if (this.registerErrorPageFilter) {
+ 			application.addPrimarySources(Collections.singleton(ErrorPageFilterConfiguration.class));
+ 		}
+ 		application.setRegisterShutdownHook(false);
+ 		return run(application);
+ }
 
 	/**
 	 * Returns the {@code SpringApplicationBuilder} that is used to configure and create
