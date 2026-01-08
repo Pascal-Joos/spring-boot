@@ -53,7 +53,6 @@ import org.springframework.core.env.PropertySources;
 import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Internal class used by the {@link ConfigurationPropertiesBindingPostProcessor} to
@@ -236,8 +235,8 @@ class ConfigurationPropertiesBinder {
 		}
 
 		ConfigurationPropertiesBinder create() {
-    			return new ConfigurationPropertiesBinder(Nullability.castToNonnull(this.applicationContext));
-    }
+			return new ConfigurationPropertiesBinder(this.applicationContext);
+		}
 
 	}
 
