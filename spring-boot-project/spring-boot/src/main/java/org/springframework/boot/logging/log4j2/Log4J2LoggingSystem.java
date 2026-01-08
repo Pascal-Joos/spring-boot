@@ -72,7 +72,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * {@link LoggingSystem} for <a href="https://logging.apache.org/log4j/2.x/">Log4j 2</a>.
@@ -250,14 +249,14 @@ public class Log4J2LoggingSystem extends AbstractLoggingSystem {
 	}
 
 	@Override
-  	protected void loadDefaults(LoggingInitializationContext initializationContext,   @Nullable LogFile logFile) {
-  		if (logFile != null) {
-  			loadConfiguration(getPackagedConfigFile("log4j2-file.xml"), logFile, Nullability.castToNonnull(getOverrides(initializationContext)));
-  		}
-  		else {
-  			loadConfiguration(getPackagedConfigFile("log4j2.xml"), logFile, Nullability.castToNonnull(getOverrides(initializationContext)));
-  		}
-  }
+	protected void loadDefaults(LoggingInitializationContext initializationContext, @Nullable LogFile logFile) {
+		if (logFile != null) {
+			loadConfiguration(getPackagedConfigFile("log4j2-file.xml"), logFile, getOverrides(initializationContext));
+		}
+		else {
+			loadConfiguration(getPackagedConfigFile("log4j2.xml"), logFile, getOverrides(initializationContext));
+		}
+	}
 
 	private List<String> getOverrides(LoggingInitializationContext initializationContext) {
 		BindResult<List<String>> overrides = Binder.get(initializationContext.getEnvironment())
@@ -266,13 +265,13 @@ public class Log4J2LoggingSystem extends AbstractLoggingSystem {
 	}
 
 	@Override
- 	protected void loadConfiguration(LoggingInitializationContext initializationContext, String location,
- 			 @Nullable LogFile logFile) {
- 		if (initializationContext != null) {
- 			applySystemProperties(initializationContext.getEnvironment(), logFile);
- 		}
- 		loadConfiguration(location, logFile, Nullability.castToNonnull(getOverrides(initializationContext)));
- }
+	protected void loadConfiguration(LoggingInitializationContext initializationContext, String location,
+			@Nullable LogFile logFile) {
+		if (initializationContext != null) {
+			applySystemProperties(initializationContext.getEnvironment(), logFile);
+		}
+		loadConfiguration(location, logFile, getOverrides(initializationContext));
+	}
 
 	/**
 	 * Load the configuration from the given {@code location}, creating a composite using
