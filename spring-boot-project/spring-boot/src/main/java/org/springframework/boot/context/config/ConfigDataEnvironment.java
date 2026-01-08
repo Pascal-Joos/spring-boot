@@ -45,6 +45,7 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.core.log.LogMessage;
 import org.springframework.util.StringUtils;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Wrapper around a {@link ConfigurableEnvironment} that can be used to import and apply
@@ -287,26 +288,26 @@ class ConfigDataEnvironment {
 	}
 
 	private Collection<? extends String> getIncludedProfiles(ConfigDataEnvironmentContributors contributors,
-			ConfigDataActivationContext activationContext) {
-		PlaceholdersResolver placeholdersResolver = new ConfigDataEnvironmentContributorPlaceholdersResolver(
-				contributors, activationContext, null, true);
-		Set<String> result = new LinkedHashSet<>();
-		for (ConfigDataEnvironmentContributor contributor : contributors) {
-			ConfigurationPropertySource source = contributor.getConfigurationPropertySource();
-			if (source != null && !contributor.hasConfigDataOption(ConfigData.Option.IGNORE_PROFILES)) {
-				Binder binder = new Binder(Collections.singleton(source), placeholdersResolver);
-				binder.bind(Profiles.INCLUDE_PROFILES, STRING_LIST).ifBound((includes) -> {
-					if (!contributor.isActive(activationContext)) {
-						InactiveConfigDataAccessException.throwIfPropertyFound(contributor, Profiles.INCLUDE_PROFILES);
-						InactiveConfigDataAccessException.throwIfPropertyFound(contributor,
-								Profiles.INCLUDE_PROFILES.append("[0]"));
-					}
-					result.addAll(includes);
-				});
-			}
-		}
-		return result;
-	}
+ 			ConfigDataActivationContext activationContext) {
+ 		PlaceholdersResolver placeholdersResolver = new ConfigDataEnvironmentContributorPlaceholdersResolver(
+ 				contributors, activationContext, null, true);
+ 		Set<String> result = new LinkedHashSet<>();
+ 		for (ConfigDataEnvironmentContributor contributor : contributors) {
+ 			ConfigurationPropertySource source = contributor.getConfigurationPropertySource();
+ 			if (source != null && !contributor.hasConfigDataOption(ConfigData.Option.IGNORE_PROFILES)) {
+ 				Binder binder = new Binder(Collections.singleton(source), placeholdersResolver);
+ 				binder.bind(Profiles.INCLUDE_PROFILES, STRING_LIST).ifBound((includes) -> {
+ 					if (!contributor.isActive(activationContext)) {
+ 						InactiveConfigDataAccessException.throwIfPropertyFound(contributor, Profiles.INCLUDE_PROFILES);
+ 						InactiveConfigDataAccessException.throwIfPropertyFound(contributor,
+ 								Nullability.castToNonnull(Profiles.INCLUDE_PROFILES).append("[0]"));
+ 					}
+ 					result.addAll(includes);
+ 				});
+ 			}
+ 		}
+ 		return result;
+ }
 
 	private ConfigDataEnvironmentContributors processWithProfiles(ConfigDataEnvironmentContributors contributors,
 			ConfigDataImporter importer, ConfigDataActivationContext activationContext) {

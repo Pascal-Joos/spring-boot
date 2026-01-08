@@ -121,7 +121,7 @@ final class SystemEnvironmentPropertyMapper implements PropertyMapper {
 		return legacyCompatibleName != null && legacyCompatibleName.isAncestorOf(candidate);
 	}
 
-	private ConfigurationPropertyName buildLegacyCompatibleName(ConfigurationPropertyName name) {
+	@Nullable private ConfigurationPropertyName buildLegacyCompatibleName(ConfigurationPropertyName name) {
 		StringBuilder legacyCompatibleName = new StringBuilder();
 		for (int i = 0; i < name.getNumberOfElements(); i++) {
 			if (i != 0) {

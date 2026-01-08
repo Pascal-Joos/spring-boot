@@ -123,7 +123,7 @@ public class InactiveConfigDataAccessException extends ConfigDataException {
 	 * @param contributor the contributor to check
 	 * @param name the name to check
 	 */
-	static void throwIfPropertyFound(ConfigDataEnvironmentContributor contributor, ConfigurationPropertyName name) {
+	static void throwIfPropertyFound(ConfigDataEnvironmentContributor contributor, @Nullable ConfigurationPropertyName name) {
 		ConfigurationPropertySource source = contributor.getConfigurationPropertySource();
 		ConfigurationProperty property = (source != null) ? source.getConfigurationProperty(name) : null;
 		if (property != null) {
