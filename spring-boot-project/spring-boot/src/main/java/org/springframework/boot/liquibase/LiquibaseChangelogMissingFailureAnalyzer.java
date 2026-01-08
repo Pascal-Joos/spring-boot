@@ -21,6 +21,7 @@ import liquibase.exception.ChangeLogParseException;
 import org.springframework.boot.diagnostics.AbstractFailureAnalyzer;
 import org.springframework.boot.diagnostics.FailureAnalysis;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * An {@link AbstractFailureAnalyzer} that analyzes exceptions of type
@@ -44,8 +45,8 @@ class LiquibaseChangelogMissingFailureAnalyzer extends AbstractFailureAnalyzer<C
 	}
 
 	private String extractChangelogPath(ChangeLogParseException cause) {
-		return cause.getMessage().substring(0, cause.getMessage().length() - MESSAGE_SUFFIX.length());
-	}
+ 		return Nullability.castToNonnull(cause.getMessage()).substring(0, Nullability.castToNonnull(cause.getMessage()).length() - MESSAGE_SUFFIX.length());
+ }
 
 	private String getDescription(String changelogPath) {
 		return "Liquibase failed to start because no changelog could be found at '" + changelogPath + "'.";
