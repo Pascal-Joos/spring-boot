@@ -32,7 +32,6 @@ import org.xnio.XnioWorker;
 
 import org.springframework.util.Assert;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * A {@link HttpHandlerFactory} for an {@link AccessLogHandler}.
@@ -81,11 +80,11 @@ class AccessLogHttpHandlerFactory implements HttpHandlerFactory {
 	}
 
 	private void createAccessLogDirectoryIfNecessary() {
- 		Assert.state(this.directory != null, "Access log directory is not set");
- 		if (!Nullability.castToNonnull(this.directory).isDirectory() && !Nullability.castToNonnull(this.directory).mkdirs()) {
- 			throw new IllegalStateException("Failed to create access log directory '" + this.directory + "'");
- 		}
-   }
+		Assert.state(this.directory != null, "Access log directory is not set");
+		if (!this.directory.isDirectory() && !this.directory.mkdirs()) {
+			throw new IllegalStateException("Failed to create access log directory '" + this.directory + "'");
+		}
+	}
 
 	private XnioWorker createWorker() throws IOException {
 		Xnio xnio = Xnio.getInstance(Undertow.class.getClassLoader());
