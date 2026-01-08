@@ -286,9 +286,9 @@ class JavaBeanBinder implements DataObjectBinder {
 
 		private final ResolvableType declaringClassType;
 
-		@Nullable private Method getter;
+		private Method getter;
 
-		@Nullable private Method setter;
+		private Method setter;
 
 		@Nullable
 		private Field field;
@@ -348,40 +348,34 @@ class JavaBeanBinder implements DataObjectBinder {
 		}
 
 		@Nullable
-  		Supplier<Object> getValue(Supplier<?> instance) {
-  			if (this.getter == null) {
-  				return null;
-  			}
-  			return () -> {
-  				try {
-  					if (this.getter == null) {
-  						return null;
-  					}
-  					this.getter.setAccessible(true);
-  					return this.getter.invoke(instance.get());
-  				}
-  				catch (Exception ex) {
-  					throw new IllegalStateException("Unable to get value for property " + this.name, ex);
-  				}
-  			};
-  }
+		Supplier<Object> getValue(Supplier<?> instance) {
+			if (this.getter == null) {
+				return null;
+			}
+			return () -> {
+				try {
+					this.getter.setAccessible(true);
+					return this.getter.invoke(instance.get());
+				}
+				catch (Exception ex) {
+					throw new IllegalStateException("Unable to get value for property " + this.name, ex);
+				}
+			};
+		}
 
 		boolean isSettable() {
 			return this.setter != null;
 		}
 
 		void setValue(Supplier<?> instance, Object value) {
-  			if (!isSettable()) {
-  				throw new IllegalStateException("No setter available for property " + this.name);
-  			}
-  			try {
-  				this.setter.setAccessible(true);
-  				this.setter.invoke(instance.get(), value);
-  			}
-  			catch (Exception ex) {
-  				throw new IllegalStateException("Unable to set value for property " + this.name, ex);
-  			}
-    }
+			try {
+				this.setter.setAccessible(true);
+				this.setter.invoke(instance.get(), value);
+			}
+			catch (Exception ex) {
+				throw new IllegalStateException("Unable to set value for property " + this.name, ex);
+			}
+		}
 
 	}
 
