@@ -54,8 +54,8 @@ public class NettyRSocketServer implements RSocketServer {
 		this.lifecycleTimeout = lifecycleTimeout;
 	}
 
-	
-	@Nullable @Override
+	@Nullable
+	@Override
 	public InetSocketAddress address() {
 		if (this.channel != null) {
 			return this.channel.address();
@@ -64,14 +64,11 @@ public class NettyRSocketServer implements RSocketServer {
 	}
 
 	@Override
- 	public void start() throws RSocketServerException {
- 		this.channel = block(this.starter, this.lifecycleTimeout);
- 		InetSocketAddress address = address();
- 		if (address != null) {
- 			logger.info("Netty RSocket started on port(s): " + address.getPort());
- 		}
- 		startDaemonAwaitThread(this.channel);
- 	}
+	public void start() throws RSocketServerException {
+		this.channel = block(this.starter, this.lifecycleTimeout);
+		logger.info("Netty RSocket started on port(s): " + address().getPort());
+		startDaemonAwaitThread(this.channel);
+	}
 
 	private void startDaemonAwaitThread(CloseableChannel channel) {
 		Thread awaitThread = new Thread(() -> channel.onClose().block(), "rsocket");
