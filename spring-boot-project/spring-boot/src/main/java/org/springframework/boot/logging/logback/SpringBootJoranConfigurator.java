@@ -278,17 +278,14 @@ class SpringBootJoranConfigurator extends JoranConfigurator {
 		}
 
 		@Nullable
-  		private Object instantiate( @Nullable Class<?> type) {
-  			if (type == null) {
-  				return null;
-  			}
-  			try {
-  				return type.getConstructor().newInstance();
-  			}
-  			catch (Exception ex) {
-  				return null;
-  			}
-  }
+		private Object instantiate(@Nullable Class<?> type) {
+			try {
+				return type.getConstructor().newInstance();
+			}
+			catch (Exception ex) {
+				return null;
+			}
+		}
 
 		private void processComponent(Class<?> componentType, Set<String> reflectionTypes) {
 			BeanDescription beanDescription = this.modelInterpretationContext.getBeanDescriptionCache()
