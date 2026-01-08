@@ -38,8 +38,8 @@ final class GracefulShutdown {
 
 	private final Supplier<DisposableServer> disposableServer;
 
-	
-	@Nullable private volatile Thread shutdownThread;
+	@Nullable
+	private volatile Thread shutdownThread;
 
 	private volatile boolean shuttingDown;
 
@@ -75,14 +75,14 @@ final class GracefulShutdown {
 	}
 
 	void abort() {
- 		Thread shutdownThread = this.shutdownThread;
- 		if (shutdownThread != null) {
- 			while (!this.shuttingDown) {
- 				sleep(50);
- 			}
- 			shutdownThread.interrupt();
- 		}
- }
+		Thread shutdownThread = this.shutdownThread;
+		if (shutdownThread != null) {
+			while (!this.shuttingDown) {
+				sleep(50);
+			}
+			this.shutdownThread.interrupt();
+		}
+	}
 
 	private void sleep(long millis) {
 		try {
