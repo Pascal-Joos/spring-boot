@@ -50,8 +50,8 @@ import javax.annotation.Nullable;
  */
 public class TypeExcludeFilter implements TypeFilter, BeanFactoryAware {
 
-	
-	@Nullable private BeanFactory beanFactory;
+	@Nullable
+	private BeanFactory beanFactory;
 
 	@Nullable
 	private Collection<TypeExcludeFilter> delegates;
@@ -75,13 +75,13 @@ public class TypeExcludeFilter implements TypeFilter, BeanFactoryAware {
 	}
 
 	private Collection<TypeExcludeFilter> getDelegates() {
- 		Collection<TypeExcludeFilter> delegates = this.delegates;
- 		if (delegates == null && this.beanFactory instanceof ListableBeanFactory) {
- 			delegates = ((ListableBeanFactory) this.beanFactory).getBeansOfType(TypeExcludeFilter.class).values();
- 			this.delegates = delegates;
- 		}
- 		return delegates;
- 	}
+		Collection<TypeExcludeFilter> delegates = this.delegates;
+		if (delegates == null) {
+			delegates = ((ListableBeanFactory) this.beanFactory).getBeansOfType(TypeExcludeFilter.class).values();
+			this.delegates = delegates;
+		}
+		return delegates;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
