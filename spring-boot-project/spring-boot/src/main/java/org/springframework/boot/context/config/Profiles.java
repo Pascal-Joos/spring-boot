@@ -41,6 +41,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Provides access to environment profiles that have either been set directly on the
@@ -85,13 +86,13 @@ public class Profiles implements Iterable<String> {
 	}
 
 	private List<String> getActivatedProfiles(Environment environment, Binder binder,
-			Collection<String> additionalProfiles) {
-		return asUniqueItemList(getProfiles(environment, binder, Type.ACTIVE), additionalProfiles);
-	}
+ 			Collection<String> additionalProfiles) {
+ 		return asUniqueItemList(Nullability.castToNonnull(getProfiles(environment, binder, Type.ACTIVE)), additionalProfiles);
+   }
 
 	private List<String> getDefaultProfiles(Environment environment, Binder binder) {
-		return asUniqueItemList(getProfiles(environment, binder, Type.DEFAULT));
-	}
+ 		return asUniqueItemList(Nullability.castToNonnull(getProfiles(environment, binder, Type.DEFAULT)));
+ }
 
 	private Collection<String> getProfiles(Environment environment, Binder binder, Type type) {
 		String environmentPropertyValue = environment.getProperty(type.getName());

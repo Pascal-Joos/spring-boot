@@ -99,7 +99,7 @@ public final class BindResult<T> {
 	 * {@code null})
 	 * @return the value, if bound, otherwise {@code other}
 	 */
-	public T orElse(@Nullable T other) {
+	@Nullable public T orElse(@Nullable T other) {
 		return (this.value != null) ? this.value : other;
 	}
 

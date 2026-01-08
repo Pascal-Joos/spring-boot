@@ -76,7 +76,7 @@ public class StandardConfigDataLocationResolver
 
 	private final List<PropertySourceLoader> propertySourceLoaders;
 
-	private final String[] configNames;
+	@Nullable private final String[] configNames;
 
 	private final LocationResourceLoader resourceLoader;
 
@@ -96,12 +96,13 @@ public class StandardConfigDataLocationResolver
 	}
 
 	private String[] getConfigNames(Binder binder) {
-		String[] configNames = binder.bind(CONFIG_NAME_PROPERTY, String[].class).orElse(DEFAULT_CONFIG_NAMES);
-		for (String configName : configNames) {
-			validateConfigName(configName);
-		}
-		return configNames;
-	}
+ 		String[] configNames = binder.bind(CONFIG_NAME_PROPERTY, String[].class).orElse(DEFAULT_CONFIG_NAMES);
+ 		String[] nonNullConfigNames = (configNames != null) ? configNames : DEFAULT_CONFIG_NAMES;
+ 		for (String configName : nonNullConfigNames) {
+ 			validateConfigName(configName);
+ 		}
+ 		return nonNullConfigNames;
+ }
 
 	private void validateConfigName(String name) {
 		Assert.state(!name.contains("*"), () -> "Config name '" + name + "' cannot contain '*'");
@@ -189,15 +190,19 @@ public class StandardConfigDataLocationResolver
 	}
 
 	private Set<StandardConfigDataReference> getReferencesForDirectory(ConfigDataLocation configDataLocation,
-			String directory, @Nullable String profile) {
-		Set<StandardConfigDataReference> references = new LinkedHashSet<>();
-		for (String name : this.configNames) {
-			Deque<StandardConfigDataReference> referencesForName = getReferencesForConfigName(name, configDataLocation,
-					directory, profile);
-			references.addAll(referencesForName);
-		}
-		return references;
-	}
+ 			String directory,  @Nullable String profile) {
+ 		Set<StandardConfigDataReference> references = new LinkedHashSet<>();
+ 		List<String> configNames = this.configNames;
+ 		if (configNames == null) {
+ 			return references;
+ 		}
+ 		for (String name : configNames) {
+ 			Deque<StandardConfigDataReference> referencesForName = getReferencesForConfigName(name, configDataLocation,
+ 					directory, profile);
+ 			references.addAll(referencesForName);
+ 		}
+ 		return references;
+ }
 
 	private Deque<StandardConfigDataReference> getReferencesForConfigName(String name,
 			ConfigDataLocation configDataLocation, String directory, @Nullable String profile) {
