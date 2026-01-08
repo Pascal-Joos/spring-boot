@@ -26,7 +26,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Maintains a mapping of {@link ConfigurationPropertyName} aliases.
@@ -52,11 +51,11 @@ public final class ConfigurationPropertyNameAliases implements Iterable<Configur
 	}
 
 	public void addAliases(String name, String... aliases) {
- 		Assert.notNull(name, "Name must not be null");
- 		Assert.notNull(aliases, "Aliases must not be null");
- 		addAliases(Nullability.castToNonnull(ConfigurationPropertyName.of(name)),
- 				Arrays.stream(aliases).map(ConfigurationPropertyName::of).toArray(ConfigurationPropertyName[]::new));
- }
+		Assert.notNull(name, "Name must not be null");
+		Assert.notNull(aliases, "Aliases must not be null");
+		addAliases(ConfigurationPropertyName.of(name),
+				Arrays.stream(aliases).map(ConfigurationPropertyName::of).toArray(ConfigurationPropertyName[]::new));
+	}
 
 	public void addAliases(ConfigurationPropertyName name, ConfigurationPropertyName... aliases) {
 		Assert.notNull(name, "Name must not be null");

@@ -28,7 +28,7 @@ class PrefixedConfigurationPropertySource implements ConfigurationPropertySource
 
 	private final ConfigurationPropertySource source;
 
-	@Nullable private final ConfigurationPropertyName prefix;
+	private final ConfigurationPropertyName prefix;
 
 	PrefixedConfigurationPropertySource(ConfigurationPropertySource source, String prefix) {
 		Assert.notNull(source, "Source must not be null");
@@ -37,7 +37,7 @@ class PrefixedConfigurationPropertySource implements ConfigurationPropertySource
 		this.prefix = ConfigurationPropertyName.of(prefix);
 	}
 
-	@Nullable protected final ConfigurationPropertyName getPrefix() {
+	protected final ConfigurationPropertyName getPrefix() {
 		return this.prefix;
 	}
 

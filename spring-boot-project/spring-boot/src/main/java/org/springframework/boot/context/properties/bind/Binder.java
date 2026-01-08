@@ -43,7 +43,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.util.Assert;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * A container object which Binds objects from one or more
@@ -226,8 +225,8 @@ public class Binder {
 	 * @see #bind(ConfigurationPropertyName, Bindable, BindHandler)
 	 */
 	public <T> BindResult<T> bind(String name, Bindable<T> target) {
- 		return bind(Nullability.castToNonnull(ConfigurationPropertyName.of(name)), target, null);
- }
+		return bind(ConfigurationPropertyName.of(name), target, null);
+	}
 
 	/**
 	 * Bind the specified target {@link Bindable} using this binder's
@@ -238,7 +237,7 @@ public class Binder {
 	 * @return the binding result (never {@code null})
 	 * @see #bind(ConfigurationPropertyName, Bindable, BindHandler)
 	 */
-	public <T> BindResult<T> bind(@Nullable ConfigurationPropertyName name, Bindable<T> target) {
+	public <T> BindResult<T> bind(ConfigurationPropertyName name, Bindable<T> target) {
 		return bind(name, target, null);
 	}
 
@@ -252,8 +251,8 @@ public class Binder {
 	 * @return the binding result (never {@code null})
 	 */
 	public <T> BindResult<T> bind(String name, Bindable<T> target, BindHandler handler) {
- 		return bind(Nullability.castToNonnull(ConfigurationPropertyName.of(name)), target, handler);
- }
+		return bind(ConfigurationPropertyName.of(name), target, handler);
+	}
 
 	/**
 	 * Bind the specified target {@link Bindable} using this binder's
@@ -264,7 +263,7 @@ public class Binder {
 	 * @param <T> the bound type
 	 * @return the binding result (never {@code null})
 	 */
-	public <T> BindResult<T> bind(@Nullable ConfigurationPropertyName name, Bindable<T> target, @Nullable BindHandler handler) {
+	public <T> BindResult<T> bind(ConfigurationPropertyName name, Bindable<T> target, @Nullable BindHandler handler) {
 		T bound = bind(name, target, handler, false);
 		return BindResult.of(bound);
 	}
@@ -296,8 +295,8 @@ public class Binder {
 	 * @see #bindOrCreate(ConfigurationPropertyName, Bindable, BindHandler)
 	 */
 	public <T> T bindOrCreate(String name, Bindable<T> target) {
- 		return bindOrCreate(Nullability.castToNonnull(ConfigurationPropertyName.of(name)), target, null);
-   }
+		return bindOrCreate(ConfigurationPropertyName.of(name), target, null);
+	}
 
 	/**
 	 * Bind the specified target {@link Bindable} using this binder's
@@ -312,8 +311,8 @@ public class Binder {
 	 * @see #bindOrCreate(ConfigurationPropertyName, Bindable, BindHandler)
 	 */
 	public <T> T bindOrCreate(String name, Bindable<T> target, BindHandler handler) {
- 		return bindOrCreate(Nullability.castToNonnull(ConfigurationPropertyName.of(name)), target, handler);
-   }
+		return bindOrCreate(ConfigurationPropertyName.of(name), target, handler);
+	}
 
 	/**
 	 * Bind the specified target {@link Bindable} using this binder's
