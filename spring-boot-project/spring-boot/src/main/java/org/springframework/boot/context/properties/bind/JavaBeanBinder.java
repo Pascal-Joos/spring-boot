@@ -37,7 +37,6 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyS
 import org.springframework.core.MethodParameter;
 import org.springframework.core.ResolvableType;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * {@link DataObjectBinder} for mutable Java Beans.
@@ -91,24 +90,24 @@ class JavaBeanBinder implements DataObjectBinder {
 	}
 
 	private <T> boolean bind(BeanSupplier<T> beanSupplier, DataObjectPropertyBinder propertyBinder,
- 			BeanProperty property) {
- 		String propertyName = property.getName();
- 		ResolvableType type = property.getType();
- 		Supplier<Object> value = property.getValue(beanSupplier);
- 		Annotation[] annotations = property.getAnnotations();
- 		Object bound = propertyBinder.bindProperty(propertyName,
- 				Bindable.of(type).withSuppliedValue(value).withAnnotations(Nullability.castToNonnull(annotations)));
- 		if (bound == null) {
- 			return false;
- 		}
- 		if (property.isSettable()) {
- 			property.setValue(beanSupplier, bound);
- 		}
- 		else if (value == null || !bound.equals(value.get())) {
- 			throw new IllegalStateException("No setter found for property: " + property.getName());
- 		}
- 		return true;
- }
+			BeanProperty property) {
+		String propertyName = property.getName();
+		ResolvableType type = property.getType();
+		Supplier<Object> value = property.getValue(beanSupplier);
+		Annotation[] annotations = property.getAnnotations();
+		Object bound = propertyBinder.bindProperty(propertyName,
+				Bindable.of(type).withSuppliedValue(value).withAnnotations(annotations));
+		if (bound == null) {
+			return false;
+		}
+		if (property.isSettable()) {
+			property.setValue(beanSupplier, bound);
+		}
+		else if (value == null || !bound.equals(value.get())) {
+			throw new IllegalStateException("No setter found for property: " + property.getName());
+		}
+		return true;
+	}
 
 	/**
 	 * The bean being bound.
