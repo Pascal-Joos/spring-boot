@@ -42,8 +42,8 @@ import javax.annotation.Nullable;
  */
 public class MustacheView extends AbstractTemplateView {
 
-	
-	@Nullable private Compiler compiler;
+	@Nullable
+	private Compiler compiler;
 
 	@Nullable
 	private String charset;
@@ -84,13 +84,10 @@ public class MustacheView extends AbstractTemplateView {
 	}
 
 	private Template createTemplate(Resource resource) throws IOException {
- 		if (this.compiler == null) {
- 			throw new IllegalStateException("Property 'compiler' is required");
- 		}
- 		try (Reader reader = getReader(resource)) {
- 			return this.compiler.compile(reader);
- 		}
-   }
+		try (Reader reader = getReader(resource)) {
+			return this.compiler.compile(reader);
+		}
+	}
 
 	private Reader getReader(Resource resource) throws IOException {
 		if (this.charset != null) {
