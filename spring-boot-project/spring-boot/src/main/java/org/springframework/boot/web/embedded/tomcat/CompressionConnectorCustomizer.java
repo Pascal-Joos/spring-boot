@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  */
 class CompressionConnectorCustomizer implements TomcatConnectorCustomizer {
 
-	@Nullable private final Compression compression;
+	private final Compression compression;
 
 	CompressionConnectorCustomizer(Compression compression) {
 		this.compression = compression;
@@ -49,25 +49,25 @@ class CompressionConnectorCustomizer implements TomcatConnectorCustomizer {
 	}
 
 	private void customize(AbstractHttp11Protocol<?> protocol) {
- 		Compression compression = this.compression;
- 		protocol.setCompression("on");
- 		protocol.setCompressionMinSize(getMinResponseSize(compression));
- 		protocol.setCompressibleMimeType(getMimeTypes(compression));
- 		if (compression != null && compression.getExcludedUserAgents() != null) {
- 			protocol.setNoCompressionUserAgents(getExcludedUserAgents());
- 		}
- }
+		Compression compression = this.compression;
+		protocol.setCompression("on");
+		protocol.setCompressionMinSize(getMinResponseSize(compression));
+		protocol.setCompressibleMimeType(getMimeTypes(compression));
+		if (this.compression.getExcludedUserAgents() != null) {
+			protocol.setNoCompressionUserAgents(getExcludedUserAgents());
+		}
+	}
 
-	private int getMinResponseSize(@Nullable Compression compression) {
+	private int getMinResponseSize(Compression compression) {
 		return (int) compression.getMinResponseSize().toBytes();
 	}
 
-	private String getMimeTypes(@Nullable Compression compression) {
+	private String getMimeTypes(Compression compression) {
 		return StringUtils.arrayToCommaDelimitedString(compression.getMimeTypes());
 	}
 
 	private String getExcludedUserAgents() {
- 		return (this.compression != null) ? StringUtils.arrayToCommaDelimitedString(this.compression.getExcludedUserAgents()) : "";
-   }
+		return StringUtils.arrayToCommaDelimitedString(this.compression.getExcludedUserAgents());
+	}
 
 }
