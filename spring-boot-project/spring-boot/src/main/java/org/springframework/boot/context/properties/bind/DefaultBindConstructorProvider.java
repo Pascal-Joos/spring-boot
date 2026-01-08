@@ -131,7 +131,7 @@ class DefaultBindConstructorProvider implements BindConstructorProvider {
 			return false;
 		}
 
-		private static Constructor<?> getConstructorBindingAnnotated(Class<?> type, Constructor<?>[] candidates,
+		@Nullable private static Constructor<?> getConstructorBindingAnnotated(Class<?> type, Constructor<?>[] candidates,
 				MergedAnnotations[] mergedAnnotations) {
 			Constructor<?> result = null;
 			for (int i = 0; i < candidates.length; i++) {
