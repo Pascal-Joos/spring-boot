@@ -39,6 +39,7 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.env.SystemEnvironmentPropertySource;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * {@link ConfigurationPropertySource} backed by an {@link EnumerablePropertySource}.
@@ -196,12 +197,12 @@ class SpringIterableConfigurationPropertySource extends SpringConfigurationPrope
 
 		private final boolean trackDescendants;
 
-		private volatile Map<ConfigurationPropertyName, Set<String>> mappings;
+		@Nullable private volatile Map<ConfigurationPropertyName, Set<String>> mappings;
 
 		@Nullable
 		private volatile Map<String, ConfigurationPropertyName> reverseMappings;
 
-		private volatile Map<ConfigurationPropertyName, Set<ConfigurationPropertyName>> descendants;
+		@Nullable private volatile Map<ConfigurationPropertyName, Set<ConfigurationPropertyName>> descendants;
 
 		@Nullable
 		private volatile ConfigurationPropertyName[] configurationPropertyNames;
@@ -282,8 +283,11 @@ class SpringIterableConfigurationPropertySource extends SpringConfigurationPrope
 		}
 
 		Set<String> getMapped(ConfigurationPropertyName configurationPropertyName) {
-			return this.mappings.getOrDefault(configurationPropertyName, Collections.emptySet());
-		}
+  			if (this.mappings == null) {
+  				return Collections.emptySet();
+  			}
+  			return this.mappings.getOrDefault(configurationPropertyName, Collections.emptySet());
+  }
 
 		ConfigurationPropertyName[] getConfigurationPropertyNames(String[] propertyNames) {
 			ConfigurationPropertyName[] names = this.configurationPropertyNames;
@@ -302,18 +306,22 @@ class SpringIterableConfigurationPropertySource extends SpringConfigurationPrope
 		}
 
 		ConfigurationPropertyState containsDescendantOf(ConfigurationPropertyName name,
-				BiPredicate<ConfigurationPropertyName, ConfigurationPropertyName> ancestorOfCheck) {
-			if (name.isEmpty() && !this.descendants.isEmpty()) {
-				return ConfigurationPropertyState.PRESENT;
-			}
-			Set<ConfigurationPropertyName> candidates = this.descendants.getOrDefault(name, Collections.emptySet());
-			for (ConfigurationPropertyName candidate : candidates) {
-				if (ancestorOfCheck.test(name, candidate)) {
-					return ConfigurationPropertyState.PRESENT;
-				}
-			}
-			return ConfigurationPropertyState.ABSENT;
-		}
+      				BiPredicate<ConfigurationPropertyName, ConfigurationPropertyName> ancestorOfCheck) {
+      			Map<ConfigurationPropertyName, Set<ConfigurationPropertyName>> descendants = this.descendants;
+      			if (descendants == null) {
+      				return ConfigurationPropertyState.ABSENT;
+      			}
+      			if (name.isEmpty() && !Nullability.castToNonnull(this.descendants).isEmpty()) {
+      				return ConfigurationPropertyState.PRESENT;
+      			}
+      			Set<ConfigurationPropertyName> candidates = descendants.getOrDefault(name, Collections.emptySet());
+      			for (ConfigurationPropertyName candidate : candidates) {
+      				if (ancestorOfCheck.test(name, candidate)) {
+      					return ConfigurationPropertyState.PRESENT;
+      				}
+      			}
+      			return ConfigurationPropertyState.ABSENT;
+    }
 
 	}
 
