@@ -40,8 +40,8 @@ import javax.annotation.Nullable;
  */
 public class ErrorPageRegistrarBeanPostProcessor implements BeanPostProcessor, BeanFactoryAware {
 
-	@Nullable
-	private ListableBeanFactory beanFactory;
+	
+	@Nullable private ListableBeanFactory beanFactory;
 
 	@Nullable
 	private List<ErrorPageRegistrar> registrars;
@@ -73,14 +73,15 @@ public class ErrorPageRegistrarBeanPostProcessor implements BeanPostProcessor, B
 	}
 
 	private Collection<ErrorPageRegistrar> getRegistrars() {
-		if (this.registrars == null) {
-			// Look up does not include the parent context
-			this.registrars = new ArrayList<>(
-					this.beanFactory.getBeansOfType(ErrorPageRegistrar.class, false, false).values());
-			this.registrars.sort(AnnotationAwareOrderComparator.INSTANCE);
-			this.registrars = Collections.unmodifiableList(this.registrars);
-		}
-		return this.registrars;
-	}
+ 		if (this.registrars == null) {
+ 			// Look up does not include the parent context
+ 			Assert.state(this.beanFactory != null, "BeanFactory must not be null");
+ 			this.registrars = new ArrayList<>(
+ 					this.beanFactory.getBeansOfType(ErrorPageRegistrar.class, false, false).values());
+ 			this.registrars.sort(AnnotationAwareOrderComparator.INSTANCE);
+ 			this.registrars = Collections.unmodifiableList(this.registrars);
+ 		}
+ 		return this.registrars;
+ }
 
 }
