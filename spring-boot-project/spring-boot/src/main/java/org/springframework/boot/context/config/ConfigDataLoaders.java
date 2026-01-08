@@ -96,7 +96,7 @@ class ConfigDataLoaders {
 		return loader.load(context, resource);
 	}
 
-	@SuppressWarnings({ "unchecked", "NullAway" })
+	@SuppressWarnings("unchecked")
 	private <R extends ConfigDataResource> ConfigDataLoader<R> getLoader(ConfigDataLoaderContext context, R resource) {
 		ConfigDataLoader<R> result = null;
 		for (int i = 0; i < this.loaders.size(); i++) {
