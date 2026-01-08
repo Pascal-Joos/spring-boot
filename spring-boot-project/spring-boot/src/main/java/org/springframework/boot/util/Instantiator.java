@@ -171,7 +171,7 @@ public class Instantiator<T> {
 		throw new IllegalAccessException("Class [" + type.getName() + "] has no suitable constructor");
 	}
 
-	@Nullable private Object[] getArgs(Class<?>[] parameterTypes) {
+	private Object[] getArgs(Class<?>[] parameterTypes) {
 		Object[] args = new Object[parameterTypes.length];
 		for (int i = 0; i < parameterTypes.length; i++) {
 			Function<Class<?>, Object> parameter = getAvailableParameter(parameterTypes[i]);
