@@ -31,7 +31,6 @@ import org.springframework.core.env.PropertySources;
 import org.springframework.util.Assert;
 import com.uber.nullaway.annotations.Initializer;
 import javax.annotation.Nullable;
-import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * {@link BeanPostProcessor} to bind {@link PropertySources} to beans annotated with
@@ -78,10 +77,10 @@ public class ConfigurationPropertiesBindingPostProcessor
 	}
 
 	@Override
- 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
- 		bind(Nullability.castToNonnull(ConfigurationPropertiesBean.get(this.applicationContext, bean, beanName)));
- 		return bean;
- }
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		bind(ConfigurationPropertiesBean.get(this.applicationContext, bean, beanName));
+		return bean;
+	}
 
 	private void bind(ConfigurationPropertiesBean bean) {
 		if (bean == null || hasBoundValueObject(bean.getName())) {
