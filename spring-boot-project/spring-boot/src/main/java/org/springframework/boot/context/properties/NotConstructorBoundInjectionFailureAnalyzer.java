@@ -45,25 +45,23 @@ class NotConstructorBoundInjectionFailureAnalyzer
 		return 0;
 	}
 
-	@Nullable @Override
-   protected FailureAnalysis analyze(Throwable rootFailure, NoSuchBeanDefinitionException cause,
-            @Nullable String description) {
-       InjectionPoint injectionPoint = findInjectionPoint(rootFailure);
-       if (injectionPoint == null) {
-           return null;
-       }
-       if (isConstructorBindingConfigurationProperties(injectionPoint)) {
-           String simpleName = injectionPoint.getMember().getDeclaringClass().getSimpleName();
-           String action = String.format("Update your configuration so that " + simpleName + " is defined via @"
-                   + ConfigurationPropertiesScan.class.getSimpleName() + " or @"
-                   + EnableConfigurationProperties.class.getSimpleName() + ".", simpleName);
-           return new FailureAnalysis(
-                   simpleName + " is annotated with @" + ConstructorBinding.class.getSimpleName()
-                           + " but it is defined as a regular bean which caused dependency injection to fail.",
-                   action, cause);
-       }
-       return null;
-   }
+	@Nullable
+	@Override
+	protected FailureAnalysis analyze(Throwable rootFailure, NoSuchBeanDefinitionException cause,
+			@Nullable String description) {
+		InjectionPoint injectionPoint = findInjectionPoint(rootFailure);
+		if (isConstructorBindingConfigurationProperties(injectionPoint)) {
+			String simpleName = injectionPoint.getMember().getDeclaringClass().getSimpleName();
+			String action = String.format("Update your configuration so that " + simpleName + " is defined via @"
+					+ ConfigurationPropertiesScan.class.getSimpleName() + " or @"
+					+ EnableConfigurationProperties.class.getSimpleName() + ".", simpleName);
+			return new FailureAnalysis(
+					simpleName + " is annotated with @" + ConstructorBinding.class.getSimpleName()
+							+ " but it is defined as a regular bean which caused dependency injection to fail.",
+					action, cause);
+		}
+		return null;
+	}
 
 	private boolean isConstructorBindingConfigurationProperties(@Nullable InjectionPoint injectionPoint) {
 		if (injectionPoint != null && injectionPoint.getMember() instanceof Constructor) {
