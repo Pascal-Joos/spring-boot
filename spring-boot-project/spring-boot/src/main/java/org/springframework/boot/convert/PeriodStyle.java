@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 
 import org.springframework.util.Assert;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * A standard set of {@link Period} units.
@@ -266,9 +267,9 @@ public enum PeriodStyle {
 		}
 
 		private int intValue(Period value) {
-			Assert.notNull(this.intValue, () -> "intValue cannot be extracted from " + this.name());
-			return this.intValue.apply(value);
-		}
+  			Assert.notNull(this.intValue, () -> "intValue cannot be extracted from " + this.name());
+  			return Nullability.castToNonnull(this.intValue).apply(value);
+  }
 
 		private static Unit fromChronoUnit(@Nullable ChronoUnit chronoUnit) {
 			if (chronoUnit == null) {
