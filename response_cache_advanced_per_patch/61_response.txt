@@ -1,0 +1,26 @@
+<response>
+    <reason><![CDATA[
+Within getMessage, the parameter propertySource is immediately dereferenced via propertySource.getName() with no null check, so if it were null the method would throw a NullPointerException.
+
+From the provided call chain:
+
+- getMessage is called only from the InactiveConfigDataAccessException constructor.
+- That constructor is called from two places:
+  1) ConfigDataEnvironmentContributorPlaceholdersResolver.resolvePlaceholder:
+     - Here, propertySource is obtained as contributor.getPropertySource().
+     - There is a null check before use: Object value = (propertySource != null) ? propertySource.getProperty(placeholder) : null;
+     - The exception is thrown only inside the if (value != null && !isActive(contributor)) block, which is reachable even when propertySource is null (value would be null, so that block is skipped). However, the throw happens only if value != null, and value is only non-null if propertySource != null. Therefore, in this path, propertySource cannot be null when passed to the InactiveConfigDataAccessException constructor and hence to getMessage.
+  2) InactiveConfigDataAccessException.throwIfPropertyFound:
+     - ConfigurationPropertySource source = contributor.getConfigurationPropertySource();
+     - ConfigurationProperty property = (source != null) ? source.getConfigurationProperty(name) : null;
+     - The exception is thrown only if (property != null).
+     - When that condition holds, the code does:
+       PropertySource<?> propertySource = contributor.getPropertySource();
+       throw new InactiveConfigDataAccessException(propertySource, ...);
+     - There is no null check on propertySource here. If contributor.getPropertySource() can return null, then null can be passed into the InactiveConfigDataAccessException constructor and thus into getMessage, causing a potential NPE.
+
+The nullability of propertySource in this second path depends on the implementation of ConfigDataEnvironmentContributor.getPropertySource(), which is not provided. Since getPropertySource() directly determines whether propertySource can be null in the throwIfPropertyFound call path, and we lack its implementation, we cannot safely conclude that propertySource is always non-null.
+
+Therefore, based solely on the visible call chain and without the declaration/implementation of ConfigDataEnvironmentContributor.getPropertySource(), we must allow for the possibility that propertySource is null in getMessage.]]></reason>
+    <value>YES</value>
+</response>

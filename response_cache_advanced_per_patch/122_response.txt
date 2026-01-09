@@ -1,0 +1,27 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public Binder( Iterable<ConfigurationPropertySource> sources,
+			 PlaceholdersResolver placeholdersResolver,  List<ConversionService> conversionServices,
+			 Consumer<PropertyEditorRegistry> propertyEditorInitializer,
+			 BindHandler defaultBindHandler,  BindConstructorProvider constructorProvider) {
+		Assert.notNull(sources, "Sources must not be null");
+		for (ConfigurationPropertySource source : Nullability.castToNonnull(sources)) {
+			Assert.notNull(source, "Sources must not contain null elements");
+		}
+		this.sources = sources;
+		this.placeholdersResolver = (placeholdersResolver != null) ? placeholdersResolver : PlaceholdersResolver.NONE;
+		this.bindConverter = BindConverter.get(conversionServices, propertyEditorInitializer);
+		this.defaultBindHandler = (defaultBindHandler != null) ? defaultBindHandler : BindHandler.DEFAULT;
+		if (constructorProvider == null) {
+			constructorProvider = BindConstructorProvider.DEFAULT;
+		}
+		ValueObjectBinder valueObjectBinder = new ValueObjectBinder(constructorProvider);
+		JavaBeanBinder javaBeanBinder = JavaBeanBinder.INSTANCE;
+		this.dataObjectBinders = Collections.unmodifiableList(Arrays.asList(valueObjectBinder, javaBeanBinder));
+}
+  ```
+    ]]>
+  </code>
+</response>

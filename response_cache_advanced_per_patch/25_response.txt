@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public void addInitializers(ApplicationContextInitializer<?>... initializers) {
+		setInitializers(Arrays.asList(initializers));
+  }
+  ```
+    ]]>
+  </code>
+</response>

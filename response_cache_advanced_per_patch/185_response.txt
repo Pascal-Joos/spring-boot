@@ -1,0 +1,19 @@
+<response>
+  <reason><![CDATA[
+At the call site, `candidate` is an element of the array returned by `EmbeddedDatabaseConnection.values()`, so each `candidate` is a constant of the `EmbeddedDatabaseConnection` enum.
+
+In typical Spring Boot code (and by Java enum semantics), `EmbeddedDatabaseConnection` is an `enum` whose field `type` is initialized in each enum constant’s constructor to a non-null `EmbeddedDatabaseType` (or `NONE` is used as a special enum constant, not a null value). The loop explicitly skips the `NONE` constant via `if (candidate != NONE && ...)`, so the only candidates for which `candidate.getType()` is evaluated are the “real” embedded database connection constants, each of which has a valid, initialized `type`.
+
+Within `getType()` there is only a single return path:
+
+```java
+public EmbeddedDatabaseType getType() {
+    return this.type;
+}
+```
+
+There are no calls to other methods and no branching that could alter `this.type` or substitute another value. Thus, at this specific call site, `candidate.getType()` returns the `type` field of an enum constant that, by construction and usage in Spring Boot, is non-null.
+
+Therefore, `candidate.getType()` cannot be null at this call site.]]></reason>
+  <value>NO</value>
+</response>

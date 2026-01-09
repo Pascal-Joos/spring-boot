@@ -1,0 +1,12 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public List<T> instantiate( ClassLoader classLoader,  Collection<String> names) {
+		Assert.notNull(names, "Names must not be null");
+		return instantiate(Nullability.castToNonnull(names).stream().map((name) -> TypeSupplier.forName(classLoader, name)));
+}
+  ```
+    ]]>
+  </code>
+</response>

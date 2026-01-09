@@ -1,0 +1,6 @@
+<response>
+    <reason><![CDATA[
+The method name is `setInitializers`, which clearly follows the standard setter naming pattern (`setXyz`). Your own criteria say that initializer methods exclude setter methods, even if they assign to fields. It also does not start with "init" or "initialize", nor is it a known framework lifecycle method like `onCreate` or `init`. Therefore, by the given definition (and NullAway’s intended use), this should be treated as a setter, not an initializer method.
+    ]]></reason>
+    <value>NO</value>
+</response>

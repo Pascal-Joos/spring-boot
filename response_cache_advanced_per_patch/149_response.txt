@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public <T> BindResult<T> bind(String name, Bindable<T> target, BindHandler handler) {
+		return bind(Nullability.castToNonnull(ConfigurationPropertyName.of(name)), target, handler);
+}
+  ```
+    ]]>
+  </code>
+</response>

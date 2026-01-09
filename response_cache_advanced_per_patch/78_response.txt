@@ -1,0 +1,21 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Initializer
+	protected void initialize(ConfigurableEnvironment environment, ClassLoader classLoader) {
+		getLoggingSystemProperties(environment).apply();
+		this.logFile = LogFile.get(environment);
+		if (this.logFile != null) {
+			this.logFile.applyToSystemProperties();
+		}
+		this.loggerGroups = new LoggerGroups(DEFAULT_GROUP_LOGGERS);
+		initializeEarlyLoggingLevel(environment);
+		initializeSystem(environment, Nullability.castToNonnull(this.loggingSystem), this.logFile);
+		initializeFinalLoggingLevels(environment, Nullability.castToNonnull(this.loggingSystem));
+		registerShutdownHookIfNecessary(environment, Nullability.castToNonnull(this.loggingSystem));
+}
+  ```
+    ]]>
+  </code>
+</response>

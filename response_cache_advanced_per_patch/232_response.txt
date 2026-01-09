@@ -1,0 +1,21 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private void stopSilently() {
+		try {
+			if (this.undertow != null) {
+				this.undertow.stop();
+				if (this.closeables != null) {
+					this.closeables.forEach(this::closeSilently);
+				}
+			}
+		}
+		catch (Exception ex) {
+			// Ignore
+		}
+}
+  ```
+    ]]>
+  </code>
+</response>

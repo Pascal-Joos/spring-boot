@@ -1,0 +1,25 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private static PKCS8EncodedKeySpec createKeySpecForAlgorithm(byte[] bytes, int[] algorithm,
+			 int[] parameters) {
+		try {
+			DerEncoder encoder = new DerEncoder();
+			encoder.integer(0x00); // Version 0
+			DerEncoder algorithmIdentifier = new DerEncoder();
+			algorithmIdentifier.objectIdentifier(algorithm);
+			algorithmIdentifier.objectIdentifier(Nullability.castToNonnull(parameters));
+			byte[] byteArray = algorithmIdentifier.toByteArray();
+			encoder.sequence(byteArray);
+			encoder.octetString(bytes);
+			return new PKCS8EncodedKeySpec(encoder.toSequence());
+		}
+		catch (IOException ex) {
+			throw new IllegalStateException(ex);
+		}
+}
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,24 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  ConfigurationPropertyState containsDescendantOf(ConfigurationPropertyName name,
+				BiPredicate<ConfigurationPropertyName, ConfigurationPropertyName> ancestorOfCheck) {
+			if (this.descendants == null) {
+				return ConfigurationPropertyState.ABSENT;
+			}
+			if (name.isEmpty() && !this.descendants.isEmpty()) {
+				return ConfigurationPropertyState.PRESENT;
+			}
+			Set<ConfigurationPropertyName> candidates = this.descendants.getOrDefault(name, Collections.emptySet());
+			for (ConfigurationPropertyName candidate : candidates) {
+				if (ancestorOfCheck.test(name, candidate)) {
+					return ConfigurationPropertyState.PRESENT;
+				}
+			}
+			return ConfigurationPropertyState.ABSENT;
+}
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,15 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public void shutdown() {
+    logger.info("Application shutdown requested.");
+    if (SpringApplicationAdminMXBeanRegistrar.this.applicationContext != null) {
+      SpringApplicationAdminMXBeanRegistrar.this.applicationContext.close();
+    }
+  }
+  ```
+    ]]>
+  </code>
+</response>

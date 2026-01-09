@@ -1,0 +1,26 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+		@Nullable
+		Supplier<Object> getValue(Supplier<?> instance) {
+			if (this.getter == null) {
+				return null;
+			}
+			return () -> {
+				try {
+					if (this.getter == null) {
+						return null;
+					}
+					this.getter.setAccessible(true);
+					return this.getter.invoke(instance.get());
+				}
+				catch (Exception ex) {
+					throw new IllegalStateException("Unable to get value for property " + this.name, ex);
+				}
+			};
+}
+  ```
+    ]]>
+  </code>
+</response>

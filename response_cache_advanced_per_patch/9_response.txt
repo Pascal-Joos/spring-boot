@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+protected void logStartupInfo(boolean isRoot) {
+		if (isRoot && this.mainApplicationClass != null) {
+			new StartupInfoLogger(this.mainApplicationClass).logStarting(getApplicationLog());
+		}
+}
+  ```
+    ]]>
+  </code>
+</response>

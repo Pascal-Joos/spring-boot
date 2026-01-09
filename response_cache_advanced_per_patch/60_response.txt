@@ -1,0 +1,11 @@
+<response>
+  <success>false</success>
+  <methods>
+    <method>getPropertySource</method>
+    <method>getResource</method>
+    <method>getConfigurationPropertySource</method>
+    <method>getConfigurationProperty</method>
+    <method>isActive</method>
+    <method>getOrigin</method>
+  </methods>
+</response>

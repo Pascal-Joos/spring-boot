@@ -1,0 +1,15 @@
+<response>
+    <reason><![CDATA[
+Based on the criteria you described for NullAway, initializer methods are:
+- Known framework lifecycle methods (e.g., onCreate, init in specific interfaces), or
+- Methods whose names start with "init" or "initialize" and are not setters.
+
+The given method is named `setSsl`, which:
+- Follows the JavaBean setter naming convention (`setX`),
+- Simply assigns a passed parameter to a single field, and
+- Does not match the "init"/"initialize" naming pattern or the listed special lifecycle methods.
+
+Therefore, it is a typical setter method, not an initializer method for NullAway’s purposes.
+    ]]></reason>
+    <value>NO</value>
+</response>

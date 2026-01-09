@@ -1,0 +1,18 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private EnumSet<DispatcherType> extractDispatcherTypes(Map<String, Object> attributes) {
+		DispatcherType[] dispatcherTypes = (DispatcherType[]) attributes.get("dispatcherTypes");
+		if (Nullability.castToNonnull(dispatcherTypes).length == 0) {
+			return EnumSet.noneOf(DispatcherType.class);
+		}
+		if (Nullability.castToNonnull(dispatcherTypes).length == 1) {
+			return EnumSet.of(Nullability.castToNonnull(dispatcherTypes)[0]);
+		}
+		return EnumSet.of(Nullability.castToNonnull(dispatcherTypes)[0], Arrays.copyOfRange(Nullability.castToNonnull(dispatcherTypes), 1, Nullability.castToNonnull(dispatcherTypes).length));
+}
+  ```
+    ]]>
+  </code>
+</response>

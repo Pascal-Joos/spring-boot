@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public void addListeners(ApplicationListener<?>... listeners) {
+		if (this.listeners == null) {
+			this.listeners = new ArrayList<>(Arrays.asList(listeners));
+		}
+		else {
+			this.listeners.addAll(Arrays.asList(listeners));
+		}
+  }
+  ```
+    ]]>
+  </code>
+</response>

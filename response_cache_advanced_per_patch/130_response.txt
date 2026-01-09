@@ -1,0 +1,6 @@
+<response>
+    <reason><![CDATA[
+The method name `addSetter` does not match any of the known framework-based initializer patterns (e.g., `onCreate`, `init`) and does not start with "init" or "initialize". Its semantics are also that of registering/choosing a setter method, not a lifecycle or setup method guaranteed to run before other methods. Therefore, under the described NullAway rules, it should not be treated as an initializer method.
+    ]]></reason>
+    <value>NO</value>
+</response>

@@ -1,0 +1,22 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private void moveProfileSpecific(Map<ImportPhase, List<ConfigDataEnvironmentContributor>> children) {
+		List<ConfigDataEnvironmentContributor> before = children.get(ImportPhase.BEFORE_PROFILE_ACTIVATION);
+		if (!hasAnyProfileSpecificChildren(before)) {
+			return;
+		}
+		List<ConfigDataEnvironmentContributor> updatedBefore = new ArrayList<>(Nullability.castToNonnull(before).size());
+		List<ConfigDataEnvironmentContributor> updatedAfter = new ArrayList<>();
+		for (ConfigDataEnvironmentContributor contributor : Nullability.castToNonnull(before)) {
+			updatedBefore.add(moveProfileSpecificChildren(contributor, updatedAfter));
+		}
+		updatedAfter.addAll(children.getOrDefault(ImportPhase.AFTER_PROFILE_ACTIVATION, Collections.emptyList()));
+		children.put(ImportPhase.BEFORE_PROFILE_ACTIVATION, updatedBefore);
+		children.put(ImportPhase.AFTER_PROFILE_ACTIVATION, updatedAfter);
+}
+  ```
+    ]]>
+  </code>
+</response>

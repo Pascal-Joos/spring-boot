@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  ConfigurationPropertiesBinder create() {
+  			return new ConfigurationPropertiesBinder(Nullability.castToNonnull(this.applicationContext));
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,17 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private void scanPackage(ClassPathScanningCandidateComponentProvider componentProvider, String packageToScan) {
+		for (BeanDefinition candidate : componentProvider.findCandidateComponents(packageToScan)) {
+			if (candidate instanceof AnnotatedBeanDefinition annotatedBeanDefinition) {
+				for (ServletComponentHandler handler : HANDLERS) {
+					handler.handle(annotatedBeanDefinition, Nullability.castToNonnull((BeanDefinitionRegistry) this.applicationContext));
+				}
+			}
+		}
+  }
+  ```
+    ]]>
+  </code>
+</response>

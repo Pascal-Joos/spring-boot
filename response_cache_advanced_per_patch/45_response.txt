@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+void onWebServerInitializedEvent(WebServerInitializedEvent event) {
+ 		if (this.applicationContext != null && Nullability.castToNonnull(this.applicationContext).equals(event.getApplicationContext())) {
+ 			this.embeddedWebApplication = true;
+ 		}
+}
+  ```
+    ]]>
+  </code>
+</response>

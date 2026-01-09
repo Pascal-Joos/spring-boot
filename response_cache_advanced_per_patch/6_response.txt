@@ -1,0 +1,22 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private void addAotGeneratedInitializerIfNecessary(List<ApplicationContextInitializer<?>> initializers) {
+		if (AotDetector.useGeneratedArtifacts()) {
+			List<ApplicationContextInitializer<?>> aotInitializers = new ArrayList<>(
+					initializers.stream().filter(AotApplicationContextInitializer.class::isInstance).toList());
+			if (aotInitializers.isEmpty()) {
+				if (this.mainApplicationClass != null) {
+					String initializerClassName = this.mainApplicationClass.getName() + "__ApplicationContextInitializer";
+					aotInitializers.add(AotApplicationContextInitializer.forInitializerClasses(initializerClassName));
+				}
+			}
+			initializers.removeAll(aotInitializers);
+			initializers.addAll(0, aotInitializers);
+		}
+}
+  ```
+    ]]>
+  </code>
+</response>

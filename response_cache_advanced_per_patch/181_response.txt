@@ -1,0 +1,21 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+		String get( T dataSource) {
+			try {
+				if (this.getter == null) {
+					UnsupportedDataSourcePropertyException.throwIf(!this.property.isOptional(),
+							() -> "No getter mapped for '" + this.property + "' property");
+					return null;
+				}
+				return convertToString(this.getter.get(Nullability.castToNonnull(dataSource)));
+			}
+			catch (SQLException ex) {
+				throw new IllegalStateException(ex);
+			}
+}
+  ```
+    ]]>
+  </code>
+</response>

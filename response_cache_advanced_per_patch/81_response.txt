@@ -1,0 +1,32 @@
+```xml
+<response>
+    <reason><![CDATA[
+The potential nullability in question is the expression "loggingSystem" at the line:
+
+    Runnable shutdownHandler = loggingSystem.getShutdownHandler();
+
+In this method, `loggingSystem` is a parameter:
+
+    private void registerShutdownHookIfNecessary(Environment environment, LoggingSystem loggingSystem) {
+
+Within the shown code, there is:
+- No null check on `loggingSystem`
+- No reassignment of `loggingSystem`
+- A direct dereference via `loggingSystem.getShutdownHandler()`
+
+Whether `loggingSystem` can be null depends on how this method is called. The method signature does not enforce non-nullability (no annotations such as @NonNull are shown, and Java by default allows null for reference parameters). There is no visible contract here that guarantees the caller never passes null.
+
+Because the provided snippet does not include:
+- The call sites of `registerShutdownHookIfNecessary`
+- Any documented or annotated contract that `loggingSystem` is always non-null
+
+we cannot safely conclude that `loggingSystem` is never null. It is *possible* that a caller passes null, in which case `loggingSystem` would indeed be null at this line and a NullPointerException would occur when invoking `getShutdownHandler()`.
+
+Given only the provided method, there is insufficient information to guarantee non-nullness, so the determination cannot be made definitively from this snippet alone.]]></reason>
+    <value>UNKNOWN</value>
+    <requests>
+        <request><![CDATA[Provide the code (or description) of all call sites where registerShutdownHookIfNecessary is invoked, including any null checks or guarantees about the loggingSystem argument.]]></request>
+        <request><![CDATA[Provide any annotations or documentation (e.g., @NonNull, @Nullable, or method/constructor contracts) associated with the LoggingSystem parameter or the registerShutdownHookIfNecessary method.]]></request>
+    </requests>
+</response>
+```

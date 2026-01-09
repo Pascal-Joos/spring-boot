@@ -1,0 +1,40 @@
+<response>
+  <reason><![CDATA[
+At this call site (`T filter = getFilter()` inside `configure`), `getFilter()` is an abstract method of `AbstractFilterRegistrationBean` with no implementation shown. There is no non-null contract (such as an assertion, annotation, or check) executed *before or at* this specific call that would prevent `null` from being returned.
+
+Elsewhere in the same class, `getFilter()` is called and then immediately validated:
+
+```java
+Filter filter = getFilter();
+Assert.notNull(filter, "Filter must not be null");
+```
+
+This assertion ensures non-null *for that particular usage*, but it does not affect or constrain the behavior of `getFilter()` itself. A subclass could still implement:
+
+```java
+@Override
+public T getFilter() {
+    return null;
+}
+```
+
+In `configure`, the relevant part is:
+
+```java
+if (dispatcherTypes == null) {
+    T filter = getFilter();
+    if (ClassUtils.isPresent("org.springframework.web.filter.OncePerRequestFilter",
+            filter.getClass().getClassLoader()) && filter instanceof OncePerRequestFilter) {
+        dispatcherTypes = EnumSet.allOf(DispatcherType.class);
+    }
+    else {
+        dispatcherTypes = EnumSet.of(DispatcherType.REQUEST);
+    }
+}
+```
+
+There is no null-check on `filter` before it is dereferenced (`filter.getClass()`), so if a subclass returns `null`, a `NullPointerException` will occur. An exception is not a null value, but the fact that this dereference can throw shows that nothing in this call path guarantees `getFilter()` to be non-null. Since `getFilter()` is abstract and unconstrained here, it *can* return `null` at this call site.
+
+Therefore, at this specific invocation, `getFilter()` can return `null`.]]></reason>
+  <value>YES</value>
+</response>

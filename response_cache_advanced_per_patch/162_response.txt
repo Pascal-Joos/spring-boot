@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  Set<String> getMapped(ConfigurationPropertyName configurationPropertyName) {
+			if (this.mappings == null) {
+				return Collections.emptySet();
+			}
+			return this.mappings.getOrDefault(configurationPropertyName, Collections.emptySet());
+}
+  ```
+    ]]>
+  </code>
+</response>

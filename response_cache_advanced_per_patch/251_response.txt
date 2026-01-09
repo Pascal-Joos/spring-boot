@@ -1,0 +1,19 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private void customize(AbstractHttp11Protocol<?> protocol) {
+		Compression compression = this.compression;
+		if (compression != null && compression.getEnabled()) {
+			protocol.setCompression("on");
+			protocol.setCompressionMinSize(getMinResponseSize(compression));
+			protocol.setCompressibleMimeType(getMimeTypes(compression));
+			if (compression.getExcludedUserAgents() != null) {
+				protocol.setNoCompressionUserAgents(getExcludedUserAgents());
+			}
+		}
+  }
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private String extractChangelogPath(ChangeLogParseException cause) {
+		return Nullability.castToNonnull(cause.getMessage()).substring(0, Nullability.castToNonnull(cause.getMessage()).length() - MESSAGE_SUFFIX.length());
+}
+  ```
+    ]]>
+  </code>
+</response>

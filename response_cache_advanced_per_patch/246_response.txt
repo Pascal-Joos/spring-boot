@@ -1,0 +1,21 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private ServerConnector createHttp2ServerConnector(Server server, HttpConfiguration config,
+			SslContextFactory.Server sslContextFactory) {
+		HttpConnectionFactory http = new HttpConnectionFactory(config);
+		HTTP2ServerConnectionFactory h2 = new HTTP2ServerConnectionFactory(config);
+		ALPNServerConnectionFactory alpn = createAlpnServerConnectionFactory();
+		sslContextFactory.setCipherComparator(HTTP2Cipher.COMPARATOR);
+		if (isConscryptPresent()) {
+			sslContextFactory.setProvider("Conscrypt");
+		}
+		SslConnectionFactory ssl = createSslConnectionFactory(sslContextFactory, alpn.getProtocol());
+		return new SslValidatingServerConnector(server, sslContextFactory,
+				(this.ssl != null) ? this.ssl.getKeyAlias() : null, ssl, alpn, h2, http);
+}
+  ```
+    ]]>
+  </code>
+</response>

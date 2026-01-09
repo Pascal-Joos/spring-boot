@@ -1,0 +1,25 @@
+```xml
+<response>
+    <reason><![CDATA[
+Inside the method, the field this.descendants is first copied into a local variable:
+
+    Map<ConfigurationPropertyName, Set<ConfigurationPropertyName>> descendants = this.descendants;
+
+Immediately afterward, there is a null check on that local variable:
+
+    if (descendants == null) {
+        return ConfigurationPropertyState.ABSENT;
+    }
+
+From this point on, all subsequent uses in the method refer to the local variable descendants, not to this.descendants:
+
+    if (name.isEmpty() && !descendants.isEmpty()) {
+        return ConfigurationPropertyState.PRESENT;
+    }
+
+Because the condition in question uses descendants (the local) rather than this.descendants (the field), and we already returned if descendants was null, descendants is guaranteed to be non-null at that line.
+
+Therefore, the "effective" expression being evaluated for emptiness (!descendants.isEmpty()) cannot be null along any execution path that reaches this line. The field this.descendants itself may be null when the method is entered, but that is already handled and short-circuited by the earlier null check and return, so by the time this line executes, the map in use is known to be non-null.]]></reason>
+    <value>NO</value>
+</response>
+```

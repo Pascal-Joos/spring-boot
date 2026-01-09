@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private List<String> getDefaultProfiles(Environment environment, Binder binder) {
+		return asUniqueItemList(Nullability.castToNonnull(getProfiles(environment, binder, Type.DEFAULT)));
+}
+  ```
+    ]]>
+  </code>
+</response>

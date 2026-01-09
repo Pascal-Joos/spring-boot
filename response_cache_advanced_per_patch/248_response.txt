@@ -1,0 +1,4 @@
+<response>
+    <reason><![CDATA[The method name is setCompression, which follows the standard setter naming convention (starts with "set" and takes a value to assign to a field). According to your criteria, methods that are setters should not be treated as initializer methods, and the examples of initializer methods either have specific framework-defined names (e.g., onCreate, init) or start with "init"/"initialize". Therefore, this method should be considered a regular setter, not an initializer method for NullAway.]]></reason>
+    <value>NO</value>
+</response>

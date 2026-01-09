@@ -1,0 +1,25 @@
+```xml
+<response>
+    <reason><![CDATA[
+The expression "sources" in the enhanced for-loop
+
+    for (ConfigurationPropertySource source : sources) {
+
+refers to the method parameter `Iterable<ConfigurationPropertySource> sources`.
+
+Immediately before the loop, there is a null-check:
+
+    Assert.notNull(sources, "Sources must not be null");
+
+Assuming `Assert.notNull` is the standard Spring Assert (which throws an IllegalArgumentException or similar if the argument is null), then:
+
+- If `sources` is null, the assertion throws and the method does not proceed to execute the for-loop at all.
+- Therefore, by the time execution reaches the for-loop, `sources` is guaranteed to be non-null (otherwise control flow would have been interrupted by the thrown exception).
+
+No reassignment of `sources` occurs between the assertion and the for-loop, so its value cannot change to null after the check.
+
+Thus, under the normal Spring Assert contract, `sources` cannot be null at the point of use in the loop.
+    ]]></reason>
+    <value>NO</value>
+</response>
+```

@@ -1,0 +1,45 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private void prepareContext(DefaultBootstrapContext bootstrapContext, ConfigurableApplicationContext context,
+ 			ConfigurableEnvironment environment, SpringApplicationRunListeners listeners,
+ 			ApplicationArguments applicationArguments,   Banner printedBanner) {
+ 		context.setEnvironment(environment);
+ 		postProcessApplicationContext(context);
+ 		addAotGeneratedInitializerIfNecessary(this.initializers);
+ 		applyInitializers(context);
+ 		listeners.contextPrepared(context);
+ 		bootstrapContext.close(context);
+ 		if (this.logStartupInfo) {
+ 			logStartupInfo(context.getParent() == null);
+ 			logStartupProfileInfo(context);
+ 		}
+ 		// Add boot specific singleton beans
+ 		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+ 		beanFactory.registerSingleton("springApplicationArguments", applicationArguments);
+ 		if (printedBanner != null) {
+ 			beanFactory.registerSingleton("springBootBanner", printedBanner);
+ 		}
+ 		if (beanFactory instanceof AbstractAutowireCapableBeanFactory autowireCapableBeanFactory) {
+ 			autowireCapableBeanFactory.setAllowCircularReferences(this.allowCircularReferences);
+ 			if (beanFactory instanceof DefaultListableBeanFactory listableBeanFactory) {
+ 				listableBeanFactory.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
+ 			}
+ 		}
+ 		if (this.lazyInitialization) {
+ 			context.addBeanFactoryPostProcessor(new LazyInitializationBeanFactoryPostProcessor());
+ 		}
+ 		context.addBeanFactoryPostProcessor(new PropertySourceOrderingBeanFactoryPostProcessor(context));
+ 		if (!AotDetector.useGeneratedArtifacts()) {
+ 			// Load the sources
+ 			Set<Object> sources = getAllSources();
+ 			Assert.notEmpty(sources, "Sources must not be empty");
+ 			load(context, sources.toArray(new Object[0]));
+ 		}
+ 		listeners.contextLoaded(context);
+}
+  ```
+    ]]>
+  </code>
+</response>
