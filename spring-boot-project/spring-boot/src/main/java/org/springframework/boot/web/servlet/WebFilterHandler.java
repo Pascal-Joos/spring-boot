@@ -29,6 +29,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.util.StringUtils;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Handler for {@link WebFilter @WebFilter}-annotated classes.
@@ -57,15 +58,15 @@ class WebFilterHandler extends ServletComponentHandler {
 	}
 
 	private EnumSet<DispatcherType> extractDispatcherTypes(Map<String, Object> attributes) {
-		DispatcherType[] dispatcherTypes = (DispatcherType[]) attributes.get("dispatcherTypes");
-		if (dispatcherTypes.length == 0) {
-			return EnumSet.noneOf(DispatcherType.class);
-		}
-		if (dispatcherTypes.length == 1) {
-			return EnumSet.of(dispatcherTypes[0]);
-		}
-		return EnumSet.of(dispatcherTypes[0], Arrays.copyOfRange(dispatcherTypes, 1, dispatcherTypes.length));
-	}
+ 		DispatcherType[] dispatcherTypes = (DispatcherType[]) attributes.get("dispatcherTypes");
+ 		if (Nullability.castToNonnull(dispatcherTypes).length == 0) {
+ 			return EnumSet.noneOf(DispatcherType.class);
+ 		}
+ 		if (Nullability.castToNonnull(dispatcherTypes).length == 1) {
+ 			return EnumSet.of(Nullability.castToNonnull(dispatcherTypes)[0]);
+ 		}
+ 		return EnumSet.of(Nullability.castToNonnull(dispatcherTypes)[0], Arrays.copyOfRange(Nullability.castToNonnull(dispatcherTypes), 1, Nullability.castToNonnull(dispatcherTypes).length));
+ }
 
 	@Nullable
 	private String determineName(Map<String, Object> attributes, BeanDefinition beanDefinition) {
