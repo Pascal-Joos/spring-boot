@@ -90,8 +90,8 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 
 		private final Class<?> type;
 
-		@Nullable
-		private final Constructor<?> bindConstructor;
+		
+		@Nullable private final Constructor<?> bindConstructor;
 
 		
 		@Nullable private final BeanInfo beanInfo;
@@ -151,12 +151,15 @@ public class BindableRuntimeHintsRegistrar implements RuntimeHintsRegistrar {
 		}
 
 		private void handleValueObjectProperties(ReflectionHints hints) {
-			for (int i = 0; i < this.bindConstructor.getParameterCount(); i++) {
-				String propertyName = this.bindConstructor.getParameters()[i].getName();
-				ResolvableType propertyType = ResolvableType.forConstructorParameter(this.bindConstructor, i);
-				handleProperty(hints, propertyName, propertyType);
-			}
-		}
+  			if (this.bindConstructor == null) {
+  				return;
+  			}
+  			for (int i = 0; i < this.bindConstructor.getParameterCount(); i++) {
+  				String propertyName = this.bindConstructor.getParameters()[i].getName();
+  				ResolvableType propertyType = ResolvableType.forConstructorParameter(this.bindConstructor, i);
+  				handleProperty(hints, propertyName, propertyType);
+  			}
+  }
 
 		private void handleJavaBeanProperties(ReflectionHints hints) {
   			if (this.beanInfo == null) {
