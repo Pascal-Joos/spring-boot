@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * {@link UncaughtExceptionHandler} to suppress handling already logged exceptions and
@@ -86,20 +87,20 @@ class SpringBootExceptionHandler implements UncaughtExceptionHandler {
 	 * @param ex the source exception
 	 * @return {@code true} if the exception contains a log configuration message
 	 */
-	private boolean isLogConfigurationMessage(@Nullable Throwable ex) {
-		if (ex instanceof InvocationTargetException) {
-			return isLogConfigurationMessage(ex.getCause());
-		}
-		String message = ex.getMessage();
-		if (message != null) {
-			for (String candidate : LOG_CONFIGURATION_MESSAGES) {
-				if (message.contains(candidate)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+	private boolean isLogConfigurationMessage( @Nullable Throwable ex) {
+ 		if (ex instanceof InvocationTargetException) {
+ 			return isLogConfigurationMessage(ex.getCause());
+ 		}
+ 		String message = Nullability.castToNonnull(ex).getMessage();
+ 		if (message != null) {
+ 			for (String candidate : LOG_CONFIGURATION_MESSAGES) {
+ 				if (message.contains(candidate)) {
+ 					return true;
+ 				}
+ 			}
+ 		}
+ 		return false;
+ }
 
 	private boolean isRegistered(@Nullable Throwable ex) {
 		if (this.loggedExceptions.contains(ex)) {
