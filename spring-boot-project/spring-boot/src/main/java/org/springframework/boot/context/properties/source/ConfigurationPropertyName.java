@@ -763,17 +763,18 @@ public final class ConfigurationPropertyName implements Comparable<Configuration
 			this.resolved = resolved;
 		}
 
-		Elements append(@Nullable Elements additional) {
-			int size = this.size + additional.size;
-			ElementType[] type = new ElementType[size];
-			System.arraycopy(this.type, 0, type, 0, this.size);
-			System.arraycopy(additional.type, 0, type, this.size, additional.size);
-			CharSequence[] resolved = newResolved(size);
-			for (int i = 0; i < additional.size; i++) {
-				resolved[this.size + i] = additional.get(i);
-			}
-			return new Elements(this.source, size, this.start, this.end, type, resolved);
-		}
+		Elements append( @Nullable Elements additional) {
+  			additional = Nullability.castToNonnull(additional);
+  			int size = this.size + additional.size;
+  			ElementType[] type = new ElementType[size];
+  			System.arraycopy(this.type, 0, type, 0, this.size);
+  			System.arraycopy(additional.type, 0, type, this.size, additional.size);
+  			CharSequence[] resolved = newResolved(size);
+  			for (int i = 0; i < additional.size; i++) {
+  				resolved[this.size + i] = additional.get(i);
+  			}
+  			return new Elements(this.source, size, this.start, this.end, type, resolved);
+  }
 
 		Elements chop(int size) {
 			CharSequence[] resolved = newResolved(size);
