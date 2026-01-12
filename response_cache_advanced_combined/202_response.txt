@@ -1,0 +1,20 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+		@Nullable
+		private Object instantiate( Class<?> type) {
+			if (type == null) {
+				return null;
+			}
+			try {
+				return type.getConstructor().newInstance();
+			}
+			catch (Exception ex) {
+				return null;
+			}
+}
+  ```
+    ]]>
+  </code>
+</response>

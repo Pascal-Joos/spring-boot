@@ -1,0 +1,19 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private Collection<ErrorPageRegistrar> getRegistrars() {
+		if (this.registrars == null) {
+			// Look up does not include the parent context
+			Assert.state(this.beanFactory != null, "BeanFactory must not be null");
+			this.registrars = new ArrayList<>(
+					this.beanFactory.getBeansOfType(ErrorPageRegistrar.class, false, false).values());
+			this.registrars.sort(AnnotationAwareOrderComparator.INSTANCE);
+			this.registrars = Collections.unmodifiableList(this.registrars);
+		}
+		return this.registrars;
+}
+  ```
+    ]]>
+  </code>
+</response>

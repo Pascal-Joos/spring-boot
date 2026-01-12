@@ -1,0 +1,42 @@
+<response>
+  <reason><![CDATA[
+At this call site, `address()` is invoked inside `start()`:
+
+```java
+this.channel = block(this.starter, this.lifecycleTimeout);
+logger.info("Netty RSocket started on port(s): " + address().getPort());
+startDaemonAwaitThread(this.channel);
+```
+
+From the given code, the only guarantee before calling `address()` is that:
+
+```java
+this.channel = block(this.starter, this.lifecycleTimeout);
+```
+
+has executed, but we are not given any information about:
+
+1. Whether `block(...)` can return `null`.
+2. Whether `block(...)` can return a non-null `channel` for which `channel.address()` returns `null`.
+3. Whether `block(...)` might throw instead of assigning a non-null channel (exceptions are not relevant to nullability, but if it returns `null` without throwing, `this.channel` stays or becomes `null`).
+
+Inside `address()`:
+
+```java
+public InetSocketAddress address() {
+    if (this.channel != null) {
+        return this.channel.address();
+    }
+    return null;
+}
+```
+
+The method will return `null` if `this.channel` is `null`. Since we have no guarantees about `block(...)` (it might legitimately return `null` under some condition, or `this.channel` might already be `null` before the assignment if `block` is a no-op or fails silently), we cannot rule out that `this.channel` is `null` at the time of `address()`.
+
+Even if `this.channel` is non-null, `channel.address()` might itself return `null`, and we are not provided its declaration either.
+
+Because the nullability of `address()` at this call site depends on the behavior of `block(...)` and possibly `channel.address()`, and their declarations are not given, we cannot safely conclude that `address()` cannot return `null`. Given the method body as-is, the `null` branch is reachable whenever `this.channel` is `null`, and we have no evidence that this is impossible here.
+
+Therefore, at this specific call site, `address()` can return `null`.]]></reason>
+  <value>YES</value>
+</response>

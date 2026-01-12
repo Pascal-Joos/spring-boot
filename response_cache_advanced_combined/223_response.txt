@@ -1,0 +1,37 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+protected AbstractProtocolSslContextSpec<?> createSslContextSpec() {
+		if (this.ssl == null) {
+			return null;
+		}
+		Ssl ssl = this.ssl;
+		AbstractProtocolSslContextSpec<?> sslContextSpec;
+		if (this.http2 != null && this.http2.isEnabled()) {
+			sslContextSpec = Http2SslContextSpec.forServer(getKeyManagerFactory(ssl, this.sslStoreProvider));
+		}
+		else {
+			sslContextSpec = Http11SslContextSpec.forServer(getKeyManagerFactory(ssl, this.sslStoreProvider));
+		}
+		sslContextSpec.configure((builder) -> {
+			builder.trustManager(getTrustManagerFactory(ssl, this.sslStoreProvider));
+			if (ssl != null && ssl.getEnabledProtocols() != null) {
+				builder.protocols(ssl.getEnabledProtocols());
+			}
+			if (ssl != null && ssl.getCiphers() != null) {
+				builder.ciphers(Arrays.asList(ssl.getCiphers()));
+			}
+			if (ssl != null && ssl.getClientAuth() == Ssl.ClientAuth.NEED) {
+				builder.clientAuth(ClientAuth.REQUIRE);
+			}
+			else if (ssl != null && ssl.getClientAuth() == Ssl.ClientAuth.WANT) {
+				builder.clientAuth(ClientAuth.OPTIONAL);
+			}
+		});
+		return sslContextSpec;
+}
+  ```
+    ]]>
+  </code>
+</response>

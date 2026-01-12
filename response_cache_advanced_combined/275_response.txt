@@ -1,0 +1,13 @@
+<response>
+    <reason><![CDATA[
+By your own criteria, initializer methods are either:
+
+1. Well-known framework lifecycle methods (e.g., onCreate, init in specific interfaces), or  
+2. Methods whose name starts with "init" or "initialize" and are not setters.
+
+The given method is named setApplicationContext, clearly following the JavaBean setter naming convention ("setX"). Even though it assigns a field and participates in object setup (Spring’s ApplicationContextAware callback), its name pattern marks it as a setter method. You explicitly stated that setter methods should not be considered initializer methods.
+
+Therefore, under the rules you described, this method must not be treated as an initializer method for NullAway.
+    ]]></reason>
+    <value>NO</value>
+</response>

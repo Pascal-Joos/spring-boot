@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+Resource getResource(String location) {
+		validateNonPattern(Nullability.castToNonnull(location));
+		location = StringUtils.cleanPath(location);
+		if (!ResourceUtils.isUrl(location)) {
+			location = ResourceUtils.FILE_URL_PREFIX + location;
+		}
+		return this.resourceLoader.getResource(location);
+}
+  ```
+    ]]>
+  </code>
+</response>

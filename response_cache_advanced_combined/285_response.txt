@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private Template createTemplate(Resource resource) throws IOException {
+		if (this.compiler == null) {
+			throw new IllegalStateException("Property 'compiler' is required");
+		}
+		try (Reader reader = getReader(resource)) {
+			return this.compiler.compile(reader);
+		}
+  }
+  ```
+    ]]>
+  </code>
+</response>

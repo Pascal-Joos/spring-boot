@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public int compareTo(ConfigurationProperty other) {
+    int result = ObjectUtils.nullSafeCompare(this.name, other.name);
+    if (result != 0) {
+      return result;
+    }
+    return ObjectUtils.nullSafeCompare(this.value, other.value);
+  }
+  ```
+    ]]>
+  </code>
+</response>

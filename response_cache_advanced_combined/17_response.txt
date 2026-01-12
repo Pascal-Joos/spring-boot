@@ -1,0 +1,58 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public ConfigurableApplicationContext run(String... args) {
+   		long startTime = System.nanoTime();
+   		DefaultBootstrapContext bootstrapContext = createBootstrapContext();
+   		ConfigurableApplicationContext context = null;
+   		configureHeadlessProperty();
+   		SpringApplicationRunListeners listeners = getRunListeners(args);
+   		listeners.starting(bootstrapContext, Nullability.castToNonnull(this.mainApplicationClass));
+   		try {
+   			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+   			ConfigurableEnvironment environment = prepareEnvironment(listeners, bootstrapContext, applicationArguments);
+   			Banner printedBanner = printBanner(environment);
+   			context = createApplicationContext();
+   			context.setApplicationStartup(this.applicationStartup);
+   			prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner);
+   			refreshContext(context);
+   			afterRefresh(context, applicationArguments);
+   			Duration timeTakenToStartup = Duration.ofNanos(System.nanoTime() - startTime);
+   			if (this.logStartupInfo) {
+   				if (this.mainApplicationClass != null) {
+   					new StartupInfoLogger(Nullability.castToNonnull(this.mainApplicationClass)).logStarted(getApplicationLog(), timeTakenToStartup);
+   				}
+   				else {
+   					getApplicationLog().info("Application started in " + timeTakenToStartup.toMillis() + " ms");
+   				}
+   			}
+   			listeners.started(context, timeTakenToStartup);
+   			callRunners(context, applicationArguments);
+   		}
+   		catch (Throwable ex) {
+   			if (ex instanceof AbandonedRunException) {
+   				throw ex;
+   			}
+   			handleRunFailure(context, ex, listeners);
+   			throw new IllegalStateException(ex);
+   		}
+   		try {
+   			if (context.isRunning()) {
+   				Duration timeTakenToReady = Duration.ofNanos(System.nanoTime() - startTime);
+   				listeners.ready(context, timeTakenToReady);
+   			}
+   		}
+   		catch (Throwable ex) {
+   			if (ex instanceof AbandonedRunException) {
+   				throw ex;
+   			}
+   			handleRunFailure(context, ex, null);
+   			throw new IllegalStateException(ex);
+   		}
+   		return context;
+}
+  ```
+    ]]>
+  </code>
+</response>

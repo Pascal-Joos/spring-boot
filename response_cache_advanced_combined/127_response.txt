@@ -1,0 +1,6 @@
+<response>
+    <reason><![CDATA[
+The method name `addGetter` does not match any of the patterns considered initializer methods by NullAway (it does not start with `init` or `initialize`, nor is it one of the known framework lifecycle methods like `onCreate` or `init`). Semantically, it behaves like a specialized setter (it conditionally assigns to the `getter` field), which you explicitly do not want to treat as an initializer method. Therefore, it should not be considered an initializer method under the described rules.
+    ]]></reason>
+    <value>NO</value>
+</response>

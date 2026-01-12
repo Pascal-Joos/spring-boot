@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public Set<ApplicationListener<?>> getListeners() {
+		return asUnmodifiableOrderedSet((this.listeners != null) ? this.listeners : Collections.emptyList());
+}
+  ```
+    ]]>
+  </code>
+</response>

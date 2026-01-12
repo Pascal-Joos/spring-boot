@@ -1,0 +1,12 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private List<String> getActivatedProfiles(Environment environment, Binder binder,
+			Collection<String> additionalProfiles) {
+		return asUniqueItemList(Nullability.castToNonnull(getProfiles(environment, binder, Type.ACTIVE)), additionalProfiles);
+  }
+  ```
+    ]]>
+  </code>
+</response>

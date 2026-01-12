@@ -1,0 +1,4 @@
+<response>
+    <reason><![CDATA[The method name `setListeners` follows the standard JavaBeans setter convention (`setXyz`) and not an `init*` / `initialize*` pattern, and it assigns a value to a single field based on an argument, which is typical of a setter method. By your stated criteria, setter methods must not be treated as initializer methods, regardless of whether they initialize fields. Therefore, this method should not be considered an initializer method for NullAway.]]></reason>
+    <value>NO</value>
+</response>

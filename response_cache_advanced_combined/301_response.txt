@@ -1,0 +1,7 @@
+<response>
+    <success>false</success>
+    <methods>
+      <method>LoggingSystem.get</method>
+      <method>registerShutdownHook</method>
+    </methods>
+</response>

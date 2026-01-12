@@ -1,0 +1,17 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+ 	protected void loadDefaults(LoggingInitializationContext initializationContext,   LogFile logFile) {
+ 		if (logFile != null) {
+ 			loadConfiguration(getPackagedConfigFile("log4j2-file.xml"), logFile, Nullability.castToNonnull(getOverrides(initializationContext)));
+ 		}
+ 		else {
+ 			loadConfiguration(getPackagedConfigFile("log4j2.xml"), logFile, Nullability.castToNonnull(getOverrides(initializationContext)));
+ 		}
+ }
+  ```
+    ]]>
+  </code>
+</response>

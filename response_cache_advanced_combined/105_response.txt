@@ -1,0 +1,22 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private Set<StandardConfigDataReference> getReferencesForDirectory(ConfigDataLocation configDataLocation,
+			String directory,  String profile) {
+		Set<StandardConfigDataReference> references = new LinkedHashSet<>();
+		List<String> configNames = this.configNames;
+		if (configNames == null) {
+			return references;
+		}
+		for (String name : configNames) {
+			Deque<StandardConfigDataReference> referencesForName = getReferencesForConfigName(name, configDataLocation,
+					directory, profile);
+			references.addAll(referencesForName);
+		}
+		return references;
+}
+  ```
+    ]]>
+  </code>
+</response>

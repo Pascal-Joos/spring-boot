@@ -1,0 +1,22 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private boolean isLogConfigurationMessage( Throwable ex) {
+		if (ex instanceof InvocationTargetException) {
+			return isLogConfigurationMessage(ex.getCause());
+		}
+		String message = Nullability.castToNonnull(ex).getMessage();
+		if (message != null) {
+			for (String candidate : LOG_CONFIGURATION_MESSAGES) {
+				if (message.contains(candidate)) {
+					return true;
+				}
+			}
+		}
+		return false;
+}
+  ```
+    ]]>
+  </code>
+</response>

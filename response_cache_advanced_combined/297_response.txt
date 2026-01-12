@@ -1,0 +1,10 @@
+<response>
+  <success>false</success>
+  <methods>
+    <method>validatePattern</method>
+    <method>castToNonnull</method>
+    <method>getResource</method>
+    <method>getFile</method>
+    <method>isPattern</method>
+  </methods>
+</response>

@@ -1,0 +1,15 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private void setReadTimeout(ClientHttpRequestFactory factory) {
+			if (this.readTimeout != null) {
+				Method method = findMethod(factory, "setReadTimeout", int.class);
+				int timeout = Math.toIntExact(this.readTimeout.toMillis());
+				invoke(factory, method, timeout);
+			}
+  }
+  ```
+    ]]>
+  </code>
+</response>

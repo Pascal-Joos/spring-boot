@@ -1,0 +1,33 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+ 	public void stop() throws WebServerException {
+ 		synchronized (this.monitor) {
+ 			if (!this.started) {
+ 				return;
+ 			}
+ 			this.started = false;
+ 			if (this.gracefulShutdown != null) {
+ 				notifyGracefulCallback(false);
+ 			}
+ 			try {
+ 				if (this.undertow != null) {
+ 					this.undertow.stop();
+ 				}
+ 				if (this.closeables != null) {
+ 					for (Closeable closeable : this.closeables) {
+ 						closeable.close();
+ 					}
+ 				}
+ 			}
+ 			catch (Exception ex) {
+ 				throw new WebServerException("Unable to stop undertow", ex);
+ 			}
+ 		}
+}
+  ```
+    ]]>
+  </code>
+</response>

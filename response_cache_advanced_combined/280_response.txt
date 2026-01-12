@@ -1,0 +1,43 @@
+```xml
+<response>
+    <reason><![CDATA[
+In the shown method:
+
+private EnumSet<DispatcherType> extractDispatcherTypes(Map<String, Object> attributes) {
+    DispatcherType[] dispatcherTypes = (DispatcherType[]) attributes.get("dispatcherTypes");
+    if (dispatcherTypes.length == 0) {
+        return EnumSet.noneOf(DispatcherType.class);
+    }
+    if (dispatcherTypes.length == 1) {
+        return EnumSet.of(dispatcherTypes[0]);
+    }
+    return EnumSet.of(dispatcherTypes[0], Arrays.copyOfRange(dispatcherTypes, 1, dispatcherTypes.length));
+}
+
+the only assignment to dispatcherTypes is:
+
+DispatcherType[] dispatcherTypes = (DispatcherType[]) attributes.get("dispatcherTypes");
+
+The Map#get method has the signature:
+
+Object Map.get(Object key)
+
+and its contract allows it to return null if:
+- the map does not contain the given key, or
+- the key is mapped to a null value.
+
+There is no prior null-check on dispatcherTypes before it is dereferenced at:
+
+if (dispatcherTypes.length == 0) {
+
+Therefore, unless there is an external guarantee (not shown in this code) that:
+- attributes always contains the key "dispatcherTypes", and
+- the associated value is always a non-null DispatcherType[],
+
+dispatcherTypes can be null at this point. In pure Java semantics and based solely on this method, a null value from attributes.get("dispatcherTypes") is possible, and the code would then throw a NullPointerException at dispatcherTypes.length.
+
+Thus, from the perspective of this method alone, dispatcherTypes can be null at the line in question.
+    ]]></reason>
+    <value>YES</value>
+</response>
+```

@@ -1,0 +1,15 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private String[] getConfigNames(Binder binder) {
+		String[] configNames = binder.bind(CONFIG_NAME_PROPERTY, String[].class).orElse(DEFAULT_CONFIG_NAMES);
+		for (String configName : Nullability.castToNonnull(configNames)) {
+			validateConfigName(configName);
+		}
+		return configNames;
+}
+  ```
+    ]]>
+  </code>
+</response>

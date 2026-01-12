@@ -1,0 +1,50 @@
+<response>
+    <reason><![CDATA[
+Within registerShutdownHookIfNecessary(Environment environment, LoggingSystem loggingSystem), the parameter loggingSystem is dereferenced unconditionally via loggingSystem.getShutdownHandler(), so if it were null the method would crash with a NullPointerException.
+
+To determine if loggingSystem could be null in practice, we must analyze the call chain:
+
+1. registerShutdownHookIfNecessary is called from initialize:
+   registerShutdownHookIfNecessary(environment, Nullability.castToNonnull(this.loggingSystem));
+
+   Here, the value passed is this.loggingSystem (wrapped by Nullability.castToNonnull, which we must ignore per instructions regarding annotations / nullability helpers). So effectively, whatever this.loggingSystem is at that point is what becomes the loggingSystem parameter.
+
+2. this.loggingSystem is set in onApplicationEnvironmentPreparedEvent:
+   if (this.loggingSystem == null) {
+       this.loggingSystem = LoggingSystem.get(springApplication.getClassLoader());
+   }
+   initialize(event.getEnvironment(), springApplication.getClassLoader());
+
+   Therefore, when initialize (and thus registerShutdownHookIfNecessary) is called, if this.loggingSystem was null, it is first assigned LoggingSystem.get(...).
+
+3. LoggingSystem.get(ClassLoader classLoader) is:
+   String loggingSystemClassName = System.getProperty(SYSTEM_PROPERTY);
+   if (StringUtils.hasLength(loggingSystemClassName)) {
+       if (NONE.equals(loggingSystemClassName)) {
+           return new NoOpLoggingSystem();
+       }
+       return get(classLoader, loggingSystemClassName);
+   }
+   LoggingSystem loggingSystem = SYSTEM_FACTORY.getLoggingSystem(classLoader);
+   Assert.state(loggingSystem != null, "No suitable logging system located");
+   return loggingSystem;
+
+   - If SYSTEM_PROPERTY is set and not equal to NONE, it returns the result of get(classLoader, loggingSystemClassName).
+   - If SYSTEM_PROPERTY equals NONE, it returns new NoOpLoggingSystem(), which is non-null.
+   - If SYSTEM_PROPERTY is not set or empty, it calls SYSTEM_FACTORY.getLoggingSystem(classLoader) and then enforces non-null via Assert.state(loggingSystem != null, ...). If this check fails, an exception is thrown and control never returns normally; there is no path where LoggingSystem.get returns null.
+
+Although we do not see the implementation of LoggingSystem.get(ClassLoader, String) or SYSTEM_FACTORY.getLoggingSystem(ClassLoader), the crucial point is that LoggingSystem.get enforces that its local variable loggingSystem is not null before returning. Any internal null result from those helper methods would trigger Assert.state and prevent a normal return; thus, a null value cannot propagate out of LoggingSystem.get in the normal (non-exceptional) execution path.
+
+Combining these facts:
+
+- this.loggingSystem is set once via LoggingSystem.get(...), which either:
+  - returns a non-null LoggingSystem instance; or
+  - throws an exception instead of returning.
+- initialize and registerShutdownHookIfNecessary are only called after that assignment in onApplicationEnvironmentPreparedEvent.
+- There is no other reassignment or modification of loggingSystem inside registerShutdownHookIfNecessary.
+
+Under these conditions and given the provided call chain, loggingSystem cannot be null at the point registerShutdownHookIfNecessary is invoked in any normal (non-exceptional) execution path. If something went wrong in determining the LoggingSystem, an exception would be thrown earlier, and this method would not be reached.
+
+Therefore, based on the available code and ignoring annotations, the parameter loggingSystem does not receive null in any normal execution path in this context.]]></reason>
+    <value>NO</value>
+</response>

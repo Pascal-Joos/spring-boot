@@ -1,0 +1,18 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public static Object from(BeanFactory beanFactory, String beanName, Class<?> beanType) {
+		ConfigurationPropertiesBean bean = ConfigurationPropertiesBean.forValueObject(beanType, beanName);
+		ConfigurationPropertiesBinder binder = ConfigurationPropertiesBinder.get(beanFactory);
+		try {
+			return binder.bindOrCreate(Nullability.castToNonnull(bean));
+		}
+		catch (Exception ex) {
+			throw new ConfigurationPropertiesBindException(bean, ex);
+		}
+}
+  ```
+    ]]>
+  </code>
+</response>

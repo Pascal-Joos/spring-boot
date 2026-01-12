@@ -1,0 +1,15 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+	public void start() {
+		this.server.start();
+		if (this.eventPublisher != null) {
+			this.eventPublisher.publishEvent(new RSocketServerInitializedEvent(this.server));
+		}
+	}
+  ```
+    ]]>
+  </code>
+</response>

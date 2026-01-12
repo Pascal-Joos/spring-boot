@@ -1,0 +1,12 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+void switchOver() {
+		Assert.notNull(this.destinationSupplier, "Destination must not be null");
+		this.destination = this.destinationSupplier.get();
+}
+  ```
+    ]]>
+  </code>
+</response>

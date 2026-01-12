@@ -1,0 +1,17 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private List<ConfigDataEnvironmentContributor> getInitialImportContributors(Binder binder) {
+		List<ConfigDataEnvironmentContributor> initialContributors = new ArrayList<>();
+		addInitialImportContributors(initialContributors, bindLocations(binder, IMPORT_PROPERTY, EMPTY_LOCATIONS));
+		addInitialImportContributors(initialContributors,
+				Nullability.castToNonnull(bindLocations(binder, ADDITIONAL_LOCATION_PROPERTY, EMPTY_LOCATIONS)));
+		addInitialImportContributors(initialContributors,
+				bindLocations(binder, LOCATION_PROPERTY, DEFAULT_SEARCH_LOCATIONS));
+		return initialContributors;
+}
+  ```
+    ]]>
+  </code>
+</response>

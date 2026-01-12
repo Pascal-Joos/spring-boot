@@ -1,0 +1,39 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+Resource[] getResources(String location, ResourceType type) {
+ 		validatePattern(location, type);
+ 		String directoryPath = Nullability.castToNonnull(location).substring(0, Nullability.castToNonnull(location).indexOf("*/"));
+ 		String fileName = Nullability.castToNonnull(location).substring(Nullability.castToNonnull(location).lastIndexOf("/") + 1);
+ 		Resource resource = getResource(directoryPath);
+ 		if (!resource.exists()) {
+ 			return EMPTY_RESOURCES;
+ 		}
+ 		File file = getFile(Nullability.castToNonnull(location), resource);
+ 		if (!file.isDirectory()) {
+ 			return EMPTY_RESOURCES;
+ 		}
+ 		File[] subDirectories = file.listFiles(this::isVisibleDirectory);
+ 		if (subDirectories == null) {
+ 			return EMPTY_RESOURCES;
+ 		}
+ 		Arrays.sort(subDirectories, FILE_PATH_COMPARATOR);
+ 		if (type == ResourceType.DIRECTORY) {
+ 			return Arrays.stream(subDirectories).map(FileSystemResource::new).toArray(Resource[]::new);
+ 		}
+ 		List<Resource> resources = new ArrayList<>();
+ 		FilenameFilter filter = (dir, name) -> name.equals(fileName);
+ 		for (File subDirectory : subDirectories) {
+ 			File[] files = subDirectory.listFiles(filter);
+ 			if (files != null) {
+ 				Arrays.sort(files, FILE_NAME_COMPARATOR);
+ 				Arrays.stream(files).map(FileSystemResource::new).forEach(resources::add);
+ 			}
+ 		}
+ 		return resources.toArray(EMPTY_RESOURCES);
+}
+  ```
+    ]]>
+  </code>
+</response>

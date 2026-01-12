@@ -1,0 +1,7 @@
+<response>
+    <success>false</success>
+    <methods>
+      <method>getLogger</method>
+      <method>findLogger</method>
+    </methods>
+</response>

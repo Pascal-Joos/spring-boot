@@ -1,0 +1,15 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private String cleanMessage( String message) {
+		int loadedFromIndex = Nullability.castToNonnull(message).indexOf(" (loaded from");
+		if (loadedFromIndex == -1) {
+			return Nullability.castToNonnull(message);
+		}
+		return Nullability.castToNonnull(message).substring(0, loadedFromIndex);
+}
+  ```
+    ]]>
+  </code>
+</response>

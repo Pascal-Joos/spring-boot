@@ -1,0 +1,37 @@
+```xml
+<response>
+    <reason><![CDATA[
+There are two distinct return-null sites in this method:
+
+1) The early return inside the first if-block:
+   if (candidates.length == 1 && candidates[0].getParameterCount() > 0) {
+       if (type.isMemberClass() && Modifier.isPrivate(candidates[0].getModifiers())) {
+           return null;  // (A)
+       }
+       return candidates[0];
+   }
+
+2) The final ternary expression:
+   return (result != null && result.getParameterCount() > 0) ? result : null;  // (B)
+
+You are asking about the expression "return null;" at line "return null;". Both (A) and the `... : null` part of (B) are reachable under normal circumstances:
+
+- Path to (A):
+  * If there is exactly one constructor in `candidates` and it has at least one parameter:
+    - `candidates.length == 1`
+    - `candidates[0].getParameterCount() > 0`
+  * And if:
+    - `type.isMemberClass()` is true
+    - and that sole constructor is `private` (i.e., `Modifier.isPrivate(candidates[0].getModifiers())` is true)
+  * Then the method returns `null` at (A).
+
+  There is no earlier condition that prevents this: `type.isMemberClass()` and constructor modifiers are not constrained by the method; they depend entirely on the arguments passed to it. So for some valid inputs, (A) is definitely executed, returning `null`.
+
+- Path to (B):
+  After the loop, `result` may still be `null` (e.g., when all candidates are private), or it may refer to a public/protected/package-private constructor whose `getParameterCount()` is 0. In both of these situations, the ternary condition `(result != null && result.getParameterCount() > 0)` is false, and the method returns `null` from (B).
+
+Thus, there are multiple feasible execution paths that lead this method to return `null`. There is no guarantee from the method’s logic or from the contracts of `Class.getDeclaredConstructors()` / `Constructor` that would prevent `null` from being returned in all cases.
+    ]]></reason>
+    <value>YES</value>
+</response>
+```

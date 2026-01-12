@@ -1,0 +1,37 @@
+<response>
+    <reason><![CDATA[
+Within getResources, the parameter `location` is:
+
+1. Passed directly to `validatePattern(location, type)`, which in turn calls `isPattern(location)`:
+   - `isPattern(location)` uses `StringUtils.hasLength(location)` and `location.contains("*")`.
+   - If `location` were null, `hasLength(location)` would be false, and `isPattern(location)` would return false, causing `Assert.state(isPattern(location), ...)` to fail.
+   - That would throw an exception, but it still shows that `location` is dereferenced early and *not* protected from being null.
+
+2. Used in `Nullability.castToNonnull(location).substring(...)`:
+   - Even if `castToNonnull` is meant as a helper, by its name and typical usage it indicates the code is not expecting null and is “asserting” non-nullness. If `location` is null, this call would typically fail (either in the castToNonnull implementation or immediately after when calling `.substring`).
+
+3. Used repeatedly without any null checks:
+   - `location.indexOf("*/")`
+   - `location.substring(location.lastIndexOf("/") + 1)`
+   - Passed again to `getFile(location, resource)` and checked via `validatePattern`/`isPattern`.
+
+From the call chain:
+
+- `StandardConfigDataLocationResolver.resolvePattern(...)` calls:
+  `this.resourceLoader.getResources(reference.getResourceLocation(), ResourceType.FILE)`.
+  There is no guarantee in the shown code that `reference.getResourceLocation()` never returns null.
+
+- `StandardConfigDataLocationResolver.resolvePatternEmptyDirectories(...)` calls:
+  `this.resourceLoader.getResources(reference.getDirectory(), ResourceType.DIRECTORY)`.
+  Likewise, there is no explicit null guard on `reference.getDirectory()`.
+
+- `ConfigTreeConfigDataLocationResolver.resolve(String location)` calls:
+  - `Assert.isTrue(location.endsWith("/"), ...)`: this will throw if `location` is null, but it still doesn’t prevent a caller elsewhere from passing null; it only crashes in that case.
+  - `this.resourceLoader.isPattern(location)` and later `this.resourceLoader.getResources(location, ResourceType.DIRECTORY)`.
+  Again, no explicit non-null contract enforcement beyond dereferencing (which would fail at runtime if null).
+
+Given the instructions to ignore annotations and to assume that callers may pass null unless prevented by clear logic, there is nothing in the provided call chain that definitively prevents `location` from being null before entering `getResources`. The method itself clearly dereferences `location` without any internal null check and would crash if null.
+
+Therefore, based solely on the method body and its call sites, it is possible for `location` to be null at the point `getResources` is invoked, even though such a call would quickly result in a failure. ]]></reason>
+    <value>YES</value>
+</response>

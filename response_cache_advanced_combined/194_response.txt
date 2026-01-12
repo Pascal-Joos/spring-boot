@@ -1,0 +1,18 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private void log(LogLevel level, Object message,  Throwable t) {
+		synchronized (this.lines) {
+			if (this.destination != null) {
+				logTo(this.destination, level, message, t);
+			}
+			else if (this.destinationSupplier != null) {
+				this.lines.add(this.destinationSupplier, level, message, t);
+			}
+		}
+}
+  ```
+    ]]>
+  </code>
+</response>

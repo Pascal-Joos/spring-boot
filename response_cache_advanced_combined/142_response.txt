@@ -1,0 +1,21 @@
+```xml
+<response>
+    <reason><![CDATA[
+Based solely on the provided method:
+
+static ConfigurationPropertyName of(CharSequence name, boolean returnNullIfInvalid) {
+    Elements elements = elementsOf(name, returnNullIfInvalid);
+    return (elements != null) ? new ConfigurationPropertyName(elements) : null;
+}
+
+the returned expression is explicitly a ternary that returns null when elements == null. Since we do not have the implementation or contract of elementsOf(name, returnNullIfInvalid), we cannot prove that elements is never null for any combination of inputs and flags. There is no prior check or guarantee shown that would prevent elementsOf from returning null.
+
+Therefore, from the visible code alone, the expression:
+
+    (elements != null) ? new ConfigurationPropertyName(elements) : null
+
+can evaluate to null whenever elementsOf(name, returnNullIfInvalid) returns null. Without the implementation or specification of elementsOf, we cannot rule that situation out.
+    ]]></reason>
+    <value>YES</value>
+</response>
+```

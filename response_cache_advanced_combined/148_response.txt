@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public void addAliases(String name, String... aliases) {
+		Assert.notNull(name, "Name must not be null");
+		Assert.notNull(aliases, "Aliases must not be null");
+		addAliases(Nullability.castToNonnull(ConfigurationPropertyName.of(name)),
+				Arrays.stream(aliases).map(ConfigurationPropertyName::of).toArray(ConfigurationPropertyName[]::new));
+}
+  ```
+    ]]>
+  </code>
+</response>

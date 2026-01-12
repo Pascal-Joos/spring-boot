@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private void createAccessLogDirectoryIfNecessary() {
+		Assert.state(this.directory != null, "Access log directory is not set");
+		if (!Nullability.castToNonnull(this.directory).isDirectory() && !Nullability.castToNonnull(this.directory).mkdirs()) {
+			throw new IllegalStateException("Failed to create access log directory '" + this.directory + "'");
+		}
+  }
+  ```
+    ]]>
+  </code>
+</response>

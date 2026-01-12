@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+	public Iterator<ConfigurationPropertySource> iterator() {
+		Assert.notNull(this.sources, "Sources must not be null");
+		return new SourcesIterator(this.sources.iterator(), this::adapt);
+	}
+  ```
+    ]]>
+  </code>
+</response>

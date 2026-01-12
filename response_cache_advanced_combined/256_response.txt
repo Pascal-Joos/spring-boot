@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private String getExcludedUserAgents() {
+		return (this.compression != null) ? StringUtils.arrayToCommaDelimitedString(this.compression.getExcludedUserAgents()) : "";
+  }
+  ```
+    ]]>
+  </code>
+</response>

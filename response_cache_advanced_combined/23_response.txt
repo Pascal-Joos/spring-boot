@@ -1,0 +1,14 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public Set<ApplicationContextInitializer<?>> getInitializers() {
+		if (this.initializers == null) {
+			this.initializers = new ArrayList<>();
+		}
+		return asUnmodifiableOrderedSet(this.initializers);
+  }
+  ```
+    ]]>
+  </code>
+</response>

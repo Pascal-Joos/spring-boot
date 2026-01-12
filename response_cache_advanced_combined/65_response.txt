@@ -1,0 +1,11 @@
+<response>
+  <success>false</success>
+  <methods>
+    <method>getResources</method>
+    <method>isPattern</method>
+    <method>getResourceLocation</method>
+    <method>getDirectory</method>
+    <method>getNonPrefixedValue</method>
+    <method>validatePattern</method>
+  </methods>
+</response>

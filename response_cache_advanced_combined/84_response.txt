@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private void registerShutdownHookIfNecessary(Environment environment,  LoggingSystem loggingSystem) {
+		if (environment.getProperty(REGISTER_SHUTDOWN_HOOK_PROPERTY, Boolean.class, true)) {
+			Runnable shutdownHandler = Nullability.castToNonnull(loggingSystem).getShutdownHandler();
+			if (shutdownHandler != null && shutdownHookRegistered.compareAndSet(false, true)) {
+				registerShutdownHook(shutdownHandler);
+			}
+		}
+}
+  ```
+    ]]>
+  </code>
+</response>

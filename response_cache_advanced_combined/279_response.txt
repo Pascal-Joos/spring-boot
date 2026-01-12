@@ -1,0 +1,20 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  private ClassPathScanningCandidateComponentProvider createComponentProvider() {
+		ClassPathScanningCandidateComponentProvider componentProvider = new ClassPathScanningCandidateComponentProvider(
+				false);
+		if (this.applicationContext != null) {
+			componentProvider.setEnvironment(this.applicationContext.getEnvironment());
+			componentProvider.setResourceLoader(this.applicationContext);
+		}
+		for (ServletComponentHandler handler : HANDLERS) {
+			componentProvider.addIncludeFilter(handler.getTypeFilter());
+		}
+		return componentProvider;
+}
+  ```
+    ]]>
+  </code>
+</response>

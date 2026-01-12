@@ -1,0 +1,12 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public MutuallyExclusiveConfigurationPropertiesException(Collection<String> configuredNames,
+			Collection<String> mutuallyExclusiveNames) {
+		this(Nullability.castToNonnull(asSet(configuredNames)), asSet(mutuallyExclusiveNames));
+}
+  ```
+    ]]>
+  </code>
+</response>

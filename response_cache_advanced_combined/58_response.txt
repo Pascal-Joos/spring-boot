@@ -1,0 +1,17 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public ConfigDataLocation[] split(String delimiter) {
+		String[] values = StringUtils.delimitedListToStringArray(toString(), delimiter);
+		ConfigDataLocation[] result = new ConfigDataLocation[values.length];
+		for (int i = 0; i < values.length; i++) {
+			ConfigDataLocation location = of(values[i]);
+			result[i] = (location != null) ? location.withOrigin(getOrigin()) : null;
+		}
+		return result;
+}
+  ```
+    ]]>
+  </code>
+</response>

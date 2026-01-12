@@ -1,0 +1,21 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+  public int compareTo(ConfigurationProperty other) {
+    if (this.name == null && other.name == null) {
+      return 0;
+    }
+    if (this.name == null) {
+      return -1;
+    }
+    if (other.name == null) {
+      return 1;
+    }
+    return this.name.compareTo(other.name);
+  }
+  ```
+    ]]>
+  </code>
+</response>

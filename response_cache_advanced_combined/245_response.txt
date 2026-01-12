@@ -1,0 +1,15 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private ServerConnector createHttp11ServerConnector(Server server, HttpConfiguration config,
+			SslContextFactory.Server sslContextFactory) {
+		HttpConnectionFactory connectionFactory = new HttpConnectionFactory(config);
+		return new SslValidatingServerConnector(server, sslContextFactory,
+				(this.ssl != null) ? this.ssl.getKeyAlias() : null,
+				createSslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()), connectionFactory);
+}
+  ```
+    ]]>
+  </code>
+</response>

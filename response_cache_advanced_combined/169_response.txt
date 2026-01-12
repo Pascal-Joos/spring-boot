@@ -1,0 +1,12 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private int intValue(Period value) {
+			Assert.notNull(this.intValue, () -> "intValue cannot be extracted from " + this.name());
+			return Nullability.castToNonnull(this.intValue).apply(value);
+}
+  ```
+    ]]>
+  </code>
+</response>

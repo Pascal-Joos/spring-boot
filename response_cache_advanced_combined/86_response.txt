@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		bind(Nullability.castToNonnull(ConfigurationPropertiesBean.get(this.applicationContext, bean, beanName)));
+		return bean;
+}
+  ```
+    ]]>
+  </code>
+</response>

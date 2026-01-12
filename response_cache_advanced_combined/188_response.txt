@@ -1,0 +1,22 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+	@Override
+	@Nullable
+	protected FailureAnalysis analyze(Throwable rootFailure, ChangeLogParseException cause) {
+		String message = cause.getMessage();
+		if (message == null) {
+			return null;
+		}
+		if (message.endsWith(MESSAGE_SUFFIX)) {
+			String changelogPath = extractChangelogPath(cause);
+			return new FailureAnalysis(getDescription(changelogPath),
+					"Make sure a Liquibase changelog is present at the configured path.", cause);
+		}
+		return null;
+}
+  ```
+    ]]>
+  </code>
+</response>

@@ -1,0 +1,58 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+public ConfigurableApplicationContext run(String... args) {
+  		long startTime = System.nanoTime();
+  		DefaultBootstrapContext bootstrapContext = createBootstrapContext();
+  		ConfigurableApplicationContext context = null;
+  		configureHeadlessProperty();
+  		SpringApplicationRunListeners listeners = getRunListeners(args);
+  		if (this.mainApplicationClass != null) {
+  			listeners.starting(bootstrapContext, this.mainApplicationClass);
+  		}
+  		else {
+  			listeners.starting(bootstrapContext, null);
+  		}
+  		try {
+  			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+  			ConfigurableEnvironment environment = prepareEnvironment(listeners, bootstrapContext, applicationArguments);
+  			Banner printedBanner = printBanner(environment);
+  			context = createApplicationContext();
+  			context.setApplicationStartup(this.applicationStartup);
+  			prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner);
+  			refreshContext(context);
+  			afterRefresh(context, applicationArguments);
+  			Duration timeTakenToStartup = Duration.ofNanos(System.nanoTime() - startTime);
+  			if (this.logStartupInfo && this.mainApplicationClass != null) {
+  				new StartupInfoLogger(this.mainApplicationClass).logStarted(getApplicationLog(), timeTakenToStartup);
+  			}
+  			listeners.started(context, timeTakenToStartup);
+  			callRunners(context, applicationArguments);
+  		}
+  		catch (Throwable ex) {
+  			if (ex instanceof AbandonedRunException) {
+  				throw ex;
+  			}
+  			handleRunFailure(context, ex, listeners);
+  			throw new IllegalStateException(ex);
+  		}
+  		try {
+  			if (context.isRunning()) {
+  				Duration timeTakenToReady = Duration.ofNanos(System.nanoTime() - startTime);
+  				listeners.ready(context, timeTakenToReady);
+  			}
+  		}
+  		catch (Throwable ex) {
+  			if (ex instanceof AbandonedRunException) {
+  				throw ex;
+  			}
+  			handleRunFailure(context, ex, null);
+  			throw new IllegalStateException(ex);
+  		}
+  		return context;
+}
+  ```
+    ]]>
+  </code>
+</response>

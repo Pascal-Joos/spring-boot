@@ -1,0 +1,23 @@
+<response>
+  <reason><![CDATA[
+The method body is:
+
+public T orElse(T other) {
+    return (this.value != null) ? this.value : other;
+}
+
+This method has exactly two return paths:
+
+1. If this.value != null, it returns this.value.
+   - In this branch, the returned value is whatever reference is stored in this.value.
+   - There is no guarantee in the provided code that this.value is non-null in all usages; the condition only checks that in this branch it is indeed non-null, so this branch cannot return null.
+
+2. If this.value == null, it returns other.
+   - In this branch, the value of other is returned directly.
+   - There is no constraint or check that other must be non-null. Therefore, the caller may pass null as other.
+   - If the caller passes null for other and this.value is null, the method will return null.
+
+No other methods are called, so no additional declarations are needed to determine nullability. Since the method directly returns its parameter other in one path and that parameter can be null, the method can return null depending on the argument and the state of this.value.
+  ]]></reason>
+  <value>YES</value>
+</response>

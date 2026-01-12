@@ -1,0 +1,16 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  @Override
+	protected void loadConfiguration(LoggingInitializationContext initializationContext, String location,
+			 LogFile logFile) {
+		if (initializationContext != null) {
+			applySystemProperties(initializationContext.getEnvironment(), logFile);
+		}
+		loadConfiguration(location, logFile, Nullability.castToNonnull(getOverrides(initializationContext)));
+}
+  ```
+    ]]>
+  </code>
+</response>

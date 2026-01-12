@@ -1,0 +1,11 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+  public Set<ApplicationContextInitializer<?>> getInitializers() {
+		return asUnmodifiableOrderedSet(Nullability.castToNonnull(this.initializers));
+}
+  ```
+    ]]>
+  </code>
+</response>

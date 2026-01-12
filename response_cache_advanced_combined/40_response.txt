@@ -1,0 +1,13 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+void onApplicationReadyEvent(ApplicationReadyEvent event) {
+		if (this.applicationContext != null && this.applicationContext.equals(event.getApplicationContext())) {
+			this.ready = true;
+		}
+}
+  ```
+    ]]>
+  </code>
+</response>

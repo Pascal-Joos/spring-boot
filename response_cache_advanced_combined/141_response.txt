@@ -1,0 +1,27 @@
+<response>
+  <success>true</success>
+  <code><![CDATA[
+  ```java
+private int compare( String e1,  ElementType type1,  String e2,
+			 ElementType type2) {
+		if (e1 == null) {
+			return -1;
+		}
+		if (e2 == null) {
+			return 1;
+		}
+		int result = Boolean.compare(Nullability.castToNonnull(type2).isIndexed(), type1.isIndexed());
+		if (result != 0) {
+			return result;
+		}
+		if (type1 == ElementType.NUMERICALLY_INDEXED && Nullability.castToNonnull(type2) == ElementType.NUMERICALLY_INDEXED) {
+			long v1 = Long.parseLong(e1);
+			long v2 = Long.parseLong(e2);
+			return Long.compare(v1, v2);
+		}
+		return e1.compareTo(e2);
+}
+  ```
+    ]]>
+  </code>
+</response>

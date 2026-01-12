@@ -1,0 +1,4 @@
+<response>
+    <reason><![CDATA[The method name does not match any known framework lifecycle/initializer patterns (e.g., onCreate, init, initialize) and does not start with "init" or "initialize". It is a private helper/factory-style method (`createUndertowServer`) that constructs and returns an `Undertow` instance, while also mutating some fields. Under the described NullAway rules, merely initializing fields inside a helper method does not make it an initializer method; the classification is driven by naming conventions or framework semantics. Therefore, it should not be considered an initializer method.]]></reason>
+    <value>NO</value>
+</response>
