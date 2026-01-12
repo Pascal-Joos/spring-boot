@@ -323,20 +323,22 @@ class ConfigDataEnvironment {
 	}
 
 	private void applyToEnvironment(ConfigDataEnvironmentContributors contributors,
-			ConfigDataActivationContext activationContext, Set<ConfigDataLocation> loadedLocations,
-			Set<ConfigDataLocation> optionalLocations) {
-		checkForInvalidProperties(contributors);
-		checkMandatoryLocations(contributors, activationContext, loadedLocations, optionalLocations);
-		MutablePropertySources propertySources = this.environment.getPropertySources();
-		applyContributor(contributors, activationContext, propertySources);
-		DefaultPropertiesPropertySource.moveToEnd(propertySources);
-		Profiles profiles = activationContext.getProfiles();
-		this.logger.trace(LogMessage.format("Setting default profiles: %s", profiles.getDefault()));
-		this.environment.setDefaultProfiles(StringUtils.toStringArray(profiles.getDefault()));
-		this.logger.trace(LogMessage.format("Setting active profiles: %s", profiles.getActive()));
-		this.environment.setActiveProfiles(StringUtils.toStringArray(profiles.getActive()));
-		this.environmentUpdateListener.onSetProfiles(profiles);
-	}
+ 			ConfigDataActivationContext activationContext, Set<ConfigDataLocation> loadedLocations,
+ 			Set<ConfigDataLocation> optionalLocations) {
+ 		checkForInvalidProperties(contributors);
+ 		checkMandatoryLocations(contributors, activationContext, loadedLocations, optionalLocations);
+ 		MutablePropertySources propertySources = this.environment.getPropertySources();
+ 		applyContributor(contributors, activationContext, propertySources);
+ 		DefaultPropertiesPropertySource.moveToEnd(propertySources);
+ 		Profiles profiles = (activationContext != null) ? activationContext.getProfiles() : null;
+ 		if (profiles != null) {
+ 			this.logger.trace(LogMessage.format("Setting default profiles: %s", profiles.getDefault()));
+ 			this.environment.setDefaultProfiles(StringUtils.toStringArray(profiles.getDefault()));
+ 			this.logger.trace(LogMessage.format("Setting active profiles: %s", profiles.getActive()));
+ 			this.environment.setActiveProfiles(StringUtils.toStringArray(profiles.getActive()));
+ 			this.environmentUpdateListener.onSetProfiles(profiles);
+ 		}
+ }
 
 	private void applyContributor(ConfigDataEnvironmentContributors contributors,
 			ConfigDataActivationContext activationContext, MutablePropertySources propertySources) {
