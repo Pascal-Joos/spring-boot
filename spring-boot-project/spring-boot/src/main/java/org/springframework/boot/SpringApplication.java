@@ -90,6 +90,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.function.ThrowingSupplier;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Class that can be used to bootstrap and launch a Spring application from a Java main
@@ -300,50 +301,50 @@ public class SpringApplication {
 	 * @return a running {@link ApplicationContext}
 	 */
 	public ConfigurableApplicationContext run(String... args) {
-		long startTime = System.nanoTime();
-		DefaultBootstrapContext bootstrapContext = createBootstrapContext();
-		ConfigurableApplicationContext context = null;
-		configureHeadlessProperty();
-		SpringApplicationRunListeners listeners = getRunListeners(args);
-		listeners.starting(bootstrapContext, this.mainApplicationClass);
-		try {
-			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
-			ConfigurableEnvironment environment = prepareEnvironment(listeners, bootstrapContext, applicationArguments);
-			Banner printedBanner = printBanner(environment);
-			context = createApplicationContext();
-			context.setApplicationStartup(this.applicationStartup);
-			prepareContext(bootstrapContext, context, environment, listeners, applicationArguments, printedBanner);
-			refreshContext(context);
-			afterRefresh(context, applicationArguments);
-			Duration timeTakenToStartup = Duration.ofNanos(System.nanoTime() - startTime);
-			if (this.logStartupInfo) {
-				new StartupInfoLogger(this.mainApplicationClass).logStarted(getApplicationLog(), timeTakenToStartup);
-			}
-			listeners.started(context, timeTakenToStartup);
-			callRunners(context, applicationArguments);
-		}
-		catch (Throwable ex) {
-			if (ex instanceof AbandonedRunException) {
-				throw ex;
-			}
-			handleRunFailure(context, ex, listeners);
-			throw new IllegalStateException(ex);
-		}
-		try {
-			if (context.isRunning()) {
-				Duration timeTakenToReady = Duration.ofNanos(System.nanoTime() - startTime);
-				listeners.ready(context, timeTakenToReady);
-			}
-		}
-		catch (Throwable ex) {
-			if (ex instanceof AbandonedRunException) {
-				throw ex;
-			}
-			handleRunFailure(context, ex, null);
-			throw new IllegalStateException(ex);
-		}
-		return context;
-	}
+ 		long startTime = System.nanoTime();
+ 		DefaultBootstrapContext bootstrapContext = createBootstrapContext();
+ 		ConfigurableApplicationContext context = null;
+ 		configureHeadlessProperty();
+ 		SpringApplicationRunListeners listeners = getRunListeners(args);
+ 		listeners.starting(bootstrapContext, this.mainApplicationClass);
+ 		try {
+ 			ApplicationArguments applicationArguments = new DefaultApplicationArguments(args);
+ 			ConfigurableEnvironment environment = prepareEnvironment(listeners, bootstrapContext, applicationArguments);
+ 			Banner printedBanner = printBanner(environment);
+ 			context = createApplicationContext();
+ 			Nullability.castToNonnull(context).setApplicationStartup(this.applicationStartup);
+ 			prepareContext(bootstrapContext, Nullability.castToNonnull(context), environment, listeners, applicationArguments, printedBanner);
+ 			refreshContext(Nullability.castToNonnull(context));
+ 			afterRefresh(Nullability.castToNonnull(context), applicationArguments);
+ 			Duration timeTakenToStartup = Duration.ofNanos(System.nanoTime() - startTime);
+ 			if (this.logStartupInfo) {
+ 				new StartupInfoLogger(this.mainApplicationClass).logStarted(getApplicationLog(), timeTakenToStartup);
+ 			}
+ 			listeners.started(Nullability.castToNonnull(context), timeTakenToStartup);
+ 			callRunners(Nullability.castToNonnull(context), applicationArguments);
+ 		}
+ 		catch (Throwable ex) {
+ 			if (ex instanceof AbandonedRunException) {
+ 				throw ex;
+ 			}
+ 			handleRunFailure(context, ex, listeners);
+ 			throw new IllegalStateException(ex);
+ 		}
+ 		try {
+ 			if (Nullability.castToNonnull(context).isRunning()) {
+ 				Duration timeTakenToReady = Duration.ofNanos(System.nanoTime() - startTime);
+ 				listeners.ready(Nullability.castToNonnull(context), timeTakenToReady);
+ 			}
+ 		}
+ 		catch (Throwable ex) {
+ 			if (ex instanceof AbandonedRunException) {
+ 				throw ex;
+ 			}
+ 			handleRunFailure(context, ex, null);
+ 			throw new IllegalStateException(ex);
+ 		}
+ 		return Nullability.castToNonnull(context);
+ }
 
 	private DefaultBootstrapContext createBootstrapContext() {
 		DefaultBootstrapContext bootstrapContext = new DefaultBootstrapContext();
