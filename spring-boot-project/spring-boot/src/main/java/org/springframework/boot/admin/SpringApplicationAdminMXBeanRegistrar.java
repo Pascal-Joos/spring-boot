@@ -42,6 +42,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.util.Assert;
 import javax.annotation.Nullable;
+import edu.ucr.cs.riple.annotator.util.Nullability;
 
 /**
  * Register a {@link SpringApplicationAdminMXBean} implementation to the platform
@@ -56,7 +57,7 @@ public class SpringApplicationAdminMXBeanRegistrar implements ApplicationContext
 
 	private static final Log logger = LogFactory.getLog(SpringApplicationAdmin.class);
 
-	private ConfigurableApplicationContext applicationContext;
+	@Nullable private ConfigurableApplicationContext applicationContext;
 
 	private Environment environment = new StandardEnvironment();
 
@@ -113,16 +114,16 @@ public class SpringApplicationAdminMXBeanRegistrar implements ApplicationContext
 	}
 
 	void onApplicationReadyEvent(ApplicationReadyEvent event) {
-		if (this.applicationContext.equals(event.getApplicationContext())) {
-			this.ready = true;
-		}
-	}
+ 		if (this.applicationContext != null && this.applicationContext.equals(event.getApplicationContext())) {
+ 			this.ready = true;
+ 		}
+ }
 
 	void onWebServerInitializedEvent(WebServerInitializedEvent event) {
-		if (this.applicationContext.equals(event.getApplicationContext())) {
-			this.embeddedWebApplication = true;
-		}
-	}
+  		if (this.applicationContext != null && Nullability.castToNonnull(this.applicationContext).equals(event.getApplicationContext())) {
+  			this.embeddedWebApplication = true;
+  		}
+ }
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -156,10 +157,12 @@ public class SpringApplicationAdminMXBeanRegistrar implements ApplicationContext
 		}
 
 		@Override
-		public void shutdown() {
-			logger.info("Application shutdown requested.");
-			SpringApplicationAdminMXBeanRegistrar.this.applicationContext.close();
-		}
+    public void shutdown() {
+      logger.info("Application shutdown requested.");
+      if (SpringApplicationAdminMXBeanRegistrar.this.applicationContext != null) {
+        SpringApplicationAdminMXBeanRegistrar.this.applicationContext.close();
+      }
+    }
 
 	}
 
