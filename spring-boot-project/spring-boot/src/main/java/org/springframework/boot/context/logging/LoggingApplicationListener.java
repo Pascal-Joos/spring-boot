@@ -240,9 +240,9 @@ public class LoggingApplicationListener implements GenericApplicationListener {
 	}
 
 	private void onApplicationStartingEvent(ApplicationStartingEvent event) {
-		this.loggingSystem = LoggingSystem.get(event.getSpringApplication().getClassLoader());
-		this.loggingSystem.beforeInitialize();
-	}
+ 		this.loggingSystem = LoggingSystem.get(event.getSpringApplication().getClassLoader());
+ 		Nullability.castToNonnull(this.loggingSystem).beforeInitialize();
+ }
 
 	private void onApplicationEnvironmentPreparedEvent(ApplicationEnvironmentPreparedEvent event) {
 		SpringApplication springApplication = event.getSpringApplication();
